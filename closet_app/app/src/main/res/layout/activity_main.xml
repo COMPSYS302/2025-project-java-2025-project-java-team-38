@@ -44,7 +44,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="12dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/rounded_title"
             android:orientation="horizontal"
             android:gravity="center"
@@ -81,7 +82,7 @@
         <!-- Category Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="303dp"
             android:orientation="vertical"
             android:paddingHorizontal="24dp"
             android:paddingBottom="16dp">
@@ -90,29 +91,29 @@
                 android:id="@+id/btn_top_picks"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Top Picks"
-                android:drawableStart="@android:drawable/btn_star"
+                android:layout_marginBottom="12dp"
                 android:backgroundTint="@color/categoryButtonGrey"
-                android:textColor="#FFFFFF"
-                android:layout_marginBottom="8dp" />
+                android:drawableStart="@android:drawable/btn_star"
+                android:text="Top Picks"
+                android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/btn_most_viewed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Most Viewed"
-                android:drawableStart="@android:drawable/ic_menu_view"
+                android:layout_marginBottom="12dp"
                 android:backgroundTint="@color/categoryButtonGrey"
-                android:textColor="#FFFFFF"
-                android:layout_marginBottom="8dp" />
+                android:drawableStart="@android:drawable/ic_menu_view"
+                android:text="Most Viewed"
+                android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/btn_new_in"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="New In"
-                android:drawableStart="@android:drawable/ic_menu_recent_history"
                 android:backgroundTint="@color/categoryButtonGrey"
+                android:drawableStart="@android:drawable/ic_menu_recent_history"
+                android:text="New In"
                 android:textColor="#FFFFFF" />
         </LinearLayout>
     </LinearLayout>
