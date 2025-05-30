@@ -43,9 +43,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/rounded_title"
             android:orientation="horizontal"
-            android:paddingVertical="16dp">
+            android:gravity="center"
+            android:paddingVertical="16dp"
+            android:paddingHorizontal="24dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -56,12 +60,22 @@
                 android:textColor="#000000"
                 android:fontFamily="serif" />
 
-            <ImageView
-                android:layout_width="48dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:src="@drawable/hanger"
                 android:layout_marginStart="12dp"
-                android:contentDescription="Hanger Icon" />
+                android:background="@drawable/rounded_title"
+                android:gravity="center"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/hanger"
+                    android:contentDescription="Hanger Icon"
+                    android:scaleType="fitCenter" />
+            </LinearLayout>
         </LinearLayout>
 
         <!-- Category Buttons -->
