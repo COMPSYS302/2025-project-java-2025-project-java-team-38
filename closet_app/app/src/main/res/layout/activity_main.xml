@@ -59,8 +59,9 @@
             <ImageView
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@android:drawable/ic_menu_upload" <!-- Replace cause it looks ugly rn -->
-                android:layout_marginStart="12dp" />
+                android:src="@drawable/hanger"
+                android:layout_marginStart="12dp"
+                android:contentDescription="Hanger Icon" />
         </LinearLayout>
 
         <!-- Category Buttons -->
