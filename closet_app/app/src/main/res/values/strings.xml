@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Closet</string>
+
+    <string-array name="sizes_array">
+        <item>Sizes</item>
+        <item>XS</item>
+        <item>S</item>
+        <item>M</item>
+        <item>L</item>
+        <item>XL</item>
+        <item>XXL</item>
+    </string-array>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

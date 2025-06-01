@@ -1,14 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_top_picks" android:title="Top Picks" />
-        <item android:id="@+id/nav_most_viewed" android:title="Most Viewed" />
-        <item android:id="@+id/nav_new_in" android:title="New In" />
-        <item android:title="Clothing">
-            <menu>
-                <item android:id="@+id/nav_shirts" android:title="Shirts" />
-                <item android:id="@+id/nav_jeans" android:title="Jeans" />
-                <item android:id="@+id/nav_accessories" android:title="Accessories" />
-            </menu>
-        </item>
-    </group>
+
+    <item
+        android:id="@+id/nav_top_picks"
+        android:title="Top Picks"
+        android:icon="@android:drawable/btn_star_big_on" />
+
+    <item
+        android:id="@+id/nav_most_viewed"
+        android:title="Most Viewed"
+        android:icon="@android:drawable/ic_menu_view" />
+
+    <item
+        android:id="@+id/nav_new_in"
+        android:title="New In"
+        android:icon="@android:drawable/ic_input_add" />
+
 </menu>

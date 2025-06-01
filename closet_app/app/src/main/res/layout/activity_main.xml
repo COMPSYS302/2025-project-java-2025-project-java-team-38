@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Main content -->
+    <!-- Home Page -->
 
     <!-- Navigation Drawer -->
     <LinearLayout
@@ -13,14 +13,14 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Toolbar -->
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        <!-- Hamburger menu -->
+        <ImageView
+            android:id="@+id/hamburger_icon"
+            android:layout_width="44dp"
+            android:layout_height="41dp"
+            android:layout_marginEnd="10dp"
+            android:contentDescription="Menu"
+            android:src="@drawable/hamburger" />
 
         <!-- Search Bar -->
         <androidx.cardview.widget.CardView
@@ -41,7 +41,7 @@
                 android:padding="12dp" />
         </androidx.cardview.widget.CardView>
 
-        <!-- Logo and Hanger -->
+        <!-- Logo and Title -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -82,10 +82,9 @@
         </LinearLayout>
 
         <!-- Category Buttons -->
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="205dp"
+            android:layout_height="249dp"
             android:orientation="vertical"
             android:paddingHorizontal="24dp"
             android:paddingBottom="16dp">
@@ -95,11 +94,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
+                android:layout_marginTop="20dp"
                 android:backgroundTint="@color/categoryButtonGrey"
                 android:drawableStart="@drawable/heart"
                 android:drawablePadding="12dp"
                 android:text="Top Picks"
-                android:textColor="#FFFFFF"/>
+                android:textColor="#FFFFFF" />
 
 
             <Button
@@ -123,11 +123,11 @@
                 android:textColor="#FFFFFF" />
         </LinearLayout>
 
+        <!-- Home page image -->
         <ImageView
             android:layout_width="253dp"
             android:layout_height="245dp"
             android:contentDescription="Hanger Icon"
-
             android:src="@drawable/clothes" />
 
     </LinearLayout>
