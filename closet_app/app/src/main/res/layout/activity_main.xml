@@ -6,6 +6,8 @@
     android:layout_height="match_parent">
 
     <!-- Main content -->
+
+    <!-- Navigation Drawer -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -32,11 +34,11 @@
                 android:id="@+id/search_bar"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:hint="Search"
-                android:padding="12dp"
                 android:background="@drawable/rounded_title"
+                android:drawableLeft="@android:drawable/ic_menu_search"
+                android:hint="Search"
                 android:inputType="text"
-                android:drawableLeft="@android:drawable/ic_menu_search" />
+                android:padding="12dp" />
         </androidx.cardview.widget.CardView>
 
         <!-- Logo and Hanger -->
@@ -47,23 +49,23 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/rounded_title"
-            android:orientation="horizontal"
             android:gravity="center"
-            android:paddingVertical="16dp"
-            android:paddingHorizontal="24dp">
+            android:orientation="horizontal"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="16dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="serif"
                 android:text="Closet"
-                android:textSize="32sp"
-                android:textStyle="bold"
                 android:textColor="#000000"
-                android:fontFamily="serif" />
+                android:textSize="52sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="83dp"
                 android:layout_marginStart="12dp"
                 android:background="@drawable/rounded_title"
                 android:gravity="center"
@@ -71,18 +73,19 @@
                 android:paddingVertical="6dp">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/hanger"
+                    android:layout_width="73dp"
+                    android:layout_height="69dp"
                     android:contentDescription="Hanger Icon"
-                    android:scaleType="fitCenter" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/hanger" />
             </LinearLayout>
         </LinearLayout>
 
         <!-- Category Buttons -->
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="303dp"
+            android:layout_height="205dp"
             android:orientation="vertical"
             android:paddingHorizontal="24dp"
             android:paddingBottom="16dp">
@@ -93,9 +96,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:backgroundTint="@color/categoryButtonGrey"
-                android:drawableStart="@android:drawable/btn_star"
+                android:drawableStart="@drawable/heart"
+                android:drawablePadding="12dp"
                 android:text="Top Picks"
-                android:textColor="#FFFFFF" />
+                android:textColor="#FFFFFF"/>
+
 
             <Button
                 android:id="@+id/btn_most_viewed"
@@ -103,7 +108,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:backgroundTint="@color/categoryButtonGrey"
-                android:drawableStart="@android:drawable/ic_menu_view"
+                android:drawableStart="@drawable/eye"
+                android:drawablePadding="12dp"
                 android:text="Most Viewed"
                 android:textColor="#FFFFFF" />
 
@@ -112,13 +118,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/categoryButtonGrey"
-                android:drawableStart="@android:drawable/ic_menu_recent_history"
+                android:drawableStart="@drawable/newin"
                 android:text="New In"
                 android:textColor="#FFFFFF" />
         </LinearLayout>
+
+        <ImageView
+            android:layout_width="253dp"
+            android:layout_height="245dp"
+            android:contentDescription="Hanger Icon"
+
+            android:src="@drawable/clothes" />
+
     </LinearLayout>
 
-    <!-- Navigation Drawer -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view"
         android:layout_width="wrap_content"
