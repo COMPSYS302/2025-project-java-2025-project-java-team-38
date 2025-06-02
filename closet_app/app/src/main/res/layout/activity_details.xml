@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <!-- Clothing displayed -->
     <ScrollView
@@ -21,40 +22,57 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/rounded_title"
-                android:orientation="horizontal"
                 android:gravity="center"
-                android:paddingVertical="16dp"
+                android:orientation="horizontal"
                 android:paddingHorizontal="24dp"
-                android:layout_marginBottom="16dp">
+                android:paddingVertical="16dp">
 
+                <!-- hamburger -->
                 <ImageView
                     android:id="@+id/hamburger_icon"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:layout_marginEnd="160dp"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:contentDescription="Menu"
                     android:src="@drawable/hamburger" />
+
+                <!-- Title-->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_gravity="center_vertical">
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/logo_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="serif"
                     android:text="Closet"
-                    android:textSize="32sp"
-                    android:textStyle="bold"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:textColor="#000000"
-                    android:fontFamily="serif" />
-
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+                <!-- logo-->
                 <ImageView
                     android:id="@+id/logo_icon"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_marginStart="12dp"
-                    android:src="@drawable/hanger"
                     android:contentDescription="Hanger Icon"
-                    android:scaleType="fitCenter" />
+                    android:scaleType="fitCenter"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:src="@drawable/hanger" />
+
             </LinearLayout>
 
 
@@ -70,11 +88,11 @@
                     android:id="@+id/search_bar"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:hint="Search"
-                    android:padding="12dp"
                     android:background="@drawable/rounded_title"
+                    android:drawableLeft="@android:drawable/ic_menu_search"
+                    android:hint="Search"
                     android:inputType="text"
-                    android:drawableLeft="@android:drawable/ic_menu_search" />
+                    android:padding="12dp" />
             </androidx.cardview.widget.CardView>
 
 
@@ -90,10 +108,10 @@
                 android:id="@+id/product_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
                 android:text="Galaxy Collusion Jeans"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="12dp" />
+                android:textStyle="bold" />
 
             <!-- Size dropdown -->
             <Spinner
@@ -112,27 +130,27 @@
                     android:id="@+id/btn_fabric"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Fabric"
-                    android:textColor="#000000"
+                    android:layout_marginBottom="8dp"
                     android:backgroundTint="@color/categoryButtonLightGrey"
-                    android:layout_marginBottom="8dp" />
+                    android:text="Fabric"
+                    android:textColor="#000000" />
 
                 <Button
                     android:id="@+id/btn_fit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Fit"
-                    android:textColor="#000000"
+                    android:layout_marginBottom="8dp"
                     android:backgroundTint="@color/categoryButtonLightGrey"
-                    android:layout_marginBottom="8dp" />
+                    android:text="Fit"
+                    android:textColor="#000000" />
 
                 <Button
                     android:id="@+id/btn_care"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@color/categoryButtonLightGrey"
                     android:text="Care"
-                    android:textColor="#000000"
-                    android:backgroundTint="@color/categoryButtonLightGrey"/>
+                    android:textColor="#000000" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
