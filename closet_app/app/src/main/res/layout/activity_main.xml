@@ -3,26 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingTop= "24dp">
+
 
     <!-- Home Page -->
 
     <!-- Navigation Drawer -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Hamburger menu -->
+        <!-- Search Bar -->
         <ImageView
             android:id="@+id/hamburger_icon"
-            android:layout_width="44dp"
-            android:layout_height="41dp"
-            android:layout_marginEnd="10dp"
+            android:layout_width="41dp"
+            android:layout_height="70dp"
+            android:layout_marginEnd="20dp"
             android:contentDescription="Menu"
             android:src="@drawable/hamburger" />
 
-        <!-- Search Bar -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -93,8 +95,8 @@
                 android:id="@+id/btn_top_picks"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginBottom="12dp"
                 android:backgroundTint="@color/categoryButtonGrey"
                 android:drawableStart="@drawable/heart"
                 android:drawablePadding="12dp"
@@ -124,11 +126,21 @@
         </LinearLayout>
 
         <!-- Home page image -->
-        <ImageView
-            android:layout_width="253dp"
-            android:layout_height="245dp"
-            android:contentDescription="Hanger Icon"
-            android:src="@drawable/clothes" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="12dp"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/clothes"
+                android:contentDescription="Clothes Icon" />
+        </LinearLayout>
 
     </LinearLayout>
 
