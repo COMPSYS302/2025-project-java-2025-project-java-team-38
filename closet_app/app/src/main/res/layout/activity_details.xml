@@ -96,20 +96,53 @@
                     android:padding="12dp" />
             </androidx.cardview.widget.CardView>
 
-            <!-- ItemViewing-->
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/view_pager"
+
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
+                android:layout_marginBottom="8dp">
+            <!-- ItemViewing-->
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="8dp" />
+                <!--left button -->
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id = "@+id/arrow_left"
+                    android:layout_gravity="center_vertical|start"
+                    android:layout_marginStart="8dp"
+                    android:contentDescription="Previous"
+                    android:src="@android:drawable/ic_media_previous"
+                    android:background="@android:color/transparent"
+                    android:padding="8dp"
+                    app:tint="#000000"/>
+                <!--right button -->
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id = "@+id/arrow_right"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_marginStart="8dp"
+                    android:contentDescription="Next"
+                    android:src="@android:drawable/ic_media_next"
+                    android:background="@android:color/transparent"
+                    android:padding="8dp"
+                    app:tint="#000000"/>
+
+
+            </FrameLayout>
 
             <LinearLayout
                 android:id="@+id/dots_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:orientation="horizontal"
-                android:layout_marginBottom="16dp" />
+                android:orientation="horizontal" />
 
             <!-- Product Name/Description -->
             <TextView

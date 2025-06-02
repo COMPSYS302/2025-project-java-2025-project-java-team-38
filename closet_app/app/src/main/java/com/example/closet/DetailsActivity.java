@@ -1,20 +1,31 @@
 package com.example.closet;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import androidx.core.content.ContextCompat;
+
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -99,6 +110,66 @@ public class DetailsActivity extends AppCompatActivity {
             fitText.setVisibility(View.GONE);
         });
 
+        ViewPager2 viewPager = findViewById(R.id.view_pager);
+        int[] images = { R.drawable.clothes, R.drawable.hanger, R.drawable.eye };
+        ImageAdapter image = new ImageAdapter(this, images);
+        viewPager.setAdapter(image);
+
+
+        LinearLayout dotsContainer = findViewById(R.id.dots_container);
+        ImageView[] dots = new ImageView[images.length];
+
+        // Add dots dependent on # images
+        for (int i = 0; i < dots.length; i++) {
+            dots[i] = new ImageView(this);
+            dots[i].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.dot_unseen));
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            params.setMargins(8, 0, 8, 0);
+            dotsContainer.addView(dots[i], params);
+        }
+
+        // Sets first dot as active
+        dots[0].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.dot_open));
+
+        // Changing the dot on swipe
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                for (int i = 0; i < dots.length; i++) {
+                    dots[i].setImageDrawable(ContextCompat.getDrawable(
+                            DetailsActivity.this,
+                            i == position ? R.drawable.dot_open : R.drawable.dot_unseen
+                    ));
+                }
+            }
+        });
+
+
+        // Arrows on image clicking
+        ImageView arrowLeft = findViewById(R.id.arrow_left);
+        ImageView arrowRight = findViewById(R.id.arrow_right);
+
+        // Goes to previous image
+        arrowLeft.setOnClickListener(v -> {
+            int currentItem = viewPager.getCurrentItem();
+            if (currentItem > 0) {
+                viewPager.setCurrentItem(currentItem - 1, true);
+            }
+        });
+
+        // Goes to next image
+        arrowRight.setOnClickListener(v -> {
+            int currentItem = viewPager.getCurrentItem();
+            if (currentItem < images.length - 1) {
+                viewPager.setCurrentItem(currentItem + 1, true);
+            }
+        });
+
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.categoryButtonLightGrey));
+
     }
 
     @Override
@@ -106,4 +177,5 @@ public class DetailsActivity extends AppCompatActivity {
         if (toggle.onOptionsItemSelected(item)) return true;
         return super.onOptionsItemSelected(item);
     }
+
 }
