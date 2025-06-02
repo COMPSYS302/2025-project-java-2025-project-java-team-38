@@ -3,17 +3,26 @@
 
     <item
         android:id="@+id/nav_top_picks"
-        android:title="Top Picks"
-        android:icon="@android:drawable/btn_star_big_on" />
+        android:title="Top Picks" />
 
     <item
         android:id="@+id/nav_most_viewed"
-        android:title="Most Viewed"
-        android:icon="@android:drawable/ic_menu_view" />
+        android:title="Most Viewed" />
 
     <item
         android:id="@+id/nav_new_in"
-        android:title="New In"
-        android:icon="@android:drawable/ic_input_add" />
+        android:title="New In" />
+
+    <item
+        android:id="@+id/nav_shirts"
+        android:title="Shirts" />
+
+    <item
+        android:id="@+id/nav_jeans"
+        android:title="Jeans" />
+
+    <item
+        android:id="@+id/nav_accessories"
+        android:title="Accessories" />
 
 </menu>

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -72,6 +73,32 @@ public class DetailsActivity extends AppCompatActivity {
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sizeSpinner.setAdapter(adapter);
+
+        TextView fabricText = findViewById(R.id.fabric_text);
+        TextView fitText = findViewById(R.id.fit_text);
+        TextView careText = findViewById(R.id.care_text);
+
+        // FABRIC toggle
+        findViewById(R.id.btn_fabric).setOnClickListener(v -> {
+            fabricText.setVisibility(fabricText.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+            fitText.setVisibility(View.GONE);
+            careText.setVisibility(View.GONE);
+        });
+
+// FIT toggle
+        findViewById(R.id.btn_fit).setOnClickListener(v -> {
+            fitText.setVisibility(fitText.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+            fabricText.setVisibility(View.GONE);
+            careText.setVisibility(View.GONE);
+        });
+
+// CARE toggle
+        findViewById(R.id.btn_care).setOnClickListener(v -> {
+            careText.setVisibility(careText.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+            fabricText.setVisibility(View.GONE);
+            fitText.setVisibility(View.GONE);
+        });
+
     }
 
     @Override

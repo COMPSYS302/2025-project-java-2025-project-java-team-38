@@ -35,18 +35,18 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:clickable="true"
-                    android:focusable="true"
                     android:contentDescription="Menu"
+                    android:focusable="true"
                     android:src="@drawable/hamburger" />
 
                 <!-- Title-->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:orientation="horizontal"
                     android:gravity="center"
-                    android:layout_gravity="center_vertical">
+                    android:orientation="horizontal">
 
                 </LinearLayout>
 
@@ -54,10 +54,10 @@
                     android:id="@+id/logo_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="serif"
-                    android:text="Closet"
                     android:clickable="true"
                     android:focusable="true"
+                    android:fontFamily="serif"
+                    android:text="Closet"
                     android:textColor="#000000"
                     android:textSize="22sp"
                     android:textStyle="bold" />
@@ -67,10 +67,10 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_marginStart="12dp"
-                    android:contentDescription="Hanger Icon"
-                    android:scaleType="fitCenter"
                     android:clickable="true"
+                    android:contentDescription="Hanger Icon"
                     android:focusable="true"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/hanger" />
 
             </LinearLayout>
@@ -135,6 +135,15 @@
                     android:text="Fabric"
                     android:textColor="#000000" />
 
+                <TextView
+                    android:id="@+id/fabric_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:text="fabric, we exist as such huzzah"
+                    android:textColor="#444444"
+                    android:padding="8dp" />
+
                 <Button
                     android:id="@+id/btn_fit"
                     android:layout_width="match_parent"
@@ -143,6 +152,14 @@
                     android:backgroundTint="@color/categoryButtonLightGrey"
                     android:text="Fit"
                     android:textColor="#000000" />
+                <TextView
+                    android:id="@+id/fit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:text="fit, we exist as such huzzah"
+                    android:textColor="#444444"
+                    android:padding="8dp" />
 
                 <Button
                     android:id="@+id/btn_care"
@@ -151,6 +168,14 @@
                     android:backgroundTint="@color/categoryButtonLightGrey"
                     android:text="Care"
                     android:textColor="#000000" />
+                <TextView
+                    android:id="@+id/care_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:text="fit, we exist as such huzzah"
+                    android:textColor="#444444"
+                    android:padding="8dp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
