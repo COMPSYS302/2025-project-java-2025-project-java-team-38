@@ -39,7 +39,7 @@
                     android:focusable="true"
                     android:src="@drawable/hamburger" />
 
-                <!-- Title-->
+                <!-- Title break so hamburger in left corner-->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -50,6 +50,7 @@
 
                 </LinearLayout>
 
+                <!-- Title-->
                 <TextView
                     android:id="@+id/logo_title"
                     android:layout_width="wrap_content"
@@ -61,7 +62,7 @@
                     android:textColor="#000000"
                     android:textSize="22sp"
                     android:textStyle="bold" />
-                <!-- logo-->
+                <!-- Logo-->
                 <ImageView
                     android:id="@+id/logo_icon"
                     android:layout_width="32dp"
@@ -95,12 +96,19 @@
                     android:padding="12dp" />
             </androidx.cardview.widget.CardView>
 
-
-            <!-- ViewPager for images -->
-            <androidx.viewpager2.widget.ViewPager2
+            <!-- ItemViewing-->
+            <androidx.viewpager.widget.ViewPager
                 android:id="@+id/view_pager"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
+                android:layout_marginBottom="8dp" />
+
+            <LinearLayout
+                android:id="@+id/dots_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
                 android:layout_marginBottom="16dp" />
 
             <!-- Product Name/Description -->

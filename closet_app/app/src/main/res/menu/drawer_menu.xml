@@ -3,15 +3,18 @@
 
     <item
         android:id="@+id/nav_top_picks"
-        android:title="Top Picks" />
+        android:title="Top Picks"
+        android:textStyle="bold"/>
 
     <item
         android:id="@+id/nav_most_viewed"
-        android:title="Most Viewed" />
+        android:title="Most Viewed"
+        android:textStyle="bold"/>
 
     <item
         android:id="@+id/nav_new_in"
-        android:title="New In" />
+        android:title="New In"
+        android:textStyle="bold"/>
 
     <item
         android:id="@+id/nav_shirts"

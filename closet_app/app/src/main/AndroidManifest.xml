@@ -13,7 +13,7 @@
         android:theme="@style/Theme.Closet"
         >
         <activity
-            android:name=".MainActivity"
+            android:name=".DetailsActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +21,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DetailsActivity" />
+        <activity android:name=".MainActivity" />
+        <!--add here for when a page is finished being built -->
+        <!--<activity android:name=".ShirtsActivity" />
+        <activity android:name=".JeansActivity" />
+        <activity android:name=".AccessoriesActivity" />
+        -->
     </application>
 
 </manifest>

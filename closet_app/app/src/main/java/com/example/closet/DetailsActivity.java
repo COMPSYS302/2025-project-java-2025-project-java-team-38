@@ -78,21 +78,21 @@ public class DetailsActivity extends AppCompatActivity {
         TextView fitText = findViewById(R.id.fit_text);
         TextView careText = findViewById(R.id.care_text);
 
-        // FABRIC toggle
+        // Fabric button toggling
         findViewById(R.id.btn_fabric).setOnClickListener(v -> {
             fabricText.setVisibility(fabricText.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
             fitText.setVisibility(View.GONE);
             careText.setVisibility(View.GONE);
         });
 
-// FIT toggle
+        // Fit button toggling
         findViewById(R.id.btn_fit).setOnClickListener(v -> {
             fitText.setVisibility(fitText.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
             fabricText.setVisibility(View.GONE);
             careText.setVisibility(View.GONE);
         });
 
-// CARE toggle
+        // Care button toggling
         findViewById(R.id.btn_care).setOnClickListener(v -> {
             careText.setVisibility(careText.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
             fabricText.setVisibility(View.GONE);
