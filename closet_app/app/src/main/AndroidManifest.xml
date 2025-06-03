@@ -14,6 +14,7 @@
         >
         <activity
             android:name=".DetailsActivity"
+            android:theme="@style/Theme.Closet"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
