@@ -9,14 +9,18 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
 
     private final Context context;
-    private final int[] imageIds;
+    private final List<String> imageUrls;
 
-    public ImageAdapter(Context context, int[] imageIds) {
+    public ImageAdapter(Context context, List<String> imageUrls) {
         this.context = context;
-        this.imageIds = imageIds;
+        this.imageUrls = imageUrls;
     }
 
     @NonNull
@@ -28,12 +32,16 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.imageView.setImageResource(imageIds[position]);
+        Picasso.get()
+                .load(imageUrls.get(position))
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.error)
+                .into(holder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        return imageIds.length;
+        return imageUrls.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

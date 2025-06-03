@@ -18,30 +18,59 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import androidx.core.content.ContextCompat;
 
-
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FieldValue;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 public class DetailsActivity extends AppCompatActivity {
 
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle toggle;
 
+    // Firestore instance
+    private FirebaseFirestore db;
+    private ClothingItem currentItem;
+
+    // UI components
+    private TextView itemName, fabricText, fitText, careText;
+    private ViewPager2 viewPager;
+    private LinearLayout dotsContainer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_Closet);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+
+        // Initialize Firestore
+        db = FirebaseFirestore.getInstance();
+
+        // Get item ID from intent
+        String itemId = getIntent().getStringExtra("ITEM_ID");
+        if (itemId == null || itemId.isEmpty()) {
+            finish();
+            return;
+        }
+
+        // Initialize UI components
+        itemName = findViewById(R.id.item_name);
+        fabricText = findViewById(R.id.fabric_text);
+        fitText = findViewById(R.id.fit_text);
+        careText = findViewById(R.id.care_text);
+        viewPager = findViewById(R.id.view_pager);
+        dotsContainer = findViewById(R.id.dots_container);
 
         // Side window set up
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -89,41 +118,60 @@ public class DetailsActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sizeSpinner.setAdapter(adapter);
 
-        TextView fabricText = findViewById(R.id.fabric_text);
-        TextView fitText = findViewById(R.id.fit_text);
-        TextView careText = findViewById(R.id.care_text);
+        // Button listeners
+        findViewById(R.id.btn_fabric).setOnClickListener(v -> toggleVisibility(fabricText));
+        findViewById(R.id.btn_fit).setOnClickListener(v -> toggleVisibility(fitText));
+        findViewById(R.id.btn_care).setOnClickListener(v -> toggleVisibility(careText));
 
-        // Fabric button toggling
-        findViewById(R.id.btn_fabric).setOnClickListener(v -> {
-            fabricText.setVisibility(fabricText.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-            fitText.setVisibility(View.GONE);
-            careText.setVisibility(View.GONE);
-        });
+        // Load item details from Firestore
+        loadItemDetails(itemId);
 
-        // Fit button toggling
-        findViewById(R.id.btn_fit).setOnClickListener(v -> {
-            fitText.setVisibility(fitText.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-            fabricText.setVisibility(View.GONE);
-            careText.setVisibility(View.GONE);
-        });
+        // Update view count
+        incrementViewCount(itemId);
 
-        // Care button toggling
-        findViewById(R.id.btn_care).setOnClickListener(v -> {
-            careText.setVisibility(careText.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-            fabricText.setVisibility(View.GONE);
-            fitText.setVisibility(View.GONE);
-        });
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.categoryButtonLightGrey));
+    }
 
-        ViewPager2 viewPager = findViewById(R.id.view_pager);
-        int[] images = { R.drawable.clothes, R.drawable.hanger, R.drawable.eye };
-        ImageAdapter image = new ImageAdapter(this, images);
-        viewPager.setAdapter(image);
+    private void loadItemDetails(String itemId) {
+        db.collection("clothing_items").document(itemId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        currentItem = documentSnapshot.toObject(ClothingItem.class);
+                        if (currentItem != null) {
+                            updateUI();
+                        }
+                    }
+                });
+    }
 
+    private void incrementViewCount(String itemId) {
+        DocumentReference docRef = db.collection("clothing_items").document(itemId);
+        docRef.update("viewCount", FieldValue.increment(1));
+    }
 
-        LinearLayout dotsContainer = findViewById(R.id.dots_container);
-        ImageView[] dots = new ImageView[images.length];
+    private void updateUI() {
+        // Set text fields
+        itemName.setText(currentItem.getName());
+        fabricText.setText(currentItem.getFabric());
+        fitText.setText(currentItem.getFit());
+        careText.setText(currentItem.getCare());
 
-        // Add dots dependent on # images
+        // Setup image slider
+        if (currentItem.getImageUrls() != null && !currentItem.getImageUrls().isEmpty()) {
+            setupImageSlider(currentItem.getImageUrls());
+        }
+    }
+
+    private void setupImageSlider(List<String> imageUrls) {
+        ImageAdapter adapter = new ImageAdapter(this, imageUrls);
+        viewPager.setAdapter(adapter);
+
+        // Clear existing dots
+        dotsContainer.removeAllViews();
+
+        // Create new dots
+        ImageView[] dots = new ImageView[imageUrls.size()];
         for (int i = 0; i < dots.length; i++) {
             dots[i] = new ImageView(this);
             dots[i].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.dot_unseen));
@@ -135,10 +183,12 @@ public class DetailsActivity extends AppCompatActivity {
             dotsContainer.addView(dots[i], params);
         }
 
-        // Sets first dot as active
-        dots[0].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.dot_open));
+        // Set first dot as active
+        if (dots.length > 0) {
+            dots[0].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.dot_open));
+        }
 
-        // Changing the dot on swipe
+        // Dot change listener
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -151,12 +201,10 @@ public class DetailsActivity extends AppCompatActivity {
             }
         });
 
-
-        // Arrows on image clicking
+        // Arrows navigation
         ImageView arrowLeft = findViewById(R.id.arrow_left);
         ImageView arrowRight = findViewById(R.id.arrow_right);
 
-        // Goes to previous image
         arrowLeft.setOnClickListener(v -> {
             int currentItem = viewPager.getCurrentItem();
             if (currentItem > 0) {
@@ -164,16 +212,31 @@ public class DetailsActivity extends AppCompatActivity {
             }
         });
 
-        // Goes to next image
         arrowRight.setOnClickListener(v -> {
             int currentItem = viewPager.getCurrentItem();
-            if (currentItem < images.length - 1) {
+            if (currentItem < imageUrls.size() - 1) {
                 viewPager.setCurrentItem(currentItem + 1, true);
             }
         });
+    }
 
-        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.categoryButtonLightGrey));
+    private void toggleVisibility(TextView textView) {
+        boolean isVisible = textView.getVisibility() == View.VISIBLE;
+        textView.setVisibility(isVisible ? View.GONE : View.VISIBLE);
 
+        // Hide other text views
+        if (!isVisible) {
+            if (textView == fabricText) {
+                fitText.setVisibility(View.GONE);
+                careText.setVisibility(View.GONE);
+            } else if (textView == fitText) {
+                fabricText.setVisibility(View.GONE);
+                careText.setVisibility(View.GONE);
+            } else if (textView == careText) {
+                fabricText.setVisibility(View.GONE);
+                fitText.setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override
@@ -181,5 +244,4 @@ public class DetailsActivity extends AppCompatActivity {
         if (toggle.onOptionsItemSelected(item)) return true;
         return super.onOptionsItemSelected(item);
     }
-
 }
