@@ -11,6 +11,29 @@
         <item>XXL</item>
     </string-array>
 
+    <string name="menu">Menu</string>
+    <string name="hanger_icon">Hanger Icon</string>
+    <string name="search">Search</string>
+    <string name="browse_categories">Browse Categories</string>
+    <string name="shirts">Shirts</string>
+    <string name="pants">Pants</string>
+    <string name="dresses">Dresses</string>
+    <string name="shoes">Shoes</string>
+    <string name="accessories">Accessories</string>
+    <string name="recent_items">Recent Items</string>
+
+    <!-- Navigation drawer strings -->
+    <string name="nav_header_title">My Closet</string>
+    <string name="nav_header_subtitle">Organize your wardrobe</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <!-- Navigation menu items -->
+    <string name="nav_home">Home</string>
+    <string name="nav_categories">Categories</string>
+    <string name="nav_favorites">Favorites</string>
+    <string name="nav_outfits">My Outfits</string>
+    <string name="nav_settings">Settings</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

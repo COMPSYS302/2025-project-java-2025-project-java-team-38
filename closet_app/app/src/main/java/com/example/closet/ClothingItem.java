@@ -1,0 +1,165 @@
+package com.example.closet;
+
+import com.google.firebase.firestore.PropertyName;
+import java.util.List;
+
+/**
+ * Model class representing a clothing item
+ * Used with Firebase Firestore for data persistence
+ */
+public class ClothingItem {
+
+    private String id;
+    private String name;
+    private String category;
+
+    // Renamed from 'material' to 'fabric' so DetailsActivity.getFabric() works
+    private String fabric;
+
+    private String fit;
+
+    // New field for care instructions
+    private String care;
+
+    // Replaced the single imageUrl with a List<String> named 'images'
+    private List<String> images;
+
+    private List<String> likedUsers;
+
+    // This field is not stored in Firestore - it's calculated based on the current user
+    private boolean likedByCurrentUser = false;
+
+    // Default constructor required for Firestore
+    public ClothingItem() {
+    }
+
+    // (Optional) Convenience constructor if you want to set up basic fields at creation time
+    public ClothingItem(String name, String category, String fabric, String fit, String care, List<String> images) {
+        this.name = name;
+        this.category = category;
+        this.fabric = fabric;
+        this.fit = fit;
+        this.care = care;
+        this.images = images;
+    }
+
+    // Getters and setters
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @PropertyName("Name")
+    public String getName() {
+        return name;
+    }
+
+    @PropertyName("Name")
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @PropertyName("Category")
+    public String getCategory() {
+        return category;
+    }
+
+    @PropertyName("Category")
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    // Firestore field must be called "Fabric"
+    @PropertyName("Fabric")
+    public String getFabric() {
+        return fabric;
+    }
+
+    @PropertyName("Fabric")
+    public void setFabric(String fabric) {
+        this.fabric = fabric;
+    }
+
+    @PropertyName("Fit")
+    public String getFit() {
+        return fit;
+    }
+
+    @PropertyName("Fit")
+    public void setFit(String fit) {
+        this.fit = fit;
+    }
+
+    // Firestore field must be called "Care"
+    @PropertyName("Care")
+    public String getCare() {
+        return care;
+    }
+
+    @PropertyName("Care")
+    public void setCare(String care) {
+        this.care = care;
+    }
+
+    // Firestore field must be called "Images" (an array of URLs)
+    @PropertyName("Images")
+    public List<String> getImages() {
+        return images;
+    }
+
+    @PropertyName("Images")
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
+
+    @PropertyName("likedUsers")
+    public List<String> getLikedUsers() {
+        return likedUsers;
+    }
+
+    @PropertyName("likedUsers")
+    public void setLikedUsers(List<String> likedUsers) {
+        this.likedUsers = likedUsers;
+    }
+
+    // This field is not stored in Firestore
+    public boolean isLikedByCurrentUser() {
+        return likedByCurrentUser;
+    }
+
+    public void setLikedByCurrentUser(boolean likedByCurrentUser) {
+        this.likedByCurrentUser = likedByCurrentUser;
+    }
+
+    @Override
+    public String toString() {
+        return "ClothingItem{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", category='" + category + '\'' +
+                ", fabric='" + fabric + '\'' +
+                ", fit='" + fit + '\'' +
+                ", care='" + care + '\'' +
+                ", images=" + images +
+                ", likedByCurrentUser=" + likedByCurrentUser +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        ClothingItem that = (ClothingItem) obj;
+        return id != null ? id.equals(that.id) : that.id == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+}
