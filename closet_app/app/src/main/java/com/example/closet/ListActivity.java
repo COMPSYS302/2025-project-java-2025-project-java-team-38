@@ -54,6 +54,9 @@ public class ListActivity extends AppCompatActivity
     private TextView logoTitle;
     private EditText searchBar;
 
+
+
+
     // Data components
     private FirebaseFirestore firestore;
     private RowListItemAdapter itemAdapter;
@@ -82,9 +85,12 @@ public class ListActivity extends AppCompatActivity
         String searchQuery = getIntent().getStringExtra("SEARCH_QUERY");
 
         if (searchQuery != null && !searchQuery.isEmpty()) {
-            selectedCategory = null; // still null, but don't use it for UI title
-            if (logoTitle != null) logoTitle.setText("Closet - Search"); // ✅ fix here
-            setupHeader(); // still sets up click listeners etc.
+            searchBar.setText(searchQuery); // ✅ This line makes the EditText show the query
+            searchBar.setSelection(searchQuery.length()); // Optional: move cursor to end
+
+            selectedCategory = null;
+            if (logoTitle != null) logoTitle.setText("Closet - Search");
+            setupHeader();
             performSearchOnly(searchQuery);
             return;
         }
@@ -95,10 +101,11 @@ public class ListActivity extends AppCompatActivity
             selectedCategory = "Shirts";
         }
 
-        if (logoTitle != null) logoTitle.setText("Closet - " + selectedCategory); // ✅ only category
+        if (logoTitle != null) logoTitle.setText("Closet - " + selectedCategory);
         setupHeader();
         loadClothingItems();
     }
+
 
     private void performSearchOnly(String query) {
         showLoading(true);
@@ -139,6 +146,7 @@ public class ListActivity extends AppCompatActivity
                             Toast.makeText(this, "No matching items found.", Toast.LENGTH_SHORT).show();
                         }
 
+
                         updateUI();
                     } else {
                         Toast.makeText(this, "Failed to load items.", Toast.LENGTH_SHORT).show();
@@ -159,11 +167,11 @@ public class ListActivity extends AppCompatActivity
         logoTitle         = findViewById(R.id.logo_title);
         searchBar         = findViewById(R.id.search_bar);
 
-        // Verify all views were found
         if (recyclerViewItems == null) Log.e(TAG, "RecyclerView not found!");
         if (progressBar == null) Log.e(TAG, "ProgressBar not found!");
         if (textEmptyState == null) Log.e(TAG, "EmptyState TextView not found!");
     }
+
 
     /** Set up the header section (logo + title). */
     private void setupHeader() {

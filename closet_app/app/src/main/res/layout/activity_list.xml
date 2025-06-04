@@ -14,7 +14,7 @@
         android:src="@drawable/heart"
         android:contentDescription="@null" />
 
-    <!-- Foreground content (everything you already had) -->
+    <!-- Foreground content (everything you already hFad) -->
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
@@ -99,6 +99,8 @@
                         android:hint="Search"
                         android:inputType="text"
                         android:padding="12dp" />
+
+
                 </androidx.cardview.widget.CardView>
 
                 <!-- CONTENT CONTAINER -->
