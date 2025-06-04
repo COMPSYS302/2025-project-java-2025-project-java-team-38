@@ -3,6 +3,7 @@ package com.example.closet;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -46,6 +47,15 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        // 2) Hide any existing ActionBar
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
+        setContentView(R.layout.activity_main);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

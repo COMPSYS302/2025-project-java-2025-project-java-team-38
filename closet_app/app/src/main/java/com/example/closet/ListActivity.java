@@ -23,11 +23,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Activity for displaying a list of clothing items filtered by category.
@@ -350,18 +354,38 @@ public class ListActivity extends AppCompatActivity
     /** Handle single-tap on any row item. */
     @Override
     public void onItemClick(ClothingItem item, int position) {
-        // 1) Make sure item != null and has a valid ID
-        if (item == null || item.getId() == null) {
-            Log.e(TAG, "onItemClick: invalid item or missing ID");
-            return;
+        if (item == null || item.getId() == null) return;
+
+        // 1) Write the clicked item into Firestore under "RecentViews/<currentUserId>/<itemId>"
+        String currentUid = null;
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            currentUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         }
 
-        // 2) Create an Intent into DetailsActivity, passing the Firestore document ID
+        if (currentUid != null) {
+            // Use a “RecentViews” collection for this user, storing a timestamp
+            Map<String, Object> data = new HashMap<>();
+            data.put("itemId", item.getId());
+            data.put("viewedAt", FieldValue.serverTimestamp());
+
+            FirebaseFirestore
+                    .getInstance()
+                    .collection("Users")
+                    .document(currentUid)
+                    .collection("RecentViews")
+                    .document(item.getId())
+                    .set(data, SetOptions.merge())
+                    .addOnSuccessListener(aVoid -> Log.d(TAG, "Saved to recent views: " + item.getId()))
+                    .addOnFailureListener(e -> Log.e(TAG, "Failed to save recent view", e));
+        } else {
+            Log.w(TAG, "User not signed in; skipping recent‐view save");
+        }
+
+        // 2) Still launch DetailsActivity as before
         Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtra("ITEM_ID", item.getId());
         startActivity(intent);
-
-        Log.d(TAG, "Item clicked: " + item.getName() + " at position " + position +
+        Log.d(TAG, "Item clicked: " + item.getName() +
                 "; launching DetailsActivity with ITEM_ID=" + item.getId());
     }
 
