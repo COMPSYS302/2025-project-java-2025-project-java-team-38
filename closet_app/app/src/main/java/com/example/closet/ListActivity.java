@@ -63,37 +63,65 @@ public class ListActivity extends AppCompatActivity
 
         Log.d(TAG, "onCreate started");
 
-        // Initialize all view references
         initializeViews();
+        setupHeader();
+        firestore = FirebaseFirestore.getInstance();
 
-        // Read category from intent (default to "Shirts" if missing)
+        // ✅ Must be initialized before performSearchOnly()
+        clothingItems = new ArrayList<>();
+        filteredItems = new ArrayList<>();
+
+        setupRecyclerView();
+        setupSearch();
+        setupNavigation();
+
+        // ✅ Now it's safe to check and use SEARCH_QUERY
+        String searchQuery = getIntent().getStringExtra("SEARCH_QUERY");
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            selectedCategory = null;
+            logoTitle.setText("Closet - Search");
+            performSearchOnly(searchQuery);
+            return;
+        }
+
+        // fallback to category
         selectedCategory = getIntent().getStringExtra(EXTRA_CATEGORY);
         if (selectedCategory == null || selectedCategory.isEmpty()) {
             selectedCategory = "Shirts";
         }
-        Log.d(TAG, "Selected category: " + selectedCategory);
 
-        // Setup header (logo/title click actions)
-        setupHeader();
-
-        // Initialize Firestore
-        firestore = FirebaseFirestore.getInstance();
-
-        // Initialize data lists
-        clothingItems = new ArrayList<>();
-        filteredItems = new ArrayList<>();
-
-        // Set up RecyclerView + adapter
-        setupRecyclerView();
-
-        // Set up search-bar listener
-        setupSearch();
-
-        // Set up navigation drawer toggle
-        setupNavigation();
-
-        // Load data from Firestore
         loadClothingItems();
+    }
+    private void performSearchOnly(String query) {
+        showLoading(true);
+
+        FirebaseFirestore.getInstance().collection("Clothes")
+                .get()
+                .addOnCompleteListener(task -> {
+                    showLoading(false);
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        clothingItems.clear();
+                        filteredItems.clear();
+
+                        for (DocumentSnapshot doc : task.getResult()) {
+                            ClothingItem item = doc.toObject(ClothingItem.class);
+                            if (item != null && item.getName() != null &&
+                                    item.getName().toLowerCase().contains(query.toLowerCase())) {
+                                item.setId(doc.getId());
+                                filteredItems.add(item);
+                            }
+                        }
+
+                        if (filteredItems.isEmpty()) {
+                            Toast.makeText(this, "No matching items found.", Toast.LENGTH_SHORT).show();
+                        }
+
+                        updateUI();
+                    } else {
+                        Toast.makeText(this, "Failed to load items.", Toast.LENGTH_SHORT).show();
+                        showEmptyState(true);
+                    }
+                });
     }
 
     /** Initialize all view components (findViewById). */
