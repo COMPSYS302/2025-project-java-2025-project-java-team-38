@@ -1,4 +1,4 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+// Top‐level build file where you can add configuration options common to all sub‐projects/modules.
 
 buildscript {
     repositories {
@@ -6,23 +6,23 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.10.1'
+        classpath "com.android.tools.build:gradle:8.10.1"
         classpath "com.google.gms:google-services:4.3.15"
         // NOTE: Application dependencies belong in module build.gradle files
     }
 }
 
+plugins {
+    // If you have a version‐catalog entry for 'android.application', uncomment this line:
+    // alias(libs.plugins.android.application) apply false
 
-alias(libs.plugins.android.application) apply false
-    id 'com.google.gms.google-services' version '4.4.2' apply false
+    // The Google Services plugin (no need to re‐declare in each module)
+    id "com.google.gms.google-services" version "4.4.2" apply false
+
+    // These two lines allow submodules to use the Android Gradle Plugin without re‐specifying the version.
+    id "com.android.application" version "8.10.1" apply false
+    id "com.android.library"  version "8.10.1" apply false
 }
-
-
-    id 'com.android.application' version '8.10.1' apply false
-    id 'com.android.library'    version '8.10.1' apply false
-}
-
-
 
 task clean(type: Delete) {
     delete rootProject.buildDir
