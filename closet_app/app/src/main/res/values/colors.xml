@@ -32,5 +32,9 @@
     <color name="error_color">#F44336</color>
     <color name="warning_color">#FF9800</color>
 
+    <color name="bottom_nav_selected_color">#FF9800</color>
+    <!-- Gray (unselected) for bottom‐nav tabs -->
+    <color name="bottom_nav_unselected_color">#FF888888</color>
+
 
 </resources>

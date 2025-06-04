@@ -1,0 +1,12 @@
+<!-- res/values/styles.xml -->
+<resources>
+    <!-- Base theme, with an ActionBar -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- your colorPrimary, colorPrimaryDark, etc. -->
+    </style>
+
+    <!-- A “NoActionBar” variant -->
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- you can override colors here if needed -->
+    </style>
+</resources>

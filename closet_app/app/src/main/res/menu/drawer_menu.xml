@@ -1,31 +1,43 @@
-<?xml version="1.0" encoding="utf-8"?>
+<!-- res/menu/drawer_menu.xml -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- “Home” -->
     <item
-        android:id="@+id/nav_top_picks"
-        android:title="Top Picks"
-        android:textStyle="bold"/>
+        android:id="@+id/nav_home"
+        android:title="Home"
+        android:textStyle="bold" />
 
+    <!-- “Hot Deals” (formerly “Top Picks”) -->
+    <item
+        android:id="@+id/nav_hot_deals"
+        android:title="Hot Deals"
+        android:textStyle="bold" />
+
+    <!-- “Most Viewed” -->
     <item
         android:id="@+id/nav_most_viewed"
         android:title="Most Viewed"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
+    <!-- “New In” -->
     <item
         android:id="@+id/nav_new_in"
         android:title="New In"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
+    <!-- “Categories” (e.g. Shirts, Jeans, etc.) -->
     <item
-        android:id="@+id/nav_shirts"
-        android:title="Shirts" />
+        android:id="@+id/nav_categories"
+        android:title="Categories" />
 
+    <!-- “Favourites” -->
     <item
-        android:id="@+id/nav_jeans"
-        android:title="Jeans" />
+        android:id="@+id/nav_favourites"
+        android:title="Favourites" />
 
+    <!-- “Cart” -->
     <item
-        android:id="@+id/nav_accessories"
-        android:title="Accessories" />
+        android:id="@+id/nav_cart"
+        android:title="Cart" />
 
 </menu>
