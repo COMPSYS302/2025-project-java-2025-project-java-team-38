@@ -1,28 +1,31 @@
-<!-- res/menu/bottom_nav_menu.xml -->
+<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!--
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_home"       <!-- replace with your home icon -->
-    android:title="Home" />
+        android:icon="@drawable/ic_home"
+        android:title="Home" />
 
     <item
         android:id="@+id/navigation_shop"
-        android:icon="@drawable/ic_shop"       <!-- replace with your shop icon -->
-    android:title="Shop" />
+        android:icon="@drawable/ic_shop"
+        android:title="Shop" />
 
     <item
         android:id="@+id/navigation_search"
-        android:icon="@drawable/ic_search"     <!-- replace with your search icon -->
-    android:title="Search" />
+        android:icon="@drawable/ic_search"
+        android:title="Search" />
 
     <item
         android:id="@+id/navigation_account"
-        android:icon="@drawable/ic_account"    <!-- replace with your account/user icon -->
-    android:title="Account" />
+        android:icon="@drawable/ic_account"
+        android:title="Account" />
 
     <item
         android:id="@+id/navigation_favourites"
-        android:icon="@drawable/ic_favorite"   <!-- replace with your favorite/heart icon -->
-    android:title="Favourites" />
+        android:icon="@drawable/ic_favorite"
+        android:title="Favourites" />
+    -->
+
 </menu>
