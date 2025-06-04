@@ -181,7 +181,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
-                    android:text="fabric, we exist as such huzzah"
+                    android:text="100% Cotton"
                     android:textColor="#444444"
                     android:padding="8dp" />
 
@@ -198,7 +198,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
-                    android:text="fit, we exist as such huzzah"
+                    android:text="Regular Fit"
                     android:textColor="#444444"
                     android:padding="8dp" />
 
@@ -214,7 +214,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
-                    android:text="fit, we exist as such huzzah"
+                    android:text="Cold machine washable, washed inside out to preserve colour"
                     android:textColor="#444444"
                     android:padding="8dp" />
             </LinearLayout>
