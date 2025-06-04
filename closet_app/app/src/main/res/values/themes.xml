@@ -1,8 +1,7 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <style name="Theme.Closet" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Set status bar color to match your search bar -->
-        <item name="android:statusBarColor">#E7E7E7</item>
-        <!-- Ensure dark icons in status bar -->
-        <item name="android:windowLightStatusBar">true</item>
+        <!-- Use a dark color here so white icons have contrast on API <23 -->
+        <item name="android:statusBarColor">@color/darkGray</item>
+        <!-- (do NOT attempt windowLightStatusBar here, it doesn’t exist until API 23) -->
     </style>
 </resources>

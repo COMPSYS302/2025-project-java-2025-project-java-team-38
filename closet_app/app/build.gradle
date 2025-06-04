@@ -1,10 +1,11 @@
 plugins {
-    alias(libs.plugins.android.application)
+    id 'com.android.application'
     id 'com.google.gms.google-services'
 }
 
 android {
-    namespace 'com.example.closet'
+    namespace "com.example.closet"    // ← added namespace
+
     compileSdk 35
 
     defaultConfig {
@@ -13,20 +14,22 @@ android {
         targetSdk 35
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles(
+                getDefaultProguardFile('proguard-android-optimize.txt'),
+                'proguard-rules.pro'
+            )
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
-
     }
 }
 
@@ -35,7 +38,28 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 dependencies {
+    // AndroidX Core Libraries
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.core:core:1.10.1'
+    implementation 'androidx.activity:activity:1.7.2'
+    implementation 'androidx.fragment:fragment:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.2.0'
+    implementation 'com.google.android.material:material:1.9.0'
 
+    // Firebase Authentication
+    implementation 'com.google.firebase:firebase-auth:21.1.0'
+
+    // RecyclerView and CardView
+    implementation 'androidx.recyclerview:recyclerview:1.3.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+
+    // Firebase BOM (Bill of Materials)
+    implementation platform('com.google.firebase:firebase-bom:32.2.0')
+    implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.google.firebase:firebase-analytics'
+
+    // Additional dependencies from firebase branch
     implementation libs.appcompat
     implementation libs.material
     implementation libs.activity
@@ -49,4 +73,26 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'androidx.annotation:annotation:1.9.1'
 
+    // Glide for image loading (from main branch)
+    implementation 'com.github.bumptech.glide:glide:4.13.2'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
+
+    // Testing dependencies (from main branch)
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Force all Kotlin stdlib artifacts to use version 1.8.20 so they don’t conflict.
+// Add this block at the very bottom. Do NOT remove any existing dependencies.
+// ─────────────────────────────────────────────────────────────────────────────
+
+configurations.all {
+    resolutionStrategy {
+        // Force Kotlin stdlib 1.8.20 across all configurations
+        force "org.jetbrains.kotlin:kotlin-stdlib:1.8.20"
+        force "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.20"
+        force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.20"
+    }
 }

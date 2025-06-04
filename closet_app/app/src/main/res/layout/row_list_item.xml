@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Use a horizontal layout: image on left, text on right -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:minHeight="120dp">
+
+        <!-- FrameLayout wrapping the item image + heart overlay -->
+        <FrameLayout
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_vertical">
+
+            <!-- Main item image -->
+            <ImageView
+                android:id="@+id/image_item"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:contentDescription="Item Image"
+                android:background="@android:color/darker_gray"
+                android:src="@drawable/ic_placeholder_image" />
+
+            <!-- Heart icon in top-left, visible only if liked -->
+            <ImageView
+                android:id="@+id/image_heart"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_margin="4dp"
+                android:contentDescription="Liked"
+                android:src="@drawable/ic_heart_filled"
+                android:visibility="gone"
+                app:tint="@android:color/holo_red_light" />
+
+        </FrameLayout>
+
+        <!-- Vertical stack of name + subtitle + like toggle -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_vertical">
+
+            <!-- Item Name -->
+            <TextView
+                android:id="@+id/text_item_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Item Name"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:maxLines="2"
+                android:ellipsize="end" />
+
+            <!-- Item Subtitle: "Material · Fit" -->
+            <TextView
+                android:id="@+id/text_item_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Material · Fit"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="14sp"
+                android:maxLines="2"
+                android:ellipsize="end" />
+
+            <!-- Liked status text -->
+            <TextView
+                android:id="@+id/text_liked_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="♥ Liked"
+                android:textColor="@android:color/holo_red_dark"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
