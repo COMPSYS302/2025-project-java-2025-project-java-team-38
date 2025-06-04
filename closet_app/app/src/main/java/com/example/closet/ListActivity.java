@@ -61,6 +61,8 @@ public class ListActivity extends AppCompatActivity
     private List<ClothingItem> filteredItems;
     private String selectedCategory;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,38 +70,83 @@ public class ListActivity extends AppCompatActivity
 
         Log.d(TAG, "onCreate started");
 
-        // Initialize all view references
         initializeViews();
+        firestore = FirebaseFirestore.getInstance();
+        clothingItems = new ArrayList<>();
+        filteredItems = new ArrayList<>();
 
-        // Read category from intent (default to "Shirts" if missing)
+        setupRecyclerView();
+        setupSearch();
+        setupNavigation();
+
+        String searchQuery = getIntent().getStringExtra("SEARCH_QUERY");
+
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            selectedCategory = null; // still null, but don't use it for UI title
+            if (logoTitle != null) logoTitle.setText("Closet - Search"); // ✅ fix here
+            setupHeader(); // still sets up click listeners etc.
+            performSearchOnly(searchQuery);
+            return;
+        }
+
+        // Category path
         selectedCategory = getIntent().getStringExtra(EXTRA_CATEGORY);
         if (selectedCategory == null || selectedCategory.isEmpty()) {
             selectedCategory = "Shirts";
         }
-        Log.d(TAG, "Selected category: " + selectedCategory);
 
-        // Setup header (logo/title click actions)
+        if (logoTitle != null) logoTitle.setText("Closet - " + selectedCategory); // ✅ only category
         setupHeader();
-
-        // Initialize Firestore
-        firestore = FirebaseFirestore.getInstance();
-
-        // Initialize data lists
-        clothingItems = new ArrayList<>();
-        filteredItems = new ArrayList<>();
-
-        // Set up RecyclerView + adapter
-        setupRecyclerView();
-
-        // Set up search-bar listener
-        setupSearch();
-
-        // Set up navigation drawer toggle
-        setupNavigation();
-
-        // Load data from Firestore
         loadClothingItems();
     }
+
+    private void performSearchOnly(String query) {
+        showLoading(true);
+
+        FirebaseFirestore.getInstance().collection("Clothes")
+                .get()
+                .addOnCompleteListener(task -> {
+                    showLoading(false);
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        clothingItems.clear();
+                        filteredItems.clear();
+
+                        String lowerQuery = query.toLowerCase();
+
+                        for (DocumentSnapshot doc : task.getResult()) {
+                            ClothingItem item = doc.toObject(ClothingItem.class);
+                            if (item != null) {
+                                boolean matches = false;
+
+                                if (item.getName() != null && item.getName().toLowerCase().contains(lowerQuery)) {
+                                    matches = true;
+                                } else if (item.getFabric() != null && item.getFabric().toLowerCase().contains(lowerQuery)) {
+                                    matches = true;
+                                } else if (item.getFit() != null && item.getFit().toLowerCase().contains(lowerQuery)) {
+                                    matches = true;
+                                } else if (item.getCategory() != null && item.getCategory().toLowerCase().contains(lowerQuery)) {
+                                    matches = true;
+                                }
+
+                                if (matches) {
+                                    item.setId(doc.getId());
+                                    filteredItems.add(item);
+                                }
+                            }
+                        }
+
+                        if (filteredItems.isEmpty()) {
+                            Toast.makeText(this, "No matching items found.", Toast.LENGTH_SHORT).show();
+                        }
+
+                        updateUI();
+                    } else {
+                        Toast.makeText(this, "Failed to load items.", Toast.LENGTH_SHORT).show();
+                        showEmptyState(true);
+                    }
+                });
+    }
+
 
     /** Initialize all view components (findViewById). */
     private void initializeViews() {
@@ -120,15 +167,23 @@ public class ListActivity extends AppCompatActivity
 
     /** Set up the header section (logo + title). */
     private void setupHeader() {
-        // Show "Closet – <Category>"
-        logoTitle.setText("Closet - " + selectedCategory);
+        if (logoTitle != null) {
+            if (selectedCategory != null) {
+                logoTitle.setText("Closet - " + selectedCategory);
+            } else {
+                logoTitle.setText("Closet - Search");
+            }
 
-        // Optional: clicking the logo or title shows a toast
-        logoIcon.setOnClickListener(v ->
-                Toast.makeText(this, "Logo clicked", Toast.LENGTH_SHORT).show());
-        logoTitle.setOnClickListener(v ->
-                Toast.makeText(this, "Title clicked", Toast.LENGTH_SHORT).show());
+            logoTitle.setOnClickListener(v ->
+                    Toast.makeText(this, "Title clicked", Toast.LENGTH_SHORT).show());
+        }
+
+        if (logoIcon != null) {
+            logoIcon.setOnClickListener(v ->
+                    Toast.makeText(this, "Logo clicked", Toast.LENGTH_SHORT).show());
+        }
     }
+
 
     /** Set up navigation drawer toggle (hamburger icon). */
     private void setupNavigation() {
