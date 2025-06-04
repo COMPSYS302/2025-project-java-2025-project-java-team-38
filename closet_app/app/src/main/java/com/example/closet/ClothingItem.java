@@ -4,37 +4,35 @@ import com.google.firebase.firestore.PropertyName;
 import java.util.List;
 
 /**
- * Model class representing a clothing item
- * Used with Firebase Firestore for data persistence
+ * Model class representing a clothing item.
+ * Used with Firebase Firestore for data persistence.
  */
 public class ClothingItem {
 
     private String id;
     private String name;
     private String category;
-
-    // Renamed from 'material' to 'fabric' so DetailsActivity.getFabric() works
     private String fabric;
-
     private String fit;
-
-    // New field for care instructions
     private String care;
-
-    // Replaced the single imageUrl with a List<String> named 'images'
     private List<String> images;
-
     private List<String> likedUsers;
 
-    // This field is not stored in Firestore - it's calculated based on the current user
+    // This field is not stored in Firestore—it’s set locally based on the current user.
     private boolean likedByCurrentUser = false;
 
-    // Default constructor required for Firestore
-    public ClothingItem() {
-    }
+    /** Default constructor required for Firestore deserialization */
+    public ClothingItem() { }
 
-    // (Optional) Convenience constructor if you want to set up basic fields at creation time
-    public ClothingItem(String name, String category, String fabric, String fit, String care, List<String> images) {
+    /**
+     * Convenience constructor (you can add/remove parameters as needed).
+     */
+    public ClothingItem(String name,
+                        String category,
+                        String fabric,
+                        String fit,
+                        String care,
+                        List<String> images) {
         this.name = name;
         this.category = category;
         this.fabric = fabric;
@@ -43,8 +41,7 @@ public class ClothingItem {
         this.images = images;
     }
 
-    // Getters and setters
-
+    /** ID getter/setter (not annotated—FireStore uses document ID, not a field) */
     public String getId() {
         return id;
     }
@@ -53,6 +50,7 @@ public class ClothingItem {
         this.id = id;
     }
 
+    /** Firestore field: "Name" */
     @PropertyName("Name")
     public String getName() {
         return name;
@@ -63,6 +61,7 @@ public class ClothingItem {
         this.name = name;
     }
 
+    /** Firestore field: "Category" */
     @PropertyName("Category")
     public String getCategory() {
         return category;
@@ -73,7 +72,7 @@ public class ClothingItem {
         this.category = category;
     }
 
-    // Firestore field must be called "Fabric"
+    /** Firestore field: "Fabric" */
     @PropertyName("Fabric")
     public String getFabric() {
         return fabric;
@@ -84,6 +83,7 @@ public class ClothingItem {
         this.fabric = fabric;
     }
 
+    /** Firestore field: "Fit" */
     @PropertyName("Fit")
     public String getFit() {
         return fit;
@@ -94,7 +94,7 @@ public class ClothingItem {
         this.fit = fit;
     }
 
-    // Firestore field must be called "Care"
+    /** Firestore field: "Care" */
     @PropertyName("Care")
     public String getCare() {
         return care;
@@ -105,7 +105,7 @@ public class ClothingItem {
         this.care = care;
     }
 
-    // Firestore field must be called "Images" (an array of URLs)
+    /** Firestore field: "Images" (an array of URL strings) */
     @PropertyName("Images")
     public List<String> getImages() {
         return images;
@@ -116,6 +116,7 @@ public class ClothingItem {
         this.images = images;
     }
 
+    /** Firestore field: "likedUsers" (list of UIDs who have liked this item) */
     @PropertyName("likedUsers")
     public List<String> getLikedUsers() {
         return likedUsers;
@@ -126,7 +127,7 @@ public class ClothingItem {
         this.likedUsers = likedUsers;
     }
 
-    // This field is not stored in Firestore
+    /** Not stored in Firestore—tracks whether the current user has liked this item */
     public boolean isLikedByCurrentUser() {
         return likedByCurrentUser;
     }
@@ -145,6 +146,7 @@ public class ClothingItem {
                 ", fit='" + fit + '\'' +
                 ", care='" + care + '\'' +
                 ", images=" + images +
+                ", likedUsers=" + likedUsers +
                 ", likedByCurrentUser=" + likedByCurrentUser +
                 '}';
     }

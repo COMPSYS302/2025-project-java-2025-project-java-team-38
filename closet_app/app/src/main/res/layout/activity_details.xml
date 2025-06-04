@@ -106,6 +106,7 @@
                 android:id="@+id/view_pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:scaleType = "centerCrop"
                 android:layout_marginBottom="8dp" />
                 <!--left button -->
                 <ImageView
@@ -131,8 +132,6 @@
                     android:background="@android:color/transparent"
                     android:padding="8dp"
                     app:tint="#000000"/>
-
-
             </FrameLayout>
 
             <LinearLayout
@@ -150,7 +149,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:text="Galaxy Collusion Jeans"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -181,7 +179,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
-                    android:text="fabric, we exist as such huzzah"
+                    android:text="100% Cotton"
                     android:textColor="#444444"
                     android:padding="8dp" />
 
@@ -198,7 +196,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
-                    android:text="fit, we exist as such huzzah"
+                    android:text="Regular Fit"
                     android:textColor="#444444"
                     android:padding="8dp" />
 
@@ -214,7 +212,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
-                    android:text="fit, we exist as such huzzah"
+                    android:text="Cold machine washable, washed inside out to preserve colour"
                     android:textColor="#444444"
                     android:padding="8dp" />
             </LinearLayout>

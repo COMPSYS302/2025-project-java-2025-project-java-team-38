@@ -1,16 +1,16 @@
 package com.example.closet;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
-
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
@@ -26,7 +26,6 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate the layout file: res/layout/images.xml (must define an ImageView with @+id/image_view)
         View view = LayoutInflater.from(context).inflate(R.layout.images, parent, false);
         return new ViewHolder(view);
     }
@@ -35,12 +34,31 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String url = imageUrls.get(position);
 
-        // Use Glide instead of Picasso
-        Glide.with(context)
-                .load(url)
-                .placeholder(R.drawable.ic_placeholder_image)  // grey placeholder we added earlier
-                .error(R.drawable.ic_error_image)              // add a "error" drawable in /res/drawable/
-                .into(holder.imageView);
+        if (url != null && url.startsWith("http")) {
+            try {
+                Picasso.get()
+                        .load(url)
+                        .placeholder(R.drawable.clothes) // show something while loading
+                        .error(R.drawable.hanger)        // fallback image if broken
+                        .into(holder.imageView, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                Log.d("ImageAdapter", "Loaded: " + url);
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                Log.e("ImageAdapter", "Failed to load: " + url, e);
+                            }
+                        });
+            } catch (Exception e) {
+                Log.e("ImageAdapter", "Exception during image load at position " + position + ": " + url, e);
+                holder.imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.dot_unseen));
+            }
+        } else {
+            Log.w("ImageAdapter", "Invalid URL at position " + position + ": " + url);
+            holder.imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.dot_unseen));
+        }
     }
 
     @Override
@@ -53,7 +71,6 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            // In images.xml, there must be an ImageView with id="@+id/image_view"
             imageView = itemView.findViewById(R.id.image_view);
         }
     }
