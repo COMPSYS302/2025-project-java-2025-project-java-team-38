@@ -132,7 +132,8 @@
                     android:text="@string/shirts"
                     android:textSize="16sp"
                     android:background="@drawable/category_button_bg"
-                    android:textColor="@android:color/white" />
+                    android:backgroundTint="@color/categoryButtonLightGrey"
+                    android:textColor="@android:color/black" />
 
                 <Button
                     android:id="@+id/btn_pants"
@@ -143,7 +144,8 @@
                     android:text="@string/pants"
                     android:textSize="16sp"
                     android:background="@drawable/category_button_bg"
-                    android:textColor="@android:color/white" />
+                    android:backgroundTint="@color/categoryButtonLightGrey"
+                    android:textColor="@android:color/black" /> />
 
                 <Button
                     android:id="@+id/btn_dresses"
@@ -154,7 +156,8 @@
                     android:text="@string/dresses"
                     android:textSize="16sp"
                     android:background="@drawable/category_button_bg"
-                    android:textColor="@android:color/white" />
+                    android:backgroundTint="@color/categoryButtonLightGrey"
+                    android:textColor="@android:color/black" /> />
 
                 <Button
                     android:id="@+id/btn_shoes"
@@ -165,7 +168,8 @@
                     android:text="@string/shoes"
                     android:textSize="16sp"
                     android:background="@drawable/category_button_bg"
-                    android:textColor="@android:color/white" />
+                    android:backgroundTint="@color/categoryButtonLightGrey"
+                    android:textColor="@android:color/black" /> />
 
                 <Button
                     android:id="@+id/btn_accessories"
@@ -177,7 +181,8 @@
                     android:text="@string/accessories"
                     android:textSize="16sp"
                     android:background="@drawable/category_button_bg"
-                    android:textColor="@android:color/white" />
+                    android:backgroundTint="@color/categoryButtonLightGrey"
+                    android:textColor="@android:color/black" /> />
 
             </GridLayout>
 

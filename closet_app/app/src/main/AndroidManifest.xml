@@ -25,7 +25,7 @@
 
         <!-- ListActivity - Displays clothing items by category -->
         <activity
-            android:name=".ui.ListActivity"
+            android:name=".ListActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity" />
 
