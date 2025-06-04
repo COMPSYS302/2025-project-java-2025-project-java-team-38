@@ -349,14 +349,6 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
         loadRecentItems();
     }
 
-    @Override
-    public void onBackPressed() {
-        if (drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
 
     @Override
     protected void onDestroy() {

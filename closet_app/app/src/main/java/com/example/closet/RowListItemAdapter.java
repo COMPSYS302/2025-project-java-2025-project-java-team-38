@@ -117,7 +117,7 @@ public class RowListItemAdapter extends RecyclerView.Adapter<RowListItemAdapter.
             gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
                 @Override
                 public boolean onDoubleTap(MotionEvent e) {
-                    int pos = getAdapterPosition();
+                    int pos = getBindingAdapterPosition();
                     if (pos != RecyclerView.NO_POSITION && likeListener != null) {
                         ClothingItem clickedItem = items.get(pos);
                         boolean newLikeStatus = !clickedItem.isLikedByCurrentUser();
@@ -129,7 +129,7 @@ public class RowListItemAdapter extends RecyclerView.Adapter<RowListItemAdapter.
 
                 @Override
                 public boolean onSingleTapConfirmed(MotionEvent e) {
-                    int pos = getAdapterPosition();
+                    int pos = getBindingAdapterPosition();
                     if (pos != RecyclerView.NO_POSITION && clickListener != null) {
                         clickListener.onItemClick(items.get(pos), pos);
                         return true;
@@ -143,7 +143,7 @@ public class RowListItemAdapter extends RecyclerView.Adapter<RowListItemAdapter.
 
             // Entire row single‐tap (alternative entry point)
             itemView.setOnClickListener(v -> {
-                int pos = getAdapterPosition();
+                int pos = getBindingAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION && clickListener != null) {
                     clickListener.onItemClick(items.get(pos), pos);
                 }

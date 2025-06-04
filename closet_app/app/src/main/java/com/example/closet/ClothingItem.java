@@ -1,8 +1,7 @@
 package com.example.closet;
 
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.PropertyName;
-
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,7 +10,10 @@ import java.util.List;
  */
 public class ClothingItem {
 
+    // Firestore document ID (not stored as a field in Firestore, but set locally)
     private String id;
+
+    // Basic fields stored in Firestore
     private String name;
     private String category;
     private String fabric;
@@ -19,35 +21,50 @@ public class ClothingItem {
     private String care;
     private List<String> images;
     private List<String> likedUsers;
+
+    // New fields that exist in Firestore but were missing
     private List<String> sizes;
-
-    private long views;
+    private int views;
     private int likes;
-    private Timestamp dateAdded;
+    private String dateAdded;
 
-    // This field is not stored in Firestore—it’s set locally based on the current user.
+    // This field is not stored in Firestore—set locally based on the current user
     private boolean likedByCurrentUser = false;
 
     /** Default constructor required for Firestore deserialization */
-    public ClothingItem() { }
+    public ClothingItem() {
+        // Initialize collections so Firestore can write into them without null-pointer issues
+        this.images = new ArrayList<>();
+        this.likedUsers = new ArrayList<>();
+        this.sizes = new ArrayList<>();
+        this.views = 0;
+        this.likes = 0;
+    }
 
     /**
-     * Convenience constructor (you can add/remove parameters as needed).
+     * Convenience constructor (you can add or remove parameters as needed).
+     * Initializes counts (views, likes) to zero and sizes to an empty list.
      */
     public ClothingItem(String name,
                         String category,
                         String fabric,
                         String fit,
                         String care,
-                        List<String> images) {
+                        List<String> images,
+                        List<String> sizes) {
         this.name = name;
         this.category = category;
         this.fabric = fabric;
         this.fit = fit;
         this.care = care;
-        this.images = images;
+        this.images = (images != null) ? images : new ArrayList<>();
+        this.sizes = (sizes != null) ? sizes : new ArrayList<>();
+        this.likedUsers = new ArrayList<>();
+        this.views = 0;
+        this.likes = 0;
     }
 
+    /** ID getter/setter (not annotated—Firestore uses document ID, not a field) */
     public String getId() {
         return id;
     }
@@ -56,6 +73,7 @@ public class ClothingItem {
         this.id = id;
     }
 
+    /** Firestore field: "Name" */
     @PropertyName("Name")
     public String getName() {
         return name;
@@ -66,6 +84,7 @@ public class ClothingItem {
         this.name = name;
     }
 
+    /** Firestore field: "Category" */
     @PropertyName("Category")
     public String getCategory() {
         return category;
@@ -76,6 +95,7 @@ public class ClothingItem {
         this.category = category;
     }
 
+    /** Firestore field: "Fabric" */
     @PropertyName("Fabric")
     public String getFabric() {
         return fabric;
@@ -86,6 +106,7 @@ public class ClothingItem {
         this.fabric = fabric;
     }
 
+    /** Firestore field: "Fit" */
     @PropertyName("Fit")
     public String getFit() {
         return fit;
@@ -96,6 +117,7 @@ public class ClothingItem {
         this.fit = fit;
     }
 
+    /** Firestore field: "Care" */
     @PropertyName("Care")
     public String getCare() {
         return care;
@@ -106,6 +128,7 @@ public class ClothingItem {
         this.care = care;
     }
 
+    /** Firestore field: "Images" (an array of URL strings) */
     @PropertyName("Images")
     public List<String> getImages() {
         return images;
@@ -113,9 +136,10 @@ public class ClothingItem {
 
     @PropertyName("Images")
     public void setImages(List<String> images) {
-        this.images = images;
+        this.images = (images != null) ? images : new ArrayList<>();
     }
 
+    /** Firestore field: "likedUsers" (list of UIDs who have liked this item) */
     @PropertyName("likedUsers")
     public List<String> getLikedUsers() {
         return likedUsers;
@@ -123,9 +147,14 @@ public class ClothingItem {
 
     @PropertyName("likedUsers")
     public void setLikedUsers(List<String> likedUsers) {
-        this.likedUsers = likedUsers;
+        this.likedUsers = (likedUsers != null) ? likedUsers : new ArrayList<>();
     }
 
+    // ────────────────────────────────────────────────────────────────────────────
+    // Newly added fields to match Firestore documents:
+    // ────────────────────────────────────────────────────────────────────────────
+
+    /** Firestore field: "Sizes" (list of available sizes, e.g. ["S","M","L"]) */
     @PropertyName("Sizes")
     public List<String> getSizes() {
         return sizes;
@@ -133,19 +162,21 @@ public class ClothingItem {
 
     @PropertyName("Sizes")
     public void setSizes(List<String> sizes) {
-        this.sizes = sizes;
+        this.sizes = (sizes != null) ? sizes : new ArrayList<>();
     }
 
+    /** Firestore field: "Views" (number of times this item has been viewed) */
     @PropertyName("Views")
-    public long getViews() {
+    public int getViews() {
         return views;
     }
 
     @PropertyName("Views")
-    public void setViews(long views) {
+    public void setViews(int views) {
         this.views = views;
     }
 
+    /** Firestore field: "Likes" (number of likes this item has received) */
     @PropertyName("Likes")
     public int getLikes() {
         return likes;
@@ -156,15 +187,20 @@ public class ClothingItem {
         this.likes = likes;
     }
 
+    /** Firestore field: "dateAdded" (timestamp or string of when this was added) */
     @PropertyName("dateAdded")
-    public Timestamp getDateAdded() {
+    public String getDateAdded() {
         return dateAdded;
     }
 
     @PropertyName("dateAdded")
-    public void setDateAdded(Timestamp dateAdded) {
+    public void setDateAdded(String dateAdded) {
         this.dateAdded = dateAdded;
     }
+
+    // ────────────────────────────────────────────────────────────────────────────
+    // Field not stored in Firestore—tracks whether the current user has liked this item
+    // ────────────────────────────────────────────────────────────────────────────
 
     public boolean isLikedByCurrentUser() {
         return likedByCurrentUser;
@@ -188,7 +224,7 @@ public class ClothingItem {
                 ", sizes=" + sizes +
                 ", views=" + views +
                 ", likes=" + likes +
-                ", dateAdded=" + dateAdded +
+                ", dateAdded='" + dateAdded + '\'' +
                 ", likedByCurrentUser=" + likedByCurrentUser +
                 '}';
     }

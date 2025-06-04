@@ -129,7 +129,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
                 @Override
                 public boolean onDoubleTap(MotionEvent e) {
-                    int position = getAdapterPosition();
+                    int position = getBindingAdapterPosition();
                     if (position != RecyclerView.NO_POSITION && likeListener != null) {
                         ClothingItem item = items.get(position);
                         boolean newLikeStatus = !item.isLikedByCurrentUser();
@@ -141,7 +141,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
                 @Override
                 public boolean onSingleTapConfirmed(MotionEvent e) {
-                    int position = getAdapterPosition();
+                    int position = getBindingAdapterPosition();
                     if (position != RecyclerView.NO_POSITION && clickListener != null) {
                         clickListener.onItemClick(items.get(position), position);
                         return true;
@@ -157,7 +157,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
             // Set click listener on the entire item for normal tap
             itemView.setOnClickListener(v -> {
-                int position = getAdapterPosition();
+                int position = getBindingAdapterPosition();
                 if (position != RecyclerView.NO_POSITION && clickListener != null) {
                     clickListener.onItemClick(items.get(position), position);
                 }
