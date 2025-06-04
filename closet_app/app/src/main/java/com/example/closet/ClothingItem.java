@@ -1,6 +1,8 @@
 package com.example.closet;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.PropertyName;
+
 import java.util.List;
 
 /**
@@ -17,6 +19,11 @@ public class ClothingItem {
     private String care;
     private List<String> images;
     private List<String> likedUsers;
+    private List<String> sizes;
+
+    private long views;
+    private int likes;
+    private Timestamp dateAdded;
 
     // This field is not stored in Firestore—it’s set locally based on the current user.
     private boolean likedByCurrentUser = false;
@@ -41,7 +48,6 @@ public class ClothingItem {
         this.images = images;
     }
 
-    /** ID getter/setter (not annotated—FireStore uses document ID, not a field) */
     public String getId() {
         return id;
     }
@@ -50,7 +56,6 @@ public class ClothingItem {
         this.id = id;
     }
 
-    /** Firestore field: "Name" */
     @PropertyName("Name")
     public String getName() {
         return name;
@@ -61,7 +66,6 @@ public class ClothingItem {
         this.name = name;
     }
 
-    /** Firestore field: "Category" */
     @PropertyName("Category")
     public String getCategory() {
         return category;
@@ -72,7 +76,6 @@ public class ClothingItem {
         this.category = category;
     }
 
-    /** Firestore field: "Fabric" */
     @PropertyName("Fabric")
     public String getFabric() {
         return fabric;
@@ -83,7 +86,6 @@ public class ClothingItem {
         this.fabric = fabric;
     }
 
-    /** Firestore field: "Fit" */
     @PropertyName("Fit")
     public String getFit() {
         return fit;
@@ -94,7 +96,6 @@ public class ClothingItem {
         this.fit = fit;
     }
 
-    /** Firestore field: "Care" */
     @PropertyName("Care")
     public String getCare() {
         return care;
@@ -105,7 +106,6 @@ public class ClothingItem {
         this.care = care;
     }
 
-    /** Firestore field: "Images" (an array of URL strings) */
     @PropertyName("Images")
     public List<String> getImages() {
         return images;
@@ -116,7 +116,6 @@ public class ClothingItem {
         this.images = images;
     }
 
-    /** Firestore field: "likedUsers" (list of UIDs who have liked this item) */
     @PropertyName("likedUsers")
     public List<String> getLikedUsers() {
         return likedUsers;
@@ -127,7 +126,46 @@ public class ClothingItem {
         this.likedUsers = likedUsers;
     }
 
-    /** Not stored in Firestore—tracks whether the current user has liked this item */
+    @PropertyName("Sizes")
+    public List<String> getSizes() {
+        return sizes;
+    }
+
+    @PropertyName("Sizes")
+    public void setSizes(List<String> sizes) {
+        this.sizes = sizes;
+    }
+
+    @PropertyName("Views")
+    public long getViews() {
+        return views;
+    }
+
+    @PropertyName("Views")
+    public void setViews(long views) {
+        this.views = views;
+    }
+
+    @PropertyName("Likes")
+    public int getLikes() {
+        return likes;
+    }
+
+    @PropertyName("Likes")
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    @PropertyName("dateAdded")
+    public Timestamp getDateAdded() {
+        return dateAdded;
+    }
+
+    @PropertyName("dateAdded")
+    public void setDateAdded(Timestamp dateAdded) {
+        this.dateAdded = dateAdded;
+    }
+
     public boolean isLikedByCurrentUser() {
         return likedByCurrentUser;
     }
@@ -147,6 +185,10 @@ public class ClothingItem {
                 ", care='" + care + '\'' +
                 ", images=" + images +
                 ", likedUsers=" + likedUsers +
+                ", sizes=" + sizes +
+                ", views=" + views +
+                ", likes=" + likes +
+                ", dateAdded=" + dateAdded +
                 ", likedByCurrentUser=" + likedByCurrentUser +
                 '}';
     }
