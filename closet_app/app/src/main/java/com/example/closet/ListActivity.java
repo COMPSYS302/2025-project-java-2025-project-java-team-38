@@ -104,12 +104,27 @@ public class ListActivity extends AppCompatActivity
                         clothingItems.clear();
                         filteredItems.clear();
 
+                        String lowerQuery = query.toLowerCase();
+
                         for (DocumentSnapshot doc : task.getResult()) {
                             ClothingItem item = doc.toObject(ClothingItem.class);
-                            if (item != null && item.getName() != null &&
-                                    item.getName().toLowerCase().contains(query.toLowerCase())) {
-                                item.setId(doc.getId());
-                                filteredItems.add(item);
+                            if (item != null) {
+                                boolean matches = false;
+
+                                if (item.getName() != null && item.getName().toLowerCase().contains(lowerQuery)) {
+                                    matches = true;
+                                } else if (item.getFabric() != null && item.getFabric().toLowerCase().contains(lowerQuery)) {
+                                    matches = true;
+                                } else if (item.getFit() != null && item.getFit().toLowerCase().contains(lowerQuery)) {
+                                    matches = true;
+                                } else if (item.getCategory() != null && item.getCategory().toLowerCase().contains(lowerQuery)) {
+                                    matches = true;
+                                }
+
+                                if (matches) {
+                                    item.setId(doc.getId());
+                                    filteredItems.add(item);
+                                }
                             }
                         }
 
@@ -124,6 +139,7 @@ public class ListActivity extends AppCompatActivity
                     }
                 });
     }
+
 
     /** Initialize all view components (findViewById). */
     private void initializeViews() {
