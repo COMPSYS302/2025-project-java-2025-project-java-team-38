@@ -1,170 +1,218 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop= "24dp">
+    android:fitsSystemWindows="true"
+    tools:context=".MainActivity">
 
-    <!-- Home Page -->
-
-    <!-- Navigation Drawer -->
-
-    <LinearLayout
+    <!-- Main content -->
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:fillViewport="true">
 
-        <!-- Search Bar -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="24dp"
-        android:paddingStart="16dp"
-        android:paddingBottom="8dp"
-        android:gravity="start|center_vertical">
-
-        <ImageView
-            android:id="@+id/hamburger_icon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="2dp"
-            android:layout_marginTop="16dp"
-            android:adjustViewBounds="true"
-            android:clickable="true"
-            android:contentDescription="Menu"
-            android:focusable="true"
-
-            android:scaleType="fitCenter"
-            android:src="@drawable/hamburger"
-
-            />
-    </LinearLayout>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="12dp"
-            android:elevation="4dp"
-            app:cardCornerRadius="8dp">
-
-            <EditText
-                android:id="@+id/search_bar"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@drawable/rounded_title"
-                android:drawableLeft="@android:drawable/ic_menu_search"
-                android:hint="Search"
-                android:inputType="text"
-                android:padding="12dp" />
-        </androidx.cardview.widget.CardView>
-
-        <!-- Logo and Title -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="12dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/rounded_title"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingHorizontal="24dp"
-            android:paddingVertical="16dp">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="serif"
-                android:text="Closet"
-                android:textColor="#000000"
-                android:textSize="52sp"
-                android:textStyle="bold" />
-
+            <!-- Custom Header with Logo and Hamburger Menu -->
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="83dp"
-                android:layout_marginStart="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/rounded_title"
-                android:gravity="center"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="6dp">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="16dp">
 
+                <!-- Hamburger Menu -->
                 <ImageView
-                    android:layout_width="73dp"
-                    android:layout_height="69dp"
-                    android:contentDescription="Hanger Icon"
+                    android:id="@+id/hamburger_icon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:clickable="true"
+                    android:contentDescription="@string/menu"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="4dp"
+                    android:src="@drawable/hamburger" />
+
+                <!-- Spacer to center the title and logo -->
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <!-- Title -->
+                <TextView
+                    android:id="@+id/logo_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:fontFamily="serif"
+                    android:text="@string/app_name"
+                    android:textColor="#000000"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <!-- Logo -->
+                <ImageView
+                    android:id="@+id/logo_icon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="12dp"
+                    android:clickable="true"
+                    android:contentDescription="@string/hanger_icon"
+                    android:focusable="true"
                     android:scaleType="fitCenter"
                     android:src="@drawable/hanger" />
+
+                <!-- Spacer to balance the layout -->
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
             </LinearLayout>
-        </LinearLayout>
 
-        <!-- Category Buttons -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="249dp"
-            android:orientation="vertical"
-            android:paddingHorizontal="24dp"
-            android:paddingBottom="16dp">
-
-            <Button
-                android:id="@+id/btn_top_picks"
+            <!-- Search Bar -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="12dp"
-                android:backgroundTint="@color/categoryButtonGrey"
-                android:drawableStart="@drawable/heart"
-                android:drawablePadding="12dp"
-                android:text="Top Picks"
-                android:textColor="#FFFFFF" />
+                android:layout_marginBottom="24dp"
+                android:elevation="2dp"
+                app:cardCornerRadius="8dp">
 
+                <EditText
+                    android:id="@+id/search_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/rounded_title"
+                    android:drawableStart="@android:drawable/ic_menu_search"
+                    android:drawablePadding="8dp"
+                    android:hint="@string/search"
+                    android:inputType="text"
+                    android:autofillHints="search"
+                    android:padding="12dp"
+                    android:textSize="16sp" />
 
-            <Button
-                android:id="@+id/btn_most_viewed"
+            </androidx.cardview.widget.CardView>
+
+            <!-- Browse Categories Section -->
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:backgroundTint="@color/categoryButtonGrey"
-                android:drawableStart="@drawable/eye"
-                android:drawablePadding="12dp"
-                android:text="Most Viewed"
-                android:textColor="#FFFFFF" />
+                android:text="@string/browse_categories"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="16dp" />
 
-            <Button
-                android:id="@+id/btn_new_in"
+            <!-- Category Buttons Grid -->
+            <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/categoryButtonGrey"
-                android:drawableStart="@drawable/newin"
-                android:text="New In"
-                android:textColor="#FFFFFF" />
-        </LinearLayout>
+                android:columnCount="2"
+                android:rowCount="3"
+                android:layout_marginBottom="24dp">
 
-        <!-- Home page image -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="12dp"
-            android:gravity="center">
+                <Button
+                    android:id="@+id/btn_shirts"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    android:text="@string/shirts"
+                    android:textSize="16sp"
+                    android:background="@drawable/category_button_bg"
+                    android:textColor="@android:color/white" />
 
-            <ImageView
-                android:layout_width="0dp"
+                <Button
+                    android:id="@+id/btn_pants"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    android:text="@string/pants"
+                    android:textSize="16sp"
+                    android:background="@drawable/category_button_bg"
+                    android:textColor="@android:color/white" />
+
+                <Button
+                    android:id="@+id/btn_dresses"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    android:text="@string/dresses"
+                    android:textSize="16sp"
+                    android:background="@drawable/category_button_bg"
+                    android:textColor="@android:color/white" />
+
+                <Button
+                    android:id="@+id/btn_shoes"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    android:text="@string/shoes"
+                    android:textSize="16sp"
+                    android:background="@drawable/category_button_bg"
+                    android:textColor="@android:color/white" />
+
+                <Button
+                    android:id="@+id/btn_accessories"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    android:layout_columnSpan="2"
+                    android:text="@string/accessories"
+                    android:textSize="16sp"
+                    android:background="@drawable/category_button_bg"
+                    android:textColor="@android:color/white" />
+
+            </GridLayout>
+
+            <!-- Recent Items Section -->
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
-                android:src="@drawable/clothes"
-                android:contentDescription="Clothes Icon" />
+                android:text="@string/recent_items"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Horizontal RecyclerView for Recent Items -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_recent_items"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                tools:listitem="@layout/row_list_item" />
+
         </LinearLayout>
 
-    </LinearLayout>
+    </ScrollView>
 
+    <!-- Navigation Drawer -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:menu="@menu/drawer_menu" />
+        android:fitsSystemWindows="true"
+        app:menu="@menu/drawer_menu"
+        app:headerLayout="@layout/nav_header" />
+
 </androidx.drawerlayout.widget.DrawerLayout>
