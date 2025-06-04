@@ -182,11 +182,7 @@ public class ListActivity extends AppCompatActivity
         recyclerViewItems.setHasFixedSize(true);
     }
 
-    /**
-     * Query Firestore’s “Clothes” collection for all items where “Category” == selectedCategory,
-     * then sort by “Name,” convert each document to ClothingItem, check “likedUsers” to see if
-     * current user has liked it, and populate clothingItems + filteredItems.
-     */
+
     private void loadClothingItems() {
         // 1) Show the progress bar while we fetch
         showLoading(true);
@@ -297,10 +293,6 @@ public class ListActivity extends AppCompatActivity
         Log.d(TAG, "Item clicked: " + item.getName() + " at position " + position);
     }
 
-    /**
-     * Handle double‐tap on image (like/unlike).
-     * We update Firestore’s “likedUsers” array for the given item ID.
-     */
     @Override
     public void onItemLike(ClothingItem item, int position, boolean isLiked) {
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
@@ -340,13 +332,4 @@ public class ListActivity extends AppCompatActivity
                 });
     }
 
-    /** If the drawer is open, close it on back‐pressed; otherwise just behave normally. */
-    @Override
-    public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
 }
