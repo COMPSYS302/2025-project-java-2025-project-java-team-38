@@ -57,6 +57,8 @@ public class ListActivity extends AppCompatActivity
     private List<ClothingItem> filteredItems;
     private String selectedCategory;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,26 +68,6 @@ public class ListActivity extends AppCompatActivity
 
         initializeViews();
         firestore = FirebaseFirestore.getInstance();
-
-
-        // ✅ Now it's safe to check and use SEARCH_QUERY
-        String searchQuery = getIntent().getStringExtra("SEARCH_QUERY");
-        if (searchQuery != null && !searchQuery.isEmpty()) {
-            selectedCategory = null;
-            logoTitle.setText("Closet - Search");
-            performSearchOnly(searchQuery);
-            return;
-        }
-
-        // fallback to category
-        selectedCategory = getIntent().getStringExtra(EXTRA_CATEGORY);
-        if (selectedCategory == null || selectedCategory.isEmpty()) {
-            selectedCategory = "Shirts";
-        }
-
-        setupHeader();
-
-        // ✅ Must be initialized before performSearchOnly()
         clothingItems = new ArrayList<>();
         filteredItems = new ArrayList<>();
 
@@ -93,8 +75,27 @@ public class ListActivity extends AppCompatActivity
         setupSearch();
         setupNavigation();
 
+        String searchQuery = getIntent().getStringExtra("SEARCH_QUERY");
+
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            selectedCategory = null; // still null, but don't use it for UI title
+            if (logoTitle != null) logoTitle.setText("Closet - Search"); // ✅ fix here
+            setupHeader(); // still sets up click listeners etc.
+            performSearchOnly(searchQuery);
+            return;
+        }
+
+        // Category path
+        selectedCategory = getIntent().getStringExtra(EXTRA_CATEGORY);
+        if (selectedCategory == null || selectedCategory.isEmpty()) {
+            selectedCategory = "Shirts";
+        }
+
+        if (logoTitle != null) logoTitle.setText("Closet - " + selectedCategory); // ✅ only category
+        setupHeader();
         loadClothingItems();
     }
+
     private void performSearchOnly(String query) {
         showLoading(true);
 
@@ -162,15 +163,23 @@ public class ListActivity extends AppCompatActivity
 
     /** Set up the header section (logo + title). */
     private void setupHeader() {
-        // Show "Closet – <Category>"
-        logoTitle.setText("Closet - " + selectedCategory);
+        if (logoTitle != null) {
+            if (selectedCategory != null) {
+                logoTitle.setText("Closet - " + selectedCategory);
+            } else {
+                logoTitle.setText("Closet - Search");
+            }
 
-        // Optional: clicking the logo or title shows a toast
-        logoIcon.setOnClickListener(v ->
-                Toast.makeText(this, "Logo clicked", Toast.LENGTH_SHORT).show());
-        logoTitle.setOnClickListener(v ->
-                Toast.makeText(this, "Title clicked", Toast.LENGTH_SHORT).show());
+            logoTitle.setOnClickListener(v ->
+                    Toast.makeText(this, "Title clicked", Toast.LENGTH_SHORT).show());
+        }
+
+        if (logoIcon != null) {
+            logoIcon.setOnClickListener(v ->
+                    Toast.makeText(this, "Logo clicked", Toast.LENGTH_SHORT).show());
+        }
     }
+
 
     /** Set up navigation drawer toggle (hamburger icon). */
     private void setupNavigation() {
