@@ -15,7 +15,7 @@
         android:theme="@style/Theme.Closet"
         >
         <activity
-            android:name=".MainActivity"
+            android:name=".DetailsActivity"
             android:theme="@style/Theme.Closet"
             android:exported="true">
             <intent-filter>
@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".DetailsActivity" />
+        <activity android:name=".MainActivity" />
         <!--add here for when a page is finished being built -->
         <!--<activity android:name=".ShirtsActivity" />
         <activity android:name=".JeansActivity" />
