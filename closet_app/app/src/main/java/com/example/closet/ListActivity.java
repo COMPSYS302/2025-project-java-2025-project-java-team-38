@@ -33,7 +33,9 @@ import java.util.List;
  * Now also checks whether the current user has "liked" each item,
  * so the adapter can show a heart overlay when appropriate.
  */
-public class ListActivity extends AppCompatActivity implements ItemAdapter.OnItemClickListener {
+public class ListActivity extends AppCompatActivity
+        implements RowListItemAdapter.OnItemClickListener,
+        RowListItemAdapter.OnItemLikeListener {
 
     private static final String TAG = "ListActivity";
     public static final String EXTRA_CATEGORY = "category";
@@ -50,7 +52,7 @@ public class ListActivity extends AppCompatActivity implements ItemAdapter.OnIte
 
     // Data components
     private FirebaseFirestore firestore;
-    private ItemAdapter itemAdapter;
+    private RowListItemAdapter itemAdapter;
     private List<ClothingItem> clothingItems;
     private List<ClothingItem> filteredItems; // For search functionality
     private String selectedCategory;
@@ -60,41 +62,39 @@ public class ListActivity extends AppCompatActivity implements ItemAdapter.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
-        // Initialize views
+        // 1) Initialize all view references
         initializeViews();
 
-        // Get selected category from intent
+        // 2) Read category from intent (default to "Shirts" if missing)
         selectedCategory = getIntent().getStringExtra(EXTRA_CATEGORY);
         if (selectedCategory == null) {
-            selectedCategory = "Shirts"; // Default fallback
+            selectedCategory = "Shirts";
         }
 
-        // Set up header
+        // 3) Setup header (logo/title click actions)
         setupHeader();
 
-        // Initialize Firebase Firestore
+        // 4) Initialize Firestore
         firestore = FirebaseFirestore.getInstance();
 
-        // Initialize data lists
+        // 5) Initialize data lists
         clothingItems = new ArrayList<>();
         filteredItems = new ArrayList<>();
 
-        // Set up RecyclerView & adapter
+        // 6) Set up RecyclerView + adapter
         setupRecyclerView();
 
-        // Set up search functionality
+        // 7) Set up search‐bar listener
         setupSearch();
 
-        // Set up navigation
+        // 8) Set up navigation drawer toggle
         setupNavigation();
 
-        // Load data from Firestore
+        // 9) Finally, load data from Firestore
         loadClothingItems();
     }
 
-    /**
-     * Initialize all view components
-     */
+    /** Initialize all view components (findViewById). */
     private void initializeViews() {
         recyclerViewItems = findViewById(R.id.recycler_view_items);
         progressBar       = findViewById(R.id.progress_bar);
@@ -106,28 +106,17 @@ public class ListActivity extends AppCompatActivity implements ItemAdapter.OnIte
         searchBar         = findViewById(R.id.search_bar);
     }
 
-    /**
-     * Set up the header section
-     */
+    /** Set up the header section (logo + title). */
     private void setupHeader() {
-        // Set the title to show current category
+        // Show “Closet – <Category>”
         logoTitle.setText("Closet - " + selectedCategory);
 
-        // Make logo clickable (optional - could navigate to home)
-        logoIcon.setOnClickListener(v -> {
-            // Navigate to home or perform action
-            Toast.makeText(this, "Logo clicked", Toast.LENGTH_SHORT).show();
-        });
-
-        logoTitle.setOnClickListener(v -> {
-            // Navigate to home or perform action
-            Toast.makeText(this, "Title clicked", Toast.LENGTH_SHORT).show();
-        });
+        // Optional: clicking the logo or title shows a toast (you can replace with real navigation if needed)
+        logoIcon.setOnClickListener(v -> Toast.makeText(this, "Logo clicked", Toast.LENGTH_SHORT).show());
+        logoTitle.setOnClickListener(v -> Toast.makeText(this, "Title clicked", Toast.LENGTH_SHORT).show());
     }
 
-    /**
-     * Set up navigation drawer
-     */
+    /** Set up navigation drawer toggle (hamburger icon). */
     private void setupNavigation() {
         hamburgerIcon.setOnClickListener(v -> {
             if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -138,13 +127,11 @@ public class ListActivity extends AppCompatActivity implements ItemAdapter.OnIte
         });
     }
 
-    /**
-     * Set up search functionality
-     */
+    /** Set up real‐time search filtering on EditText. */
     private void setupSearch() {
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { /* no-op */ }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -152,17 +139,19 @@ public class ListActivity extends AppCompatActivity implements ItemAdapter.OnIte
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) { /* no-op */ }
         });
     }
 
     /**
-     * Filter items based on search query
+     * Filter items in memory based on the query string,
+     * then call updateUI() to refresh the list or show the empty state.
      */
     private void filterItems(String query) {
         filteredItems.clear();
 
         if (query.isEmpty()) {
+            // If no query, show all loaded items
             filteredItems.addAll(clothingItems);
         } else {
             String lowerCaseQuery = query.toLowerCase().trim();
@@ -175,19 +164,18 @@ public class ListActivity extends AppCompatActivity implements ItemAdapter.OnIte
             }
         }
 
-        // Update adapter with filtered results
+        // Tell adapter to update its data
         itemAdapter.updateItems(filteredItems);
 
-        // Update empty state
+        // Show either list or empty‐state text
         updateUI();
     }
 
-    /**
-     * Set up RecyclerView with adapter and layout manager
-     */
+    /** Set up RecyclerView + attach our RowListItemAdapter. */
     private void setupRecyclerView() {
-        itemAdapter = new ItemAdapter(this, filteredItems);
+        itemAdapter = new RowListItemAdapter(this, filteredItems);
         itemAdapter.setOnItemClickListener(this);
+        itemAdapter.setOnItemLikeListener(this);
 
         recyclerViewItems.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewItems.setAdapter(itemAdapter);
@@ -195,12 +183,13 @@ public class ListActivity extends AppCompatActivity implements ItemAdapter.OnIte
     }
 
     /**
-     * Load clothing items from Firestore based on selected category
+     * Query Firestore’s “Clothes” collection for all items where “Category” == selectedCategory,
+     * then sort by “Name,” convert each document to ClothingItem, check “likedUsers” to see if
+     * current user has liked it, and populate clothingItems + filteredItems.
      */
     private void loadClothingItems() {
-        // Show progress bar & hide list initially
+        // 1) Show the progress bar while we fetch
         showLoading(true);
-
         Log.d(TAG, "Loading items for category: " + selectedCategory);
 
         firestore.collection("Clothes")
@@ -210,26 +199,25 @@ public class ListActivity extends AppCompatActivity implements ItemAdapter.OnIte
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        // Hide progress bar
+                        // Hide loading spinner
                         showLoading(false);
 
                         if (task.isSuccessful() && task.getResult() != null) {
                             clothingItems.clear();
 
-                            // Get current user ID (for like-checking)
+                            // Determine current user’s UID (if logged in)
                             String currentUid = null;
                             if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                                 currentUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                             }
 
-                            // Process each document
                             for (DocumentSnapshot document : task.getResult()) {
                                 try {
                                     ClothingItem item = document.toObject(ClothingItem.class);
                                     if (item != null) {
                                         item.setId(document.getId());
 
-                                        // Check if this user has liked the item
+                                        // Check if user has liked this item
                                         if (currentUid != null) {
                                             List<String> likedUsers = document.get("likedUsers", List.class);
                                             boolean likedByMe = false;
@@ -250,48 +238,42 @@ public class ListActivity extends AppCompatActivity implements ItemAdapter.OnIte
                                 }
                             }
 
-                            // Initialize filtered items with all items
+                            // Copy all to filteredItems for initial display
                             filteredItems.clear();
                             filteredItems.addAll(clothingItems);
 
-                            // Update UI (show list or empty state)
+                            // Refresh UI (list vs. empty state)
                             updateUI();
 
                             Log.d(TAG, "Loaded " + clothingItems.size() + " items");
                         } else {
-                            // Handle query failure
+                            // Query failed
                             String errorMessage = "Failed to load items";
                             if (task.getException() != null) {
                                 errorMessage += ": " + task.getException().getMessage();
                             }
-
                             Log.e(TAG, errorMessage);
                             Toast.makeText(ListActivity.this, errorMessage, Toast.LENGTH_LONG).show();
-
-                            // Show empty state
                             showEmptyState(true);
                         }
                     }
                 });
     }
 
-    /**
-     * Update UI after data loading
-     */
+    /** Show or hide the RecyclerView / empty‐state text depending on filteredItems. */
     private void updateUI() {
         if (filteredItems.isEmpty()) {
             showEmptyState(true);
         } else {
             showEmptyState(false);
-            // Notify adapter of data changes
+            // Make sure adapter has the latest filteredItems
             itemAdapter.updateItems(filteredItems);
         }
     }
 
     /**
-     * Show/hide loading progress bar
-     *
-     * @param show true to show, false to hide
+     * Show or hide the loading spinner. When loading = true, we show progressBar and hide RecyclerView.
+     * When loading = false, we hide progressBar and show RecyclerView.
      */
     private void showLoading(boolean show) {
         progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
@@ -299,32 +281,66 @@ public class ListActivity extends AppCompatActivity implements ItemAdapter.OnIte
     }
 
     /**
-     * Show/hide empty state message
-     *
-     * @param show true to show, false to hide
+     * Show or hide the “empty state” TextView. When show = true, we show textEmptyState and hide RecyclerView.
+     * When show = false, we hide textEmptyState and show RecyclerView.
      */
     private void showEmptyState(boolean show) {
         textEmptyState.setVisibility(show ? View.VISIBLE : View.GONE);
         recyclerViewItems.setVisibility(show ? View.GONE : View.VISIBLE);
     }
 
-    /**
-     * Handle item click from RecyclerView adapter
-     *
-     * @param item     Clicked ClothingItem
-     * @param position Position in the list
-     */
+    /** Handle single‐tap on any row. For now, just show a Toast. */
     @Override
     public void onItemClick(ClothingItem item, int position) {
-        // For now, show a Toast with the item name
         String message = "Clicked: " + item.getName();
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         Log.d(TAG, "Item clicked: " + item.getName() + " at position " + position);
     }
 
     /**
-     * Handle back button press
+     * Handle double‐tap on image (like/unlike).
+     * We update Firestore’s “likedUsers” array for the given item ID.
      */
+    @Override
+    public void onItemLike(ClothingItem item, int position, boolean isLiked) {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Toast.makeText(this, "Please log in to like items", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if (item == null || item.getId() == null) {
+            Log.e(TAG, "Invalid item for like operation");
+            return;
+        }
+
+        String itemId = item.getId();
+        java.util.Map<String, Object> updates = new java.util.HashMap<>();
+        if (isLiked) {
+            updates.put("likedUsers", com.google.firebase.firestore.FieldValue.arrayUnion(currentUserId));
+        } else {
+            updates.put("likedUsers", com.google.firebase.firestore.FieldValue.arrayRemove(currentUserId));
+        }
+
+        firestore.collection("Clothes")
+                .document(itemId)
+                .update(updates)
+                .addOnSuccessListener(aVoid -> {
+                    item.setLikedByCurrentUser(isLiked);
+                    itemAdapter.notifyItemChanged(position);
+                    String msg = isLiked ? "Added to favorites" : "Removed from favorites";
+                    Toast.makeText(ListActivity.this, msg, Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Failed to update like status", e);
+                    Toast.makeText(ListActivity.this, "Failed to update favorite status", Toast.LENGTH_SHORT).show();
+                    // Revert the change locally:
+                    item.setLikedByCurrentUser(!isLiked);
+                    itemAdapter.notifyItemChanged(position);
+                });
+    }
+
+    /** If the drawer is open, close it on back‐pressed; otherwise just behave normally. */
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
