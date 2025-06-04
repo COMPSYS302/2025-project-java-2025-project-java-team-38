@@ -1,5 +1,6 @@
 package com.example.closet;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -377,11 +378,19 @@ public class ListActivity extends AppCompatActivity
     /** Handle single-tap on any row item. */
     @Override
     public void onItemClick(ClothingItem item, int position) {
-        if (item != null) {
-            String message = "Clicked: " + item.getName();
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "Item clicked: " + item.getName() + " at position " + position);
+        // 1) Make sure item != null and has a valid ID
+        if (item == null || item.getId() == null) {
+            Log.e(TAG, "onItemClick: invalid item or missing ID");
+            return;
         }
+
+        // 2) Create an Intent into DetailsActivity, passing the Firestore document ID
+        Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtra("ITEM_ID", item.getId());
+        startActivity(intent);
+
+        Log.d(TAG, "Item clicked: " + item.getName() + " at position " + position +
+                "; launching DetailsActivity with ITEM_ID=" + item.getId());
     }
 
     /** Handle like/unlike action on an item. */
