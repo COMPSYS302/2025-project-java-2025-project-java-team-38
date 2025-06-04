@@ -273,16 +273,16 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
      */
     @Override
     public void onItemClick(ClothingItem item, int position) {
-        if (item != null) {
-            Toast.makeText(this, "Clicked: " + item.getName(), Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "Item clicked: " + item.getName());
-
-            // TODO: Navigate to item detail activity
-            // Intent intent = new Intent(this, ItemDetailActivity.class);
-            // intent.putExtra("ITEM_ID", item.getId());
-            // startActivity(intent);
+        if (item == null || item.getId() == null) {
+            Log.e(TAG, "MainActivity onItemClick: invalid item or missing ID");
+            return;
         }
+        Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtra("ITEM_ID", item.getId());
+        startActivity(intent);
+        Log.d(TAG, "MainActivity clicked: " + item.getName() + " → DetailsActivity");
     }
+
 
     /**
      * Handle item like from adapter
