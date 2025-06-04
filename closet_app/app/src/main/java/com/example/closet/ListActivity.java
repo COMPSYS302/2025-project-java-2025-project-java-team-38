@@ -65,16 +65,8 @@ public class ListActivity extends AppCompatActivity
         Log.d(TAG, "onCreate started");
 
         initializeViews();
-        setupHeader();
         firestore = FirebaseFirestore.getInstance();
 
-        // ✅ Must be initialized before performSearchOnly()
-        clothingItems = new ArrayList<>();
-        filteredItems = new ArrayList<>();
-
-        setupRecyclerView();
-        setupSearch();
-        setupNavigation();
 
         // ✅ Now it's safe to check and use SEARCH_QUERY
         String searchQuery = getIntent().getStringExtra("SEARCH_QUERY");
@@ -90,6 +82,16 @@ public class ListActivity extends AppCompatActivity
         if (selectedCategory == null || selectedCategory.isEmpty()) {
             selectedCategory = "Shirts";
         }
+
+        setupHeader();
+
+        // ✅ Must be initialized before performSearchOnly()
+        clothingItems = new ArrayList<>();
+        filteredItems = new ArrayList<>();
+
+        setupRecyclerView();
+        setupSearch();
+        setupNavigation();
 
         loadClothingItems();
     }
