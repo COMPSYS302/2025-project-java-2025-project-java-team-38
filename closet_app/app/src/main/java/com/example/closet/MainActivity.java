@@ -7,6 +7,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.util.Log;
+import android.widget.EditText;
+import android.text.TextWatcher;
+import android.text.Editable;
+
+
+
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
@@ -69,6 +75,18 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
 
         // Set up recent items RecyclerView
         setupRecentItemsRecyclerView();
+        EditText searchBar = findViewById(R.id.search_bar);
+        searchBar.setOnEditorActionListener((v, actionId, event) -> {
+            String query = searchBar.getText().toString().trim();
+            if (!query.isEmpty()) {
+                Intent intent = new Intent(MainActivity.this, ListActivity.class);
+                intent.putExtra("SEARCH_QUERY", query);
+                startActivity(intent);
+            }
+            return true;
+        });
+
+
 
         // Load recent items
         loadRecentItems();
@@ -358,4 +376,6 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
             recentItemsAdapter.cleanup();
         }
     }
+    
+
 }
