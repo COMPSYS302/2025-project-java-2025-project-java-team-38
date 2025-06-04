@@ -102,10 +102,10 @@ public class DetailsActivity extends AppCompatActivity {
                 .addOnSuccessListener(document -> {
                     if (!document.exists()) return;
 
-                    itemName.setText(document.getString("name"));
-                    fabricText.setText(document.getString("fabric"));
-                    fitText.setText(document.getString("fit"));
-                    careText.setText(document.getString("care"));
+                    itemName.setText(document.getString("Name"));
+                    fabricText.setText(document.getString("Fabric"));
+                    fitText.setText(document.getString("Fit"));
+                    careText.setText(document.getString("Care"));
 
                     try {
                         List<String> images = (List<String>) document.get("images");

@@ -207,7 +207,6 @@
                     android:id="@+id/btn_care"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:text="Care"
                     android:textColor="#000000" />
                 <TextView
