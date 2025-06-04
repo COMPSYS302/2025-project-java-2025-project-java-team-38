@@ -41,5 +41,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:33.14.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'androidx.annotation:annotation:1.9.1'
 
 }

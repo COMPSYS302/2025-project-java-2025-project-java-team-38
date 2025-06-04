@@ -34,8 +34,6 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Picasso.get()
                 .load(imageUrls.get(position))
-                .placeholder(R.drawable.placeholder)
-                .error(R.drawable.error)
                 .into(holder.imageView);
     }
 

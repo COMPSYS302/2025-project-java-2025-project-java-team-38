@@ -65,7 +65,7 @@ public class DetailsActivity extends AppCompatActivity {
         }
 
         // Initialize UI components
-        itemName = findViewById(R.id.item_name);
+        itemName = findViewById(R.id.product_name);
         fabricText = findViewById(R.id.fabric_text);
         fitText = findViewById(R.id.fit_text);
         careText = findViewById(R.id.care_text);
@@ -158,8 +158,8 @@ public class DetailsActivity extends AppCompatActivity {
         careText.setText(currentItem.getCare());
 
         // Setup image slider
-        if (currentItem.getImageUrls() != null && !currentItem.getImageUrls().isEmpty()) {
-            setupImageSlider(currentItem.getImageUrls());
+        if (currentItem.getImages() != null && !currentItem.getImages().isEmpty()) {
+            setupImageSlider(currentItem.getImages());
         }
     }
 
