@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,7 +48,8 @@ public class RowListItemAdapter extends RecyclerView.Adapter<RowListItemAdapter.
 
     public RowListItemAdapter(Context context, List<ClothingItem> items) {
         this.context = context;
-        this.items = items;
+        // Make a defensive copy so updateItems() won’t clear the original list
+        this.items = new ArrayList<>(items);
     }
 
     /** Register a row‐click listener. */

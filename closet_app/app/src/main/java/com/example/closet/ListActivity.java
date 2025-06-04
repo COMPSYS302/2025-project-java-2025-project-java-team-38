@@ -30,8 +30,7 @@ import java.util.List;
 
 /**
  * Activity for displaying a list of clothing items filtered by category.
- * Now also checks whether the current user has "liked" each item,
- * so the adapter can show a heart overlay when appropriate.
+ * Also checks whether the current user has "liked" each item.
  */
 public class ListActivity extends AppCompatActivity
         implements RowListItemAdapter.OnItemClickListener,
@@ -54,7 +53,7 @@ public class ListActivity extends AppCompatActivity
     private FirebaseFirestore firestore;
     private RowListItemAdapter itemAdapter;
     private List<ClothingItem> clothingItems;
-    private List<ClothingItem> filteredItems; // For search functionality
+    private List<ClothingItem> filteredItems;
     private String selectedCategory;
 
     @Override
@@ -62,35 +61,38 @@ public class ListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
-        // 1) Initialize all view references
+        Log.d(TAG, "onCreate started");
+
+        // Initialize all view references
         initializeViews();
 
-        // 2) Read category from intent (default to "Shirts" if missing)
+        // Read category from intent (default to "Shirts" if missing)
         selectedCategory = getIntent().getStringExtra(EXTRA_CATEGORY);
-        if (selectedCategory == null) {
+        if (selectedCategory == null || selectedCategory.isEmpty()) {
             selectedCategory = "Shirts";
         }
+        Log.d(TAG, "Selected category: " + selectedCategory);
 
-        // 3) Setup header (logo/title click actions)
+        // Setup header (logo/title click actions)
         setupHeader();
 
-        // 4) Initialize Firestore
+        // Initialize Firestore
         firestore = FirebaseFirestore.getInstance();
 
-        // 5) Initialize data lists
+        // Initialize data lists
         clothingItems = new ArrayList<>();
         filteredItems = new ArrayList<>();
 
-        // 6) Set up RecyclerView + adapter
+        // Set up RecyclerView + adapter
         setupRecyclerView();
 
-        // 7) Set up search‐bar listener
+        // Set up search-bar listener
         setupSearch();
 
-        // 8) Set up navigation drawer toggle
+        // Set up navigation drawer toggle
         setupNavigation();
 
-        // 9) Finally, load data from Firestore
+        // Load data from Firestore
         loadClothingItems();
     }
 
@@ -104,16 +106,23 @@ public class ListActivity extends AppCompatActivity
         logoIcon          = findViewById(R.id.logo_icon);
         logoTitle         = findViewById(R.id.logo_title);
         searchBar         = findViewById(R.id.search_bar);
+
+        // Verify all views were found
+        if (recyclerViewItems == null) Log.e(TAG, "RecyclerView not found!");
+        if (progressBar == null) Log.e(TAG, "ProgressBar not found!");
+        if (textEmptyState == null) Log.e(TAG, "EmptyState TextView not found!");
     }
 
     /** Set up the header section (logo + title). */
     private void setupHeader() {
-        // Show “Closet – <Category>”
+        // Show "Closet – <Category>"
         logoTitle.setText("Closet - " + selectedCategory);
 
-        // Optional: clicking the logo or title shows a toast (you can replace with real navigation if needed)
-        logoIcon.setOnClickListener(v -> Toast.makeText(this, "Logo clicked", Toast.LENGTH_SHORT).show());
-        logoTitle.setOnClickListener(v -> Toast.makeText(this, "Title clicked", Toast.LENGTH_SHORT).show());
+        // Optional: clicking the logo or title shows a toast
+        logoIcon.setOnClickListener(v ->
+                Toast.makeText(this, "Logo clicked", Toast.LENGTH_SHORT).show());
+        logoTitle.setOnClickListener(v ->
+                Toast.makeText(this, "Title clicked", Toast.LENGTH_SHORT).show());
     }
 
     /** Set up navigation drawer toggle (hamburger icon). */
@@ -127,11 +136,11 @@ public class ListActivity extends AppCompatActivity
         });
     }
 
-    /** Set up real‐time search filtering on EditText. */
+    /** Set up real-time search filtering on EditText. */
     private void setupSearch() {
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { /* no-op */ }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -139,54 +148,71 @@ public class ListActivity extends AppCompatActivity
             }
 
             @Override
-            public void afterTextChanged(Editable s) { /* no-op */ }
+            public void afterTextChanged(Editable s) { }
         });
     }
 
     /**
      * Filter items in memory based on the query string,
-     * then call updateUI() to refresh the list or show the empty state.
+     * then update the UI to refresh the list or show empty state.
      */
     private void filterItems(String query) {
+        Log.d(TAG, "Filtering items with query: '" + query + "'");
+
         filteredItems.clear();
 
-        if (query.isEmpty()) {
+        if (query == null || query.trim().isEmpty()) {
             // If no query, show all loaded items
             filteredItems.addAll(clothingItems);
         } else {
             String lowerCaseQuery = query.toLowerCase().trim();
             for (ClothingItem item : clothingItems) {
-                if (item.getName().toLowerCase().contains(lowerCaseQuery) ||
-                        (item.getFabric() != null && item.getFabric().toLowerCase().contains(lowerCaseQuery)) ||
-                        (item.getFit() != null && item.getFit().toLowerCase().contains(lowerCaseQuery))) {
+                if (item != null && (
+                        (item.getName() != null && item.getName().toLowerCase().contains(lowerCaseQuery)) ||
+                                (item.getFabric() != null && item.getFabric().toLowerCase().contains(lowerCaseQuery)) ||
+                                (item.getFit() != null && item.getFit().toLowerCase().contains(lowerCaseQuery))
+                )) {
                     filteredItems.add(item);
                 }
             }
         }
 
-        // Tell adapter to update its data
-        itemAdapter.updateItems(filteredItems);
+        Log.d(TAG, "Filter result: " + filteredItems.size() + " items");
 
-        // Show either list or empty‐state text
+        // Update the UI
         updateUI();
     }
 
     /** Set up RecyclerView + attach our RowListItemAdapter. */
     private void setupRecyclerView() {
+        Log.d(TAG, "Setting up RecyclerView");
+
+        // Initialize adapter with empty list
         itemAdapter = new RowListItemAdapter(this, filteredItems);
         itemAdapter.setOnItemClickListener(this);
         itemAdapter.setOnItemLikeListener(this);
 
-        recyclerViewItems.setLayoutManager(new LinearLayoutManager(this));
+        // Set up RecyclerView
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerViewItems.setLayoutManager(layoutManager);
         recyclerViewItems.setAdapter(itemAdapter);
         recyclerViewItems.setHasFixedSize(true);
+
+        Log.d(TAG, "RecyclerView setup complete");
+
+        // Debug RecyclerView dimensions after layout
+        recyclerViewItems.post(() -> {
+            Log.d(TAG, "RecyclerView dimensions: " +
+                    recyclerViewItems.getWidth() + "x" + recyclerViewItems.getHeight());
+        });
     }
 
-
+    /** Load clothing items from Firestore for the selected category. */
     private void loadClothingItems() {
-        // 1) Show the progress bar while we fetch
+        Log.d(TAG, "Starting to load items for category: " + selectedCategory);
+
+        // Show loading spinner
         showLoading(true);
-        Log.d(TAG, "Loading items for category: " + selectedCategory);
 
         firestore.collection("Clothes")
                 .whereEqualTo("Category", selectedCategory)
@@ -195,19 +221,25 @@ public class ListActivity extends AppCompatActivity
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        // Hide loading spinner
+                        Log.d(TAG, "Firestore query completed");
+
+                        // Always hide loading spinner first
                         showLoading(false);
 
                         if (task.isSuccessful() && task.getResult() != null) {
                             clothingItems.clear();
 
-                            // Determine current user’s UID (if logged in)
+                            QuerySnapshot querySnapshot = task.getResult();
+                            Log.d(TAG, "Query returned " + querySnapshot.size() + " documents");
+
+                            // Get current user ID for like status
                             String currentUid = null;
                             if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                                 currentUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                             }
 
-                            for (DocumentSnapshot document : task.getResult()) {
+                            // Process each document
+                            for (DocumentSnapshot document : querySnapshot) {
                                 try {
                                     ClothingItem item = document.toObject(ClothingItem.class);
                                     if (item != null) {
@@ -215,40 +247,42 @@ public class ListActivity extends AppCompatActivity
 
                                         // Check if user has liked this item
                                         if (currentUid != null) {
-                                            List<String> likedUsers = document.get("likedUsers", List.class);
-                                            boolean likedByMe = false;
-                                            if (likedUsers != null && likedUsers.contains(currentUid)) {
-                                                likedByMe = true;
-                                            }
+                                            @SuppressWarnings("unchecked")
+                                            List<String> likedUsers = (List<String>) document.get("likedUsers");
+                                            boolean likedByMe = (likedUsers != null && likedUsers.contains(currentUid));
                                             item.setLikedByCurrentUser(likedByMe);
                                         } else {
-                                            // Not logged in → treat as not liked
                                             item.setLikedByCurrentUser(false);
                                         }
 
                                         clothingItems.add(item);
                                         Log.d(TAG, "Added item: " + item.getName());
+                                    } else {
+                                        Log.w(TAG, "Failed to deserialize document: " + document.getId());
                                     }
                                 } catch (Exception e) {
                                     Log.e(TAG, "Error deserializing document: " + document.getId(), e);
+                                    Log.e(TAG, "Raw document data: " + document.getData());
                                 }
                             }
 
-                            // Copy all to filteredItems for initial display
+                            // Copy all items to filtered list for initial display
                             filteredItems.clear();
                             filteredItems.addAll(clothingItems);
 
-                            // Refresh UI (list vs. empty state)
+                            Log.d(TAG, "Final clothingItems size: " + clothingItems.size());
+                            Log.d(TAG, "Final filteredItems size: " + filteredItems.size());
+
+                            // Update UI to show the loaded items
                             updateUI();
 
-                            Log.d(TAG, "Loaded " + clothingItems.size() + " items");
                         } else {
                             // Query failed
                             String errorMessage = "Failed to load items";
                             if (task.getException() != null) {
                                 errorMessage += ": " + task.getException().getMessage();
+                                Log.e(TAG, "Firestore query failed", task.getException());
                             }
-                            Log.e(TAG, errorMessage);
                             Toast.makeText(ListActivity.this, errorMessage, Toast.LENGTH_LONG).show();
                             showEmptyState(true);
                         }
@@ -256,57 +290,95 @@ public class ListActivity extends AppCompatActivity
                 });
     }
 
-    /** Show or hide the RecyclerView / empty‐state text depending on filteredItems. */
+    /** Update UI based on current filteredItems list. */
     private void updateUI() {
+        Log.d(TAG, "updateUI called - filteredItems size: " + filteredItems.size());
+        Log.d(TAG, "RecyclerView visibility: " + recyclerViewItems.getVisibility());
+        Log.d(TAG, "EmptyState visibility: " + textEmptyState.getVisibility());
+
         if (filteredItems.isEmpty()) {
+            Log.d(TAG, "Showing empty state");
             showEmptyState(true);
         } else {
+            Log.d(TAG, "Showing items list");
             showEmptyState(false);
-            // Make sure adapter has the latest filteredItems
-            itemAdapter.updateItems(filteredItems);
+
+            // Update adapter with new data
+            if (itemAdapter != null) {
+                itemAdapter.updateItems(filteredItems);
+                Log.d(TAG, "Adapter updated with " + filteredItems.size() + " items");
+                Log.d(TAG, "Adapter getItemCount: " + itemAdapter.getItemCount());
+            } else {
+                Log.e(TAG, "itemAdapter is null!");
+            }
         }
     }
 
     /**
-     * Show or hide the loading spinner. When loading = true, we show progressBar and hide RecyclerView.
-     * When loading = false, we hide progressBar and show RecyclerView.
+     * Show or hide the loading spinner.
+     * When loading = true: show progressBar, hide RecyclerView
+     * When loading = false: hide progressBar, show RecyclerView
      */
     private void showLoading(boolean show) {
-        progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
-        recyclerViewItems.setVisibility(show ? View.GONE : View.VISIBLE);
+        Log.d(TAG, "showLoading: " + show);
+
+        if (progressBar != null && recyclerViewItems != null) {
+            progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+            recyclerViewItems.setVisibility(show ? View.GONE : View.VISIBLE);
+            // Also hide empty state when loading
+            if (show && textEmptyState != null) {
+                textEmptyState.setVisibility(View.GONE);
+            }
+        }
     }
 
     /**
-     * Show or hide the “empty state” TextView. When show = true, we show textEmptyState and hide RecyclerView.
-     * When show = false, we hide textEmptyState and show RecyclerView.
+     * Show or hide the "empty state" message.
+     * When show = true: show textEmptyState, hide RecyclerView
+     * When show = false: hide textEmptyState, show RecyclerView
      */
     private void showEmptyState(boolean show) {
-        textEmptyState.setVisibility(show ? View.VISIBLE : View.GONE);
-        recyclerViewItems.setVisibility(show ? View.GONE : View.VISIBLE);
+        Log.d(TAG, "showEmptyState: " + show);
+
+        if (textEmptyState != null && recyclerViewItems != null) {
+            textEmptyState.setVisibility(show ? View.VISIBLE : View.GONE);
+            recyclerViewItems.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
     }
 
-    /** Handle single‐tap on any row. For now, just show a Toast. */
+    /** Handle single-tap on any row item. */
     @Override
     public void onItemClick(ClothingItem item, int position) {
-        String message = "Clicked: " + item.getName();
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "Item clicked: " + item.getName() + " at position " + position);
+        if (item != null) {
+            String message = "Clicked: " + item.getName();
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "Item clicked: " + item.getName() + " at position " + position);
+        }
     }
 
+    /** Handle like/unlike action on an item. */
     @Override
     public void onItemLike(ClothingItem item, int position, boolean isLiked) {
+        Log.d(TAG, "onItemLike called - item: " + (item != null ? item.getName() : "null") +
+                ", position: " + position + ", isLiked: " + isLiked);
+
+        // Check if user is logged in
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             Toast.makeText(this, "Please log in to like items", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        if (item == null || item.getId() == null) {
+        // Validate item
+        if (item == null || item.getId() == null || item.getId().isEmpty()) {
             Log.e(TAG, "Invalid item for like operation");
+            Toast.makeText(this, "Unable to update item", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String itemId = item.getId();
+
+        // Prepare Firestore update
         java.util.Map<String, Object> updates = new java.util.HashMap<>();
         if (isLiked) {
             updates.put("likedUsers", com.google.firebase.firestore.FieldValue.arrayUnion(currentUserId));
@@ -314,22 +386,57 @@ public class ListActivity extends AppCompatActivity
             updates.put("likedUsers", com.google.firebase.firestore.FieldValue.arrayRemove(currentUserId));
         }
 
+        // Update Firestore
         firestore.collection("Clothes")
                 .document(itemId)
                 .update(updates)
                 .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Like status updated successfully");
+
+                    // Update local item state
                     item.setLikedByCurrentUser(isLiked);
-                    itemAdapter.notifyItemChanged(position);
+
+                    // Notify adapter of change
+                    if (itemAdapter != null) {
+                        itemAdapter.notifyItemChanged(position);
+                    }
+
+                    // Show user feedback
                     String msg = isLiked ? "Added to favorites" : "Removed from favorites";
                     Toast.makeText(ListActivity.this, msg, Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Failed to update like status", e);
                     Toast.makeText(ListActivity.this, "Failed to update favorite status", Toast.LENGTH_SHORT).show();
-                    // Revert the change locally:
+
+                    // Revert the change locally since Firestore update failed
                     item.setLikedByCurrentUser(!isLiked);
-                    itemAdapter.notifyItemChanged(position);
+                    if (itemAdapter != null) {
+                        itemAdapter.notifyItemChanged(position);
+                    }
                 });
     }
 
+    /**
+     * Debug method to log RecyclerView state - call this when troubleshooting
+     */
+    private void debugRecyclerViewState() {
+        Log.d(TAG, "=== RecyclerView Debug Info ===");
+        Log.d(TAG, "clothingItems size: " + (clothingItems != null ? clothingItems.size() : "NULL"));
+        Log.d(TAG, "filteredItems size: " + (filteredItems != null ? filteredItems.size() : "NULL"));
+        Log.d(TAG, "RecyclerView adapter: " + (recyclerViewItems.getAdapter() != null ? "SET" : "NULL"));
+        Log.d(TAG, "RecyclerView layoutManager: " + (recyclerViewItems.getLayoutManager() != null ? "SET" : "NULL"));
+        Log.d(TAG, "RecyclerView visibility: " + recyclerViewItems.getVisibility());
+        Log.d(TAG, "ProgressBar visibility: " + progressBar.getVisibility());
+        Log.d(TAG, "EmptyState visibility: " + textEmptyState.getVisibility());
+
+        if (itemAdapter != null) {
+            Log.d(TAG, "Adapter item count: " + itemAdapter.getItemCount());
+        }
+
+        recyclerViewItems.post(() -> {
+            Log.d(TAG, "RecyclerView actual size: " +
+                    recyclerViewItems.getWidth() + "x" + recyclerViewItems.getHeight());
+        });
+    }
 }

@@ -1,8 +1,11 @@
 package com.example.closet;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.PropertyName;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Model class representing a clothing item.
@@ -10,40 +13,40 @@ import java.util.List;
  */
 public class ClothingItem {
 
-    // Firestore document ID (not stored as a field in Firestore, but set locally)
     private String id;
-
-    // Basic fields stored in Firestore
     private String name;
     private String category;
     private String fabric;
     private String fit;
     private String care;
+
+    // Firestore field: "images" (List of URL strings)
     private List<String> images;
+
+    // Firestore field: "likedUsers" (List of UIDs who have liked this item)
     private List<String> likedUsers;
 
-    // New fields that exist in Firestore but were missing
+    // Firestore fields for tracking inventory/metrics
     private List<String> sizes;
     private int views;
     private int likes;
-    private String dateAdded;
 
-    // This field is not stored in Firestore—set locally based on the current user
+    // Firestore field: "dateAdded" (will be a Timestamp in Firestore)
+    private com.google.firebase.Timestamp dateAdded;
+
+    // This field is not stored in Firestore—it’s set locally based on the current user.
     private boolean likedByCurrentUser = false;
 
     /** Default constructor required for Firestore deserialization */
     public ClothingItem() {
-        // Initialize collections so Firestore can write into them without null-pointer issues
+        // Initialize lists so we don’t get NullPointerExceptions
         this.images = new ArrayList<>();
         this.likedUsers = new ArrayList<>();
         this.sizes = new ArrayList<>();
-        this.views = 0;
-        this.likes = 0;
     }
 
     /**
-     * Convenience constructor (you can add or remove parameters as needed).
-     * Initializes counts (views, likes) to zero and sizes to an empty list.
+     * (Optional) Convenience constructor
      */
     public ClothingItem(String name,
                         String category,
@@ -57,14 +60,15 @@ public class ClothingItem {
         this.fabric = fabric;
         this.fit = fit;
         this.care = care;
-        this.images = (images != null) ? images : new ArrayList<>();
-        this.sizes = (sizes != null) ? sizes : new ArrayList<>();
+        this.images = (images != null ? images : new ArrayList<>());
+        this.sizes = (sizes != null ? sizes : new ArrayList<>());
         this.likedUsers = new ArrayList<>();
         this.views = 0;
         this.likes = 0;
+        this.dateAdded = null;
     }
 
-    /** ID getter/setter (not annotated—Firestore uses document ID, not a field) */
+    /** ID getter/setter (not annotated—FireStore uses document ID, not a field) */
     public String getId() {
         return id;
     }
@@ -136,7 +140,7 @@ public class ClothingItem {
 
     @PropertyName("Images")
     public void setImages(List<String> images) {
-        this.images = (images != null) ? images : new ArrayList<>();
+        this.images = images;
     }
 
     /** Firestore field: "likedUsers" (list of UIDs who have liked this item) */
@@ -147,14 +151,10 @@ public class ClothingItem {
 
     @PropertyName("likedUsers")
     public void setLikedUsers(List<String> likedUsers) {
-        this.likedUsers = (likedUsers != null) ? likedUsers : new ArrayList<>();
+        this.likedUsers = likedUsers;
     }
 
-    // ────────────────────────────────────────────────────────────────────────────
-    // Newly added fields to match Firestore documents:
-    // ────────────────────────────────────────────────────────────────────────────
-
-    /** Firestore field: "Sizes" (list of available sizes, e.g. ["S","M","L"]) */
+    /** Firestore field: "Sizes" (list of strings) */
     @PropertyName("Sizes")
     public List<String> getSizes() {
         return sizes;
@@ -162,10 +162,10 @@ public class ClothingItem {
 
     @PropertyName("Sizes")
     public void setSizes(List<String> sizes) {
-        this.sizes = (sizes != null) ? sizes : new ArrayList<>();
+        this.sizes = sizes;
     }
 
-    /** Firestore field: "Views" (number of times this item has been viewed) */
+    /** Firestore field: "Views" (an integer) */
     @PropertyName("Views")
     public int getViews() {
         return views;
@@ -176,7 +176,7 @@ public class ClothingItem {
         this.views = views;
     }
 
-    /** Firestore field: "Likes" (number of likes this item has received) */
+    /** Firestore field: "Likes" (an integer) */
     @PropertyName("Likes")
     public int getLikes() {
         return likes;
@@ -187,21 +187,17 @@ public class ClothingItem {
         this.likes = likes;
     }
 
-    /** Firestore field: "dateAdded" (timestamp or string of when this was added) */
     @PropertyName("dateAdded")
-    public String getDateAdded() {
+    public com.google.firebase.Timestamp getDateAdded() {
         return dateAdded;
     }
 
     @PropertyName("dateAdded")
-    public void setDateAdded(String dateAdded) {
+    public void setDateAdded(com.google.firebase.Timestamp dateAdded) {
         this.dateAdded = dateAdded;
     }
 
-    // ────────────────────────────────────────────────────────────────────────────
-    // Field not stored in Firestore—tracks whether the current user has liked this item
-    // ────────────────────────────────────────────────────────────────────────────
-
+    /** Not stored in Firestore—tracks whether the current user has liked this item */
     public boolean isLikedByCurrentUser() {
         return likedByCurrentUser;
     }
@@ -224,22 +220,22 @@ public class ClothingItem {
                 ", sizes=" + sizes +
                 ", views=" + views +
                 ", likes=" + likes +
-                ", dateAdded='" + dateAdded + '\'' +
+                ", dateAdded=" + dateAdded +
                 ", likedByCurrentUser=" + likedByCurrentUser +
                 '}';
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        ClothingItem that = (ClothingItem) obj;
-        return id != null ? id.equals(that.id) : that.id == null;
+        ClothingItem that = (ClothingItem) o;
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return (id != null) ? id.hashCode() : 0;
     }
 }
