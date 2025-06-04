@@ -1,16 +1,16 @@
 package com.example.closet;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
@@ -32,9 +32,33 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Picasso.get()
-                .load(imageUrls.get(position))
-                .into(holder.imageView);
+        String url = imageUrls.get(position);
+
+        if (url != null && url.startsWith("http")) {
+            try {
+                Picasso.get()
+                        .load(url)
+                        .placeholder(R.drawable.clothes) // show something while loading
+                        .error(R.drawable.hanger)        // fallback image if broken
+                        .into(holder.imageView, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                Log.d("ImageAdapter", "Loaded: " + url);
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                Log.e("ImageAdapter", "Failed to load: " + url, e);
+                            }
+                        });
+            } catch (Exception e) {
+                Log.e("ImageAdapter", "Exception during image load at position " + position + ": " + url, e);
+                holder.imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.dot_unseen));
+            }
+        } else {
+            Log.w("ImageAdapter", "Invalid URL at position " + position + ": " + url);
+            holder.imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.dot_unseen));
+        }
     }
 
     @Override
