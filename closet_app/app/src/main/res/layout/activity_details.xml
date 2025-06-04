@@ -132,8 +132,6 @@
                     android:background="@android:color/transparent"
                     android:padding="8dp"
                     app:tint="#000000"/>
-
-
             </FrameLayout>
 
             <LinearLayout
