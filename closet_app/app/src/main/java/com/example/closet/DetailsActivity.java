@@ -83,7 +83,10 @@ public class DetailsActivity extends AppCompatActivity {
 
         // Load Firestore data
         String itemId = getIntent().getStringExtra("ITEM_ID");
-        if (itemId != null) loadFirestore(itemId);
+        if (itemId != null) {
+            loadFirestore(itemId);
+            incrementViewCount(itemId); // ← Add this
+        }
         else Log.e(TAG, "No ITEM_ID passed to DetailsActivity");
     }
 
@@ -127,6 +130,16 @@ public class DetailsActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e -> Log.e(TAG, "Failed to load Firestore doc", e));
     }
+    private void incrementViewCount(String itemId) {
+        db.collection("Clothes")
+                .document(itemId)
+                .update("Views", com.google.firebase.firestore.FieldValue.increment(1))
+                .addOnSuccessListener(aVoid ->
+                        Log.d(TAG, "View count incremented for item: " + itemId))
+                .addOnFailureListener(e ->
+                        Log.e(TAG, "Failed to increment view count", e));
+    }
+
 
     private void setupImageSlider(List<String> urls) {
         ImageAdapter adapter = new ImageAdapter(this, urls);
