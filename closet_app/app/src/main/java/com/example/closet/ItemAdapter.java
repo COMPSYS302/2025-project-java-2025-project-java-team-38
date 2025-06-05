@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,6 +37,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     private OnItemClickListener clickListener;
     private OnItemLikeListener likeListener;
 
+    private int layoutId;
+
+
     // Interfaces for callbacks
     public interface OnItemClickListener {
         void onItemClick(ClothingItem item, int position);
@@ -45,10 +49,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         void onItemLike(ClothingItem item, int position, boolean isLiked);
     }
 
-    public ItemAdapter(Context context, List<ClothingItem> items) {
+    public ItemAdapter(Context context, List<ClothingItem> items, int layoutId) {
         this.context = context;
         this.items = items;
+        this.layoutId = layoutId;
     }
+
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.clickListener = listener;
@@ -61,19 +67,23 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.row_list_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(layoutId, parent, false);
         return new ItemViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         ClothingItem item = items.get(position);
+        Log.d("ItemAdapter", "Binding item at position " + position + ": " + item.getName());
         holder.bind(item, position);
+
     }
 
     @Override
     public int getItemCount() {
-        return items != null ? items.size() : 0;
+        int count = (items != null) ? items.size() : 0;
+        Log.d("ItemAdapter", "getItemCount() = " + count);
+        return count;
     }
 
     /**
@@ -81,8 +91,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
      */
     public void updateItems(List<ClothingItem> newItems) {
         if (newItems != null) {
-            this.items.clear();
-            this.items.addAll(newItems);
+            Log.d(TAG, "Updating adapter with " + newItems.size() + " items");
+            this.items = new ArrayList<>(newItems); // ✅ Replace the list instead of clearing
             notifyDataSetChanged();
         }
     }
@@ -168,6 +178,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
          * Bind data to views
          */
         public void bind(ClothingItem item, int position) {
+            Log.d(TAG, "Binding item: " + item.getName());
             if (item == null) {
                 Log.w(TAG, "Attempting to bind null item at position " + position);
                 return;
