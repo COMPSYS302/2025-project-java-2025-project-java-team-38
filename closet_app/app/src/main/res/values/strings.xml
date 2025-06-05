@@ -20,7 +20,8 @@
     <string name="dresses">Dresses</string>
     <string name="shoes">Shoes</string>
     <string name="accessories">Accessories</string>
-    <string name="recent_items">Recent Items</string>
+    <string name="top_picks">Top Picks</string>
+
 
     <!-- Navigation drawer strings -->
     <string name="nav_header_title">My Closet</string>
