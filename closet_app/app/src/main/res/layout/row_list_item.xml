@@ -2,8 +2,9 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="#FFDDDD"
     android:layout_margin="8dp"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp"
@@ -13,11 +14,11 @@
 
     <!-- Use a horizontal layout: image on left, text on right -->
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="377dp"
         android:layout_height="wrap_content"
+        android:minHeight="120dp"
         android:orientation="horizontal"
-        android:padding="12dp"
-        android:minHeight="120dp">
+        android:padding="12dp">
 
         <!-- FrameLayout wrapping the item image + heart overlay -->
         <FrameLayout
@@ -30,9 +31,9 @@
                 android:id="@+id/image_item"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:contentDescription="Item Image"
                 android:background="@android:color/darker_gray"
+                android:contentDescription="Item Image"
+                android:scaleType="centerCrop"
                 android:src="@drawable/ic_placeholder_image" />
 
             <!-- Heart icon in top-left, visible only if liked -->
@@ -54,20 +55,20 @@
             android:layout_height="match_parent"
             android:layout_marginStart="16dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
             <!-- Item Name -->
             <TextView
                 android:id="@+id/text_item_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
                 android:text="Item Name"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:maxLines="2"
-                android:ellipsize="end" />
+                android:textStyle="bold" />
 
             <!-- Item Subtitle: "Material · Fit" -->
             <TextView
@@ -75,11 +76,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:maxLines="2"
                 android:text="Material · Fit"
                 android:textColor="@android:color/darker_gray"
-                android:textSize="14sp"
-                android:maxLines="2"
-                android:ellipsize="end" />
+                android:textSize="14sp" />
 
             <!-- Liked status text -->
             <TextView

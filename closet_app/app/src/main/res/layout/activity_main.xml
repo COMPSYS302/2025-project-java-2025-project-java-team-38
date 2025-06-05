@@ -198,13 +198,19 @@
 
             <!-- Horizontal RecyclerView for Recent Items -->
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view_recent_items"
+                android:id="@+id/recycler_view_top_picks"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:background="#FFCCCC"
                 android:clipToPadding="false"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
                 tools:listitem="@layout/row_list_item" />
+
+
 
         </LinearLayout>
 
