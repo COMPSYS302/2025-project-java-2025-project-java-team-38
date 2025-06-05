@@ -37,8 +37,6 @@
 
     <!-- “Cart” -->
     <item
-        android:id="@+id/nav_cart"
-        android:title="Cart" />
         android:id="@+id/nav_virtual_avatar"
         android:title="Virtual Avatar" />
 
