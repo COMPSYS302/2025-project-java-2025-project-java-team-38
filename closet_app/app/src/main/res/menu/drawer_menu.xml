@@ -9,8 +9,6 @@
 
     <!-- “Hot Deals” (formerly “Top Picks”) -->
     <item
-        android:id="@+id/nav_hot_deals"
-        android:title="Hot Deals"
         android:id="@+id/nav_top_picks"
         android:title="Top Picks"
         android:textStyle="bold" />
