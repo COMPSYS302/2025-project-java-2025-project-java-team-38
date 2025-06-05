@@ -25,6 +25,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
             btnAccessories = findViewById(R.id.btn_accessories);
             btnDresses = findViewById(R.id.btn_dresses);
             btnShoes = findViewById(R.id.btn_shoes);
+
 
             // Recent items RecyclerView
             recyclerViewRecentItems = findViewById(R.id.recycler_view_recent_items);
@@ -255,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
         }
 
         firestore.collection("Clothes")
-                .orderBy("Name")
+                .orderBy("dateAdded", Query.Direction.DESCENDING)
                 .limit(10) // Limit to 10 recent items
                 .get()
                 .addOnCompleteListener(task -> {

@@ -65,7 +65,7 @@ public class ClothingItem {
         this.likedUsers = new ArrayList<>();
         this.views = 0;
         this.likes = 0;
-        this.dateAdded = null;
+
     }
 
     /** ID getter/setter (not annotated—FireStore uses document ID, not a field) */
@@ -187,12 +187,12 @@ public class ClothingItem {
         this.likes = likes;
     }
 
-    @PropertyName("dateAdded")
+    //
     public com.google.firebase.Timestamp getDateAdded() {
         return dateAdded;
     }
 
-    @PropertyName("dateAdded")
+    //
     public void setDateAdded(com.google.firebase.Timestamp dateAdded) {
         this.dateAdded = dateAdded;
     }

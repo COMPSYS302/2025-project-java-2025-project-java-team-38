@@ -100,6 +100,8 @@ public class ListActivity extends AppCompatActivity
         if (selectedCategory == null || selectedCategory.isEmpty()) {
             selectedCategory = "Shirts";
         }
+        findViewById(R.id.logo_icon).setOnClickListener(v -> goHome());
+        findViewById(R.id.logo_title).setOnClickListener(v -> goHome());
 
         if (logoTitle != null) logoTitle.setText("Closet - " + selectedCategory);
         setupHeader();
@@ -155,6 +157,13 @@ public class ListActivity extends AppCompatActivity
                 });
     }
 
+    private void goHome() {
+        Log.d("ListActivity", "goHome() called");
+        Intent intent = new Intent(ListActivity.this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
 
     /** Initialize all view components (findViewById). */
     private void initializeViews() {
@@ -182,13 +191,11 @@ public class ListActivity extends AppCompatActivity
                 logoTitle.setText("Closet - Search");
             }
 
-            logoTitle.setOnClickListener(v ->
-                    Toast.makeText(this, "Title clicked", Toast.LENGTH_SHORT).show());
+            logoTitle.setOnClickListener(v -> goHome());
         }
 
         if (logoIcon != null) {
-            logoIcon.setOnClickListener(v ->
-                    Toast.makeText(this, "Logo clicked", Toast.LENGTH_SHORT).show());
+            logoIcon.setOnClickListener(v -> goHome());
         }
     }
 
