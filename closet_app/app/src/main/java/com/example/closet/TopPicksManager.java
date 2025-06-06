@@ -20,8 +20,8 @@ public class TopPicksManager {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("Clothes")
-                .orderBy("Views", Query.Direction.DESCENDING)
-                .limit(3)
+                .orderBy("Likes", Query.Direction.DESCENDING) // ✅ Sort by Likes count
+                .limit(3) // or 10 for Most Viewed button later
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     Log.d("TopPicksManager", "Fetched item count: " + querySnapshot.size());
@@ -29,12 +29,14 @@ public class TopPicksManager {
                     List<ClothingItem> topPicks = new ArrayList<>();
 
                     for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
-                        Log.d("TopPicksManager", "Doc ID: " + doc.getId() + ", Views: " + doc.get("Views"));
+                        Long likesCount = doc.getLong("Likes"); // Optional: read likes count for debug
+                        Log.d("TopPicksManager", "Doc ID: " + doc.getId() + ", Likes: " + likesCount);
 
                         ClothingItem item = doc.toObject(ClothingItem.class);
                         if (item != null) {
                             item.setId(doc.getId());
 
+                            // Optional: keep likedUsers field in sync if it's still used
                             List<String> likedUsers = (List<String>) doc.get("likedUsers");
                             boolean liked = likedUsers != null && currentUserId != null && likedUsers.contains(currentUserId);
                             item.setLikedByCurrentUser(liked);
@@ -53,5 +55,6 @@ public class TopPicksManager {
                     callback.onError(e);
                 });
     }
+
 
 }
