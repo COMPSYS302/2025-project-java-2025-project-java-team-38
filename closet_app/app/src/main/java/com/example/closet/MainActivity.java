@@ -247,15 +247,7 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
             recyclerViewTopPicks.setNestedScrollingEnabled(false);
 
             // ✅ Add fake item here, after adapter is ready
-            topPicks.add(new ClothingItem(
-                    "test_id",
-                    "Fake Item",
-                    "Cotton",
-                    "Slim",
-                    "Shirts",
-                    Arrays.asList("https://via.placeholder.com/150"),
-                    new ArrayList<>()
-            ));
+
             topPicksAdapter.updateItems(topPicks);
             Log.d("MainActivity", "Manually added test item to topPicks");
 
