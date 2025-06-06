@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/heart"
         android:contentDescription="@null" />
 
     <!-- Foreground layout -->
@@ -175,9 +174,13 @@
                         android:id="@+id/btn_fabric"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="Fabric"
+                        android:textAlignment="center"
                         android:layout_marginBottom="8dp"
                         android:backgroundTint="@color/categoryButtonLightGrey"
-                        android:text="Fabric"
+                        android:drawableStart="@drawable/dummy_arrow_drop_down"
+                        android:drawableEnd="@drawable/arrow_drop_down"
+                        android:drawablePadding="8dp"
                         android:textColor="#000000" />
 
                     <TextView
@@ -195,6 +198,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:backgroundTint="@color/categoryButtonLightGrey"
+                        android:drawableStart="@drawable/dummy_arrow_drop_down"
+                        android:drawableEnd="@drawable/arrow_drop_down"
+                        android:drawablePadding="8dp"
                         android:text="Fit"
                         android:textColor="#000000" />
 
@@ -212,6 +218,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/categoryButtonLightGrey"
+                        android:drawableStart="@drawable/dummy_arrow_drop_down"
+                        android:drawableEnd="@drawable/arrow_drop_down"
+                        android:drawablePadding="8dp"
                         android:text="Care"
                         android:textColor="#000000" />
 
