@@ -195,6 +195,14 @@
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
                 android:layout_marginBottom="16dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Swipe to explore →"
+                android:textSize="12sp"
+                android:textColor="#888888"
+                android:layout_marginBottom="4dp"
+                android:layout_gravity="end" />
 
             <!-- Horizontal RecyclerView for Recent Items -->
             <androidx.recyclerview.widget.RecyclerView
@@ -202,7 +210,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
-                android:background="#FFCCCC"
+                android:background="@drawable/category_button_bg"
+                android:backgroundTint="@color/categoryButtonLightGrey"
                 android:clipToPadding="false"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
