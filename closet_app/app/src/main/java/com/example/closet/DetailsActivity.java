@@ -1,6 +1,7 @@
 package com.example.closet;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -36,6 +37,10 @@ public class DetailsActivity extends AppCompatActivity {
 
     private static final String TAG = "DetailsActivity";
 
+    private ImageView likeButton;
+    private SharedPreferences prefs;
+    private String itemId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +55,9 @@ public class DetailsActivity extends AppCompatActivity {
         careText = findViewById(R.id.care_text);
         viewPager = findViewById(R.id.view_pager);
         dotsContainer = findViewById(R.id.dots_container);
+
+        likeButton = findViewById(R.id.like_button);
+        prefs = getSharedPreferences("LikedPrefs", MODE_PRIVATE);
 
         // Spinner setup
         Spinner sizeSpinner = findViewById(R.id.size_spinner);
@@ -82,10 +90,11 @@ public class DetailsActivity extends AppCompatActivity {
         findViewById(R.id.logo_icon).setOnClickListener(v -> goHome());
 
         // Load Firestore data
-        String itemId = getIntent().getStringExtra("ITEM_ID");
+        itemId = getIntent().getStringExtra("ITEM_ID");
         if (itemId != null) {
+            setupLikeLogic();
             loadFirestore(itemId);
-            incrementViewCount(itemId); // ← Add this
+            incrementViewCount(itemId);
         }
         else Log.e(TAG, "No ITEM_ID passed to DetailsActivity");
     }
@@ -187,4 +196,29 @@ public class DetailsActivity extends AppCompatActivity {
             if (current < urls.size() - 1) viewPager.setCurrentItem(current + 1, true);
         });
     }
+
+    private void setupLikeLogic() {
+        boolean hasLiked = prefs.getBoolean(itemId, false);
+
+        // Set correct heart icon
+        likeButton.setImageResource(hasLiked ? R.drawable.ic_heart_filled : R.drawable.ic_favorite);
+
+        likeButton.setOnClickListener(v -> {
+            boolean nowLiked = !prefs.getBoolean(itemId, false);
+
+            // Update heart icon immediately
+            likeButton.setImageResource(nowLiked ? R.drawable.ic_heart_filled : R.drawable.ic_favorite);
+
+            // Update SharedPreferences
+            prefs.edit().putBoolean(itemId, nowLiked).apply();
+
+
+            // Update Firestore
+            db.collection("Clothes").document(itemId)
+                    .update("Likes", com.google.firebase.firestore.FieldValue.increment(nowLiked ? 1 : -1))
+                    .addOnSuccessListener(aVoid -> Log.d(TAG, "Likes updated"))
+                    .addOnFailureListener(e -> Log.e(TAG, "Failed to update likes", e));
+        });
+    }
+
 }
