@@ -4,8 +4,7 @@ plugins {
 }
 
 android {
-    namespace "com.example.closet"    // ← added namespace
-
+    namespace "com.example.closet"
     compileSdk 35
 
     defaultConfig {
@@ -19,10 +18,19 @@ android {
 
     buildTypes {
         release {
+            // minifyEnabled = false means R8/ProGuard is OFF for release.
+            // If you ever turn it to true, your proguard-rules.pro will take effect.
             minifyEnabled false
             proguardFiles(
-                getDefaultProguardFile('proguard-android-optimize.txt'),
-                'proguard-rules.pro'
+                    getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+            )
+        }
+        debug {
+            minifyEnabled false
+            proguardFiles(
+                    getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
             )
         }
     }
@@ -38,7 +46,7 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 dependencies {
-    // AndroidX Core Libraries
+    // ─── AndroidX Core & UI Libraries ────────────────────────────────────────────
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.core:core:1.10.1'
     implementation 'androidx.activity:activity:1.7.2'
@@ -47,53 +55,45 @@ dependencies {
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.2.0'
     implementation 'com.google.android.material:material:1.9.0'
 
-    // Firebase Authentication
+    // ─── Firebase Authentication (core) ─────────────────────────────────────────
     implementation 'com.google.firebase:firebase-auth:21.1.0'
 
-    // RecyclerView and CardView
+    // ─── Play Services Auth (for classic GoogleSignInClient flow) ────────────────
+    implementation 'com.google.android.gms:play-services-auth:20.4.1'
+
+    // ─── Firebase BOM (Bill of Materials) & Firestore/Analytics ─────────────────
+    implementation platform('com.google.firebase:firebase-bom:33.14.0')
+    implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.google.firebase:firebase-analytics'
+
+    // ─── RecyclerView & CardView ───────────────────────────────────────────────
     implementation 'androidx.recyclerview:recyclerview:1.3.0'
     implementation 'androidx.cardview:cardview:1.0.0'
 
-    // Firebase BOM (Bill of Materials)
-    implementation platform('com.google.firebase:firebase-bom:32.2.0')
-    implementation 'com.google.firebase:firebase-firestore'
-    implementation 'com.google.firebase:firebase-analytics'
-
-    // Additional dependencies from firebase branch
-    implementation libs.appcompat
-    implementation libs.material
-    implementation libs.activity
-    implementation libs.constraintlayout
-    testImplementation libs.junit
-    androidTestImplementation libs.ext.junit
-    androidTestImplementation libs.espresso.core
-    implementation platform('com.google.firebase:firebase-bom:33.14.0')
-    implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-firestore'
+    // ─── Image Loading (Picasso and/or Glide) ──────────────────────────────────
     implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation 'androidx.annotation:annotation:1.9.1'
-
-    // Picasso for image loading
-    implementation 'com.squareup.picasso:picasso:2.71828'
-
-    // Glide for image loading (from main branch)
     implementation 'com.github.bumptech.glide:glide:4.13.2'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
 
-    // Testing dependencies (from main branch)
+    // ─── Testing dependencies ───────────────────────────────────────────────────
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    // ─── Optional: AndroidX Credentials + Play-Services-Auth integration ─────────
+    // Replace "1.2.0" below with whatever the latest 1.x release is on Maven Central:
+    implementation "androidx.credentials:credentials:1.2.0"
+    implementation "androidx.credentials:credentials-play-services-auth:1.2.0"
+
+    // ─── Optional: GoogleID (One-Tap + Identity) ───────────────────────────────
+    // Replace "1.0.0" below with the latest version on Maven Central:
+    implementation "com.google.android.libraries.identity.googleid:googleid:1.0.0"
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Force all Kotlin stdlib artifacts to use version 1.8.20 so they don’t conflict.
-// Add this block at the very bottom. Do NOT remove any existing dependencies.
-// ─────────────────────────────────────────────────────────────────────────────
 
 configurations.all {
     resolutionStrategy {
-        // Force Kotlin stdlib 1.8.20 across all configurations
+        // Force Kotlin stdlib 1.8.20 if you’re using any Kotlin libs
         force "org.jetbrains.kotlin:kotlin-stdlib:1.8.20"
         force "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.20"
         force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.20"

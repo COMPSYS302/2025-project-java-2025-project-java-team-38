@@ -1,6 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.closet">
 
+    <!--
+        1) Declare the LoginActivity first, and make it the LAUNCHER.
+        2) Users will see LoginActivity on app start. After successful sign-in,
+           you call finish() on LoginActivity and launch MainActivity.
+    -->
     <application
         android:allowBackup="true"
         android:icon="@drawable/hanger"
@@ -8,36 +13,68 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
 
-        <!-- Launcher Activity can keep the default AppTheme if you prefer -->
+        <!-- ──────────────────────────────────────────────────────────────────── -->
+        <!-- 1) LoginActivity: NEW entry, set as LAUNCHER so it opens first.     -->
+        <!-- ──────────────────────────────────────────────────────────────────── -->
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginActivity"
             android:exported="true"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme">  <!-- or a NoActionBar variant if you prefer -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- All Activities that should have the Drawer must use “NoActionBar” -->
+
+        <!-- ──────────────────────────────────────────────────────────────────── -->
+        <!-- 2) MainActivity: remove the LAUNCHER intent-filter (it’s now secondary) -->
+        <!--    Everything else here is unchanged from your original.            -->
+        <!-- ──────────────────────────────────────────────────────────────────── -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/AppTheme">
+            <!-- Removed LAUNCHER filter—LoginActivity will handle launching first -->
+            <!-- Keep any other intent-filters or metadata here if needed -->
+        </activity>
+
+
+        <!-- ──────────────────────────────────────────────────────────────────── -->
+        <!-- 3) Other activities (ListActivity, DetailsActivity, MostViewedActivity) -->
+        <!--    remain exactly as you had them—only their parentActivityName/themes, etc. -->
+        <!-- ──────────────────────────────────────────────────────────────────── -->
         <activity
             android:name=".ListActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+            <!-- Nothing changed here -->
+        </activity>
 
         <activity
             android:name=".DetailsActivity"
             android:exported="false"
             android:parentActivityName=".ListActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+            <!-- Nothing changed here -->
+        </activity>
 
         <activity
             android:name=".MostViewedActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+            <!-- Nothing changed here -->
+        </activity>
 
-        <!-- Add any other Activities here, all using NoActionBar if they need the same drawer -->
+        <!-- If you have any other Activities, keep them as-is below: -->
+        <!--
+        <activity
+            android:name=".SomeOtherActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        -->
     </application>
 </manifest>

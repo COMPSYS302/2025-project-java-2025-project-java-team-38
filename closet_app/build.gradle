@@ -6,6 +6,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
+        // Make sure this matches the plugin version you apply in the app‐level file
         classpath "com.android.tools.build:gradle:8.10.1"
         classpath "com.google.gms:google-services:4.3.15"
         // NOTE: Application dependencies belong in module build.gradle files
@@ -13,13 +14,13 @@ buildscript {
 }
 
 plugins {
-    // If you have a version‐catalog entry for 'android.application', uncomment this line:
+    // If you have a version-catalog entry for 'android.application', uncomment this line:
     // alias(libs.plugins.android.application) apply false
 
-    // The Google Services plugin (no need to re‐declare in each module)
-    id "com.google.gms.google-services" version "4.4.2" apply false
+    // Keep the Google Services plugin available for submodules (we'll apply it in the app module)
+    id "com.google.gms.google-services" version "4.3.15" apply false
 
-    // These two lines allow submodules to use the Android Gradle Plugin without re‐specifying the version.
+    // These two lines allow submodules to use the Android Gradle Plugin without re-specifying the version.
     id "com.android.application" version "8.10.1" apply false
     id "com.android.library"  version "8.10.1" apply false
 }
