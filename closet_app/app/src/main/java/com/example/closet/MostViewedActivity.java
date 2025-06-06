@@ -8,9 +8,12 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,6 +35,7 @@ public class MostViewedActivity extends AppCompatActivity implements ItemAdapter
     private String currentUserId;
 
     @Override
+
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -41,8 +45,49 @@ public class MostViewedActivity extends AppCompatActivity implements ItemAdapter
 
         setContentView(R.layout.activity_most_viewed);
 
-        recyclerView = findViewById(R.id.recycler_view_items);  // Match the ID in your layout
+        // Back to MainActivity when logo is clicked
+        findViewById(R.id.logo_title).setOnClickListener(v -> {
+            Intent intent = new Intent(MostViewedActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+            finish();
+        });
 
+        // Hamburger + Drawer setup
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.navigation_view);
+
+        findViewById(R.id.hamburger_icon).setOnClickListener(v -> {
+            Log.d("MostViewedActivity", "Hamburger menu clicked");
+            drawerLayout.openDrawer(GravityCompat.START);
+        });
+
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.nav_home) {
+                startActivity(new Intent(this, MainActivity.class));
+                finish();
+            } else if (itemId == R.id.nav_most_viewed) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+            } else if (itemId == R.id.nav_top_picks) {
+                Toast.makeText(this, "Top Picks clicked", Toast.LENGTH_SHORT).show();
+            } else if (itemId == R.id.nav_new_in) {
+                Toast.makeText(this, "New In clicked", Toast.LENGTH_SHORT).show();
+            } else if (itemId == R.id.nav_categories) {
+                Toast.makeText(this, "Categories clicked", Toast.LENGTH_SHORT).show();
+            } else if (itemId == R.id.nav_favourites) {
+                Toast.makeText(this, "Favourites clicked", Toast.LENGTH_SHORT).show();
+            } else if (itemId == R.id.nav_virtual_avatar) {
+                Toast.makeText(this, "Virtual Avatar clicked", Toast.LENGTH_SHORT).show();
+            }
+
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        });
+
+        // RecyclerView setup
+        recyclerView = findViewById(R.id.recycler_view_items);
         firestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -50,7 +95,7 @@ public class MostViewedActivity extends AppCompatActivity implements ItemAdapter
             currentUserId = firebaseAuth.getCurrentUser().getUid();
         }
 
-        adapter = new ItemAdapter(this, mostViewedList, R.layout.row_list_item);// You can change this to item_most_viewed if needed
+        adapter = new ItemAdapter(this, mostViewedList, R.layout.row_list_item);
         adapter.setOnItemClickListener(this);
         adapter.setOnItemLikeListener(this);
 
@@ -59,6 +104,7 @@ public class MostViewedActivity extends AppCompatActivity implements ItemAdapter
 
         loadMostViewedItems();
     }
+
 
     private void loadMostViewedItems() {
         firestore.collection("Clothes")
