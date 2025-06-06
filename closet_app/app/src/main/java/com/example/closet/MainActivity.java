@@ -156,26 +156,18 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
             // Handle navigation menu item clicks
             navigationView.setNavigationItemSelectedListener(item -> {
                 Log.d(TAG, "Navigation item clicked: " + item.getTitle());
-
-                // Handle drawer menu clicks here
                 int itemId = item.getItemId();
 
-                // Add your navigation logic here based on your menu items
-                // Example:
-                // if (itemId == R.id.nav_profile) {
-                //     startActivity(new Intent(this, ProfileActivity.class));
-                // } else if (itemId == R.id.nav_favorites) {
-                //     startActivity(new Intent(this, FavoritesActivity.class));
-                // } else if (itemId == R.id.nav_settings) {
-                //     startActivity(new Intent(this, SettingsActivity.class));
-                // }
-
-                // For now, just show a toast
-                Toast.makeText(this, "Clicked: " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                if (itemId == R.id.nav_most_viewed) {
+                    startActivity(new Intent(this, MostViewedActivity.class));
+                } else {
+                    Toast.makeText(this, "Clicked: " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                }
 
                 drawerLayout.closeDrawers();
                 return true;
             });
+
         } else {
             Log.e(TAG, "DrawerLayout or NavigationView is null");
         }
