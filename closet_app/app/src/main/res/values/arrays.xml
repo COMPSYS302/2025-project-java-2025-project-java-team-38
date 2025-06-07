@@ -1,0 +1,5 @@
+<resources>
+    <string-array name="broker_allowed_callers">
+        <item>com.google.android.gms</item>
+    </string-array>
+</resources>

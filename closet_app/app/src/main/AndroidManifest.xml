@@ -8,9 +8,14 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
 
-        <!-- Launcher Activity can keep the default AppTheme if you prefer -->
+        <!-- Allow the Credentials broker -->
+        <meta-data
+            android:name="com.google.android.gms.auth.api.credentials.CredentialManager.BROKER_ALLOWED_CALLERS"
+            android:resource="@array/broker_allowed_callers" />
+
+        <!-- 1) LoginActivity: NEW entry, set as LAUNCHER so it opens first. -->
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginActivity"
             android:exported="true"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -19,35 +24,28 @@
             </intent-filter>
         </activity>
 
-        <!-- All Activities that should have the Drawer must use “NoActionBar” -->
+        <!-- 2) MainActivity: secondary entry -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/AppTheme">
+        </activity>
+
+        <!-- 3) Other activities unchanged -->
         <activity
             android:name=".ListActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".DetailsActivity"
             android:exported="false"
             android:parentActivityName=".ListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".MostViewedActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".TopPicksActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".FavouritesActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <!-- Add any other Activities here, all using NoActionBar if they need the same drawer -->
     </application>
 </manifest>

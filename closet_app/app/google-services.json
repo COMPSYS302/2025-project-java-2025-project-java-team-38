@@ -12,7 +12,20 @@
           "package_name": "com.example.closet"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "57185028705-m385s8e1ues3jqqki421nbojtt2n1gg6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.closet",
+            "certificate_hash": "813b904ac5c6e647e4e563b9110803eaa0f2a630"
+          }
+        },
+        {
+          "client_id": "57185028705-2ofc4fptrq5upksrk7ig1sht10fpctfo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCigpwWvCUaypMmULEdAD2BOLbKcvrhULM"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "57185028705-2ofc4fptrq5upksrk7ig1sht10fpctfo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

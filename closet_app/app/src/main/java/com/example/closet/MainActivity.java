@@ -21,6 +21,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -30,6 +31,10 @@ import com.google.firebase.firestore.Query;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 
 /**
@@ -54,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
     private String currentUserId;
     private RecyclerView recyclerViewTopPicks;
     private ItemAdapter topPicksAdapter;
+
+    private GoogleSignInClient googleSignInClient;
     private List<ClothingItem> topPicks = new ArrayList<>();
 
 
@@ -71,9 +78,34 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
         setContentView(R.layout.activity_main);
 
         // Initialize Firebase
-        firestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(
+                GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        googleSignInClient = GoogleSignIn.getClient(this, gso);
+
+// wire up logout button
+        findViewById(R.id.btn_logout).setOnClickListener(v -> signOut());
+
+        // Get current user ID
+        if (firebaseAuth.getCurrentUser() != null) {
+            currentUserId = firebaseAuth.getCurrentUser().getUid();
+        }
+
+        // Initialize views
+        initializeViews();
+
+        // Wire up the Logout button in your header
+        ImageView btnLogout = findViewById(R.id.btn_logout);
+        btnLogout.setOnClickListener(v -> signOut());
+
+        // Set up components
+        setupNavigationDrawer();
+        setupCategoryButtons();
+        setupTopPicksRecyclerView();
         // Get current user ID
         if (firebaseAuth.getCurrentUser() != null) {
             currentUserId = firebaseAuth.getCurrentUser().getUid();
@@ -379,6 +411,17 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
         }
     }
 
+    private void signOut() {
+        // 1) Firebase sign-out
+        firebaseAuth.signOut();
 
+        // 2) Google sign-out
+        googleSignInClient.signOut()
+                .addOnCompleteListener(this, task -> {
+                    // 3) Back to Login screen
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    finish();
+                });
+    }
 
 }
