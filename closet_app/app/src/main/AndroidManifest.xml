@@ -43,6 +43,11 @@
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name=".FavouritesActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <!-- Add any other Activities here, all using NoActionBar if they need the same drawer -->
     </application>
 </manifest>

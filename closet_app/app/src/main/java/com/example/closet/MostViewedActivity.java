@@ -78,7 +78,8 @@ public class MostViewedActivity extends AppCompatActivity implements ItemAdapter
             } else if (itemId == R.id.nav_categories) {
                 Toast.makeText(this, "Categories clicked", Toast.LENGTH_SHORT).show();
             } else if (itemId == R.id.nav_favourites) {
-                Toast.makeText(this, "Favourites clicked", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, FavouritesActivity.class));
+                drawerLayout.closeDrawers();
             } else if (itemId == R.id.nav_virtual_avatar) {
                 Toast.makeText(this, "Virtual Avatar clicked", Toast.LENGTH_SHORT).show();
             }

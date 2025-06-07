@@ -165,6 +165,9 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
                     startActivity(new Intent(this, MostViewedActivity.class));
                 } else if (itemId == R.id.nav_top_picks) {
                     startActivity(new Intent(this, TopPicksActivity.class));
+                } else if (itemId == R.id.nav_favourites) {
+                    startActivity(new Intent(this, FavouritesActivity.class));
+                    drawerLayout.closeDrawers();
                 } else {
                     Toast.makeText(this, "Clicked: " + item.getTitle(), Toast.LENGTH_SHORT).show();
                 }

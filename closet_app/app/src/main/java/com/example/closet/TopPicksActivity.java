@@ -69,7 +69,8 @@ public class TopPicksActivity extends AppCompatActivity implements ItemAdapter.O
             } else if (itemId == R.id.nav_most_viewed) {
                 startActivity(new Intent(this, MostViewedActivity.class));
             } else if (itemId == R.id.nav_favourites) {
-                Toast.makeText(this, "Favourites clicked", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, FavouritesActivity.class));
+                drawerLayout.closeDrawers();
             }
 
             drawerLayout.closeDrawers();

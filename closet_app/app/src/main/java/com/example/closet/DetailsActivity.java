@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -42,6 +43,7 @@ public class DetailsActivity extends AppCompatActivity {
     private String itemId;
 
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
@@ -76,16 +78,42 @@ public class DetailsActivity extends AppCompatActivity {
         toggle = new ActionBarDrawerToggle(this, drawerLayout,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
-        toggle.syncState(); // <-- Required!
+        toggle.syncState();
+
         findViewById(R.id.hamburger_icon).setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
 
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(item -> {
-            startActivity(new Intent(this, MainActivity.class));
-            drawerLayout.closeDrawers();
+            int itemId = item.getItemId();
+            Intent intent = null;
+
+            if (itemId == R.id.nav_home) {
+                intent = new Intent(this, MainActivity.class);
+            } else if (itemId == R.id.nav_top_picks) {
+                intent = new Intent(this, TopPicksActivity.class);
+            } else if (itemId == R.id.nav_most_viewed) {
+                intent = new Intent(this, MostViewedActivity.class);
+            } else if (itemId == R.id.nav_favourites) {
+                intent = new Intent(this, FavouritesActivity.class);
+            } else if (itemId == R.id.nav_new_in) {
+                Toast.makeText(this, "New In clicked", Toast.LENGTH_SHORT).show();
+            } else if (itemId == R.id.nav_categories) {
+                Toast.makeText(this, "Categories clicked", Toast.LENGTH_SHORT).show();
+            } else if (itemId == R.id.nav_virtual_avatar) {
+                Toast.makeText(this, "Virtual Avatar clicked", Toast.LENGTH_SHORT).show();
+            }
+
+            if (intent != null) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+            }
+
+            drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
 
+        // Logo click
         findViewById(R.id.logo_title).setOnClickListener(v -> goHome());
         findViewById(R.id.logo_icon).setOnClickListener(v -> goHome());
 
@@ -95,9 +123,11 @@ public class DetailsActivity extends AppCompatActivity {
             setupLikeLogic();
             loadFirestore(itemId);
             incrementViewCount(itemId);
+        } else {
+            Log.e(TAG, "No ITEM_ID passed to DetailsActivity");
         }
-        else Log.e(TAG, "No ITEM_ID passed to DetailsActivity");
     }
+
 
     private void goHome() {
         Intent intent = new Intent(this, MainActivity.class);
@@ -209,11 +239,17 @@ public class DetailsActivity extends AppCompatActivity {
             // Update heart icon immediately
             likeButton.setImageResource(nowLiked ? R.drawable.ic_heart_filled : R.drawable.ic_favorite);
 
-            // Update SharedPreferences
-            prefs.edit().putBoolean(itemId, nowLiked).apply();
+            SharedPreferences.Editor editor = prefs.edit();
 
+            if (nowLiked) {
+                editor.putBoolean(itemId, true); // Save to favorites
+            } else {
+                editor.remove(itemId);           // Remove from favorites
+            }
 
-            // Update Firestore
+            editor.apply(); // Save changes
+
+            // Update Firestore like count
             db.collection("Clothes").document(itemId)
                     .update("Likes", com.google.firebase.firestore.FieldValue.increment(nowLiked ? 1 : -1))
                     .addOnSuccessListener(aVoid -> Log.d(TAG, "Likes updated"))
