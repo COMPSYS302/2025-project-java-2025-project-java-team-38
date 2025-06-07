@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -208,6 +209,37 @@ public class ListActivity extends AppCompatActivity
             } else {
                 drawerLayout.openDrawer(GravityCompat.START);
             }
+        });
+
+        NavigationView navigationView = findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            Intent intent = null;
+
+            if (itemId == R.id.nav_home) {
+                intent = new Intent(this, MainActivity.class);
+            } else if (itemId == R.id.nav_top_picks) {
+                intent = new Intent(this, TopPicksActivity.class);
+            } else if (itemId == R.id.nav_most_viewed) {
+                intent = new Intent(this, MostViewedActivity.class);
+            } else if (itemId == R.id.nav_favourites) {
+                intent = new Intent(this, FavouritesActivity.class);
+            } else if (itemId == R.id.nav_new_in) {
+                Toast.makeText(this, "New In clicked", Toast.LENGTH_SHORT).show();
+            } else if (itemId == R.id.nav_categories) {
+                Toast.makeText(this, "Categories clicked", Toast.LENGTH_SHORT).show();
+            } else if (itemId == R.id.nav_virtual_avatar) {
+                Toast.makeText(this, "Virtual Avatar clicked", Toast.LENGTH_SHORT).show();
+            }
+
+            if (intent != null) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+            }
+
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
         });
     }
 
