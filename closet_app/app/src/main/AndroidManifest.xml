@@ -38,6 +38,11 @@
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name=".TopPicksActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <!-- Add any other Activities here, all using NoActionBar if they need the same drawer -->
     </application>
 </manifest>

@@ -85,12 +85,9 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
         // Set up components
         setupNavigationDrawer();
         setupCategoryButtons();
-        setupTopPicksRecyclerView();    // ✅ New for Top Picks
-        // 🔧 TEMP: Add fake item to verify RecyclerView display
+        setupTopPicksRecyclerView();
 
-
-
-        // Search bar functionality
+        // 🔍 Search bar
         EditText searchBar = findViewById(R.id.search_bar);
         searchBar.setOnEditorActionListener((v, actionId, event) -> {
             String query = searchBar.getText().toString().trim();
@@ -102,10 +99,16 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
             return true;
         });
 
-        // Load data
-        loadTopPicks();    // ✅ load top 3 viewed items
+        // 🧭 Clickable "Swipe to explore →"
+        findViewById(R.id.text_swipe_to_explore).setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, TopPicksActivity.class);
+            startActivity(intent);
+        });
 
+        // Load top picks
+        loadTopPicks();
     }
+
 
 
     /**
@@ -160,6 +163,8 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
 
                 if (itemId == R.id.nav_most_viewed) {
                     startActivity(new Intent(this, MostViewedActivity.class));
+                } else if (itemId == R.id.nav_top_picks) {
+                    startActivity(new Intent(this, TopPicksActivity.class));
                 } else {
                     Toast.makeText(this, "Clicked: " + item.getTitle(), Toast.LENGTH_SHORT).show();
                 }
