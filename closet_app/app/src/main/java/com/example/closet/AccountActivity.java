@@ -30,6 +30,8 @@ public class AccountActivity extends AppCompatActivity {
         // highlight the “Account” tab
         bottomNav.setSelectedItemId(R.id.nav_account);
 
+
+
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
@@ -56,6 +58,10 @@ public class AccountActivity extends AppCompatActivity {
         cardSupport      = findViewById(R.id.card_support);
         tvFaqContent     = findViewById(R.id.tv_faq_content);
         tvSupportContent = findViewById(R.id.tv_support_content);
+
+        // Toggle section buttons
+        findViewById(R.id.card_faq).setOnClickListener(v -> toggleSection(cardFaq));
+        findViewById(R.id.card_support).setOnClickListener(v -> toggleSection(cardSupport));
 
         // Log out
         btnLogout.setOnClickListener(v -> {
@@ -109,5 +115,12 @@ public class AccountActivity extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void toggleSection(MaterialCardView view) {
+        boolean visible = view.getVisibility() == View.VISIBLE;
+        cardFaq.setVisibility(View.GONE);
+        cardSupport.setVisibility(View.GONE);
+        if (!visible) view.setVisibility(View.VISIBLE);
     }
 }
