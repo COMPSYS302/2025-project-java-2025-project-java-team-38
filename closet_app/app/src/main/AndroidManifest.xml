@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.closet">
 
@@ -13,7 +14,7 @@
             android:name="com.google.android.gms.auth.api.credentials.CredentialManager.BROKER_ALLOWED_CALLERS"
             android:resource="@array/broker_allowed_callers" />
 
-        <!-- 1) LoginActivity: NEW entry, set as LAUNCHER so it opens first. -->
+        <!-- 1) LoginActivity: launcher -->
         <activity
             android:name=".LoginActivity"
             android:exported="true"
@@ -24,37 +25,51 @@
             </intent-filter>
         </activity>
 
-        <!-- 2) MainActivity: secondary entry -->
+        <!-- 2) MainActivity -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/AppTheme">
-        </activity>
+            android:theme="@style/AppTheme" />
 
-        <!-- 3) Other activities unchanged -->
+        <!-- 3) ListActivity -->
         <activity
             android:name=".ListActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <!-- 4) DetailsActivity -->
         <activity
             android:name=".DetailsActivity"
             android:exported="false"
             android:parentActivityName=".ListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <!-- 5) MostViewedActivity -->
         <activity
             android:name=".MostViewedActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <!-- 6) TopPicksActivity -->
         <activity
             android:name=".TopPicksActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <!-- 7) AccountActivity -->
+        <activity
+            android:name=".AccountActivity"
+            android:exported="true"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <!-- 8) FavouritesActivity -->
         <activity
             android:name=".FavouritesActivity"
-            android:exported="false"
+            android:exported="true"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 

@@ -1,255 +1,288 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-    <!-- Main content -->
-    <ScrollView
+    <!-- Main DrawerLayout -->
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fitsSystemWindows="true"
+        tools:context=".MainActivity">
 
-        <LinearLayout
+        <!-- Main content -->
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
-            <!-- Custom Header with Logo and Hamburger Menu -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/rounded_title"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="24dp"
-                android:paddingVertical="16dp">
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:paddingBottom="80dp">
 
-                <!-- Hamburger Menu -->
-                <ImageView
-                    android:id="@+id/hamburger_icon"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:clickable="true"
-                    android:contentDescription="@string/menu"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="4dp"
-                    android:src="@drawable/hamburger" />
+                <!-- Custom Header with Logo and Hamburger Menu -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/rounded_title"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="24dp"
+                    android:paddingVertical="16dp">
 
-                <!-- Spacer to center the title and logo -->
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1" />
+                    <!-- Hamburger Menu -->
+                    <ImageView
+                        android:id="@+id/hamburger_icon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:clickable="true"
+                        android:contentDescription="@string/menu"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="4dp"
+                        android:src="@drawable/hamburger" />
 
-                <!-- Title -->
+                    <!-- Spacer to center the title and logo -->
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <!-- Title -->
+                    <TextView
+                        android:id="@+id/logo_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:fontFamily="serif"
+                        android:text="@string/app_name"
+                        android:textColor="#000000"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <!-- Logo -->
+                    <ImageView
+                        android:id="@+id/logo_icon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="12dp"
+                        android:clickable="true"
+                        android:contentDescription="@string/hanger_icon"
+                        android:focusable="true"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/hanger" />
+
+                    <!-- Spacer to balance the layout -->
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <!-- Logout Button -->
+                    <ImageView
+                        android:id="@+id/btn_logout"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:contentDescription="@string/logout"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_logout" />
+
+                </LinearLayout>
+
+                <!-- Search Bar -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    android:elevation="2dp"
+                    app:cardCornerRadius="8dp">
+
+                    <EditText
+                        android:id="@+id/search_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@drawable/rounded_title"
+                        android:drawableStart="@android:drawable/ic_menu_search"
+                        android:drawablePadding="8dp"
+                        android:hint="@string/search"
+                        android:inputType="text"
+                        android:autofillHints="search"
+                        android:padding="12dp"
+                        android:textSize="16sp" />
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- Browse Categories Section -->
                 <TextView
-                    android:id="@+id/logo_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/browse_categories"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Category Buttons Grid -->
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="2"
+                    android:rowCount="3"
+                    android:layout_marginBottom="24dp">
+
+                    <Button
+                        android:id="@+id/btn_shirts"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="4dp"
+                        android:text="@string/shirts"
+                        android:textSize="16sp"
+                        android:background="@drawable/category_button_bg"
+                        android:backgroundTint="@color/categoryButtonLightGrey"
+                        android:textColor="@android:color/black" />
+
+                    <Button
+                        android:id="@+id/btn_pants"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="4dp"
+                        android:text="@string/pants"
+                        android:textSize="16sp"
+                        android:background="@drawable/category_button_bg"
+                        android:backgroundTint="@color/categoryButtonLightGrey"
+                        android:textColor="@android:color/black" />
+
+                    <Button
+                        android:id="@+id/btn_dresses"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="4dp"
+                        android:text="@string/dresses"
+                        android:textSize="16sp"
+                        android:background="@drawable/category_button_bg"
+                        android:backgroundTint="@color/categoryButtonLightGrey"
+                        android:textColor="@android:color/black" />
+
+                    <Button
+                        android:id="@+id/btn_shoes"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="4dp"
+                        android:text="@string/shoes"
+                        android:textSize="16sp"
+                        android:background="@drawable/category_button_bg"
+                        android:backgroundTint="@color/categoryButtonLightGrey"
+                        android:textColor="@android:color/black" />
+
+                    <Button
+                        android:id="@+id/btn_accessories"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="4dp"
+                        android:layout_columnSpan="2"
+                        android:text="@string/accessories"
+                        android:textSize="16sp"
+                        android:background="@drawable/category_button_bg"
+                        android:backgroundTint="@color/categoryButtonLightGrey"
+                        android:textColor="@android:color/black" />
+
+                </GridLayout>
+
+                <!-- Recent Items Section -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/top_picks"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="16dp" />
+
+                <TextView
+                    android:id="@+id/text_swipe_to_explore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Swipe to explore →"
+                    android:textSize="12sp"
+                    android:textColor="#888888"
+                    android:layout_marginBottom="4dp"
+                    android:layout_gravity="end"
                     android:clickable="true"
-                    android:focusable="true"
-                    android:fontFamily="serif"
-                    android:text="@string/app_name"
-                    android:textColor="#000000"
-                    android:textSize="22sp"
-                    android:textStyle="bold" />
+                    android:focusable="true" />
 
-                <!-- Logo -->
-                <ImageView
-                    android:id="@+id/logo_icon"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginStart="12dp"
-                    android:clickable="true"
-                    android:contentDescription="@string/hanger_icon"
-                    android:focusable="true"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/hanger" />
-
-                <!-- Spacer to balance the layout -->
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1" />
-
-                <!-- Logout Button -->
-                <ImageView
-                    android:id="@+id/btn_logout"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:contentDescription="@string/logout"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="4dp"
-                    android:src="@drawable/ic_logout" />
+                <!-- Horizontal RecyclerView for Top picks -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view_top_picks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:background="@drawable/category_button_bg"
+                    android:backgroundTint="@color/categoryButtonLightGrey"
+                    android:clipToPadding="false"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    tools:listitem="@layout/row_list_item" />
 
             </LinearLayout>
 
-            <!-- Search Bar -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:elevation="2dp"
-                app:cardCornerRadius="8dp">
+        </ScrollView>
 
-                <EditText
-                    android:id="@+id/search_bar"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:background="@drawable/rounded_title"
-                    android:drawableStart="@android:drawable/ic_menu_search"
-                    android:drawablePadding="8dp"
-                    android:hint="@string/search"
-                    android:inputType="text"
-                    android:autofillHints="search"
-                    android:padding="12dp"
-                    android:textSize="16sp" />
+        <!-- Navigation Drawer -->
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigation_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            app:menu="@menu/drawer_menu"
+            app:headerLayout="@layout/nav_header" />
 
-            </androidx.cardview.widget.CardView>
+    </androidx.drawerlayout.widget.DrawerLayout>
 
-            <!-- Browse Categories Section -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/browse_categories"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:layout_marginBottom="16dp" />
+    <!-- Bottom Navigation Container (POSITIONED AT BOTTOM) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:background="@android:color/white">
 
-            <!-- Category Buttons Grid -->
-            <GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:columnCount="2"
-                android:rowCount="3"
-                android:layout_marginBottom="24dp">
+        <!-- Separator line -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E0E0E0" />
 
-                <Button
-                    android:id="@+id/btn_shirts"
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="4dp"
-                    android:text="@string/shirts"
-                    android:textSize="16sp"
-                    android:background="@drawable/category_button_bg"
-                    android:backgroundTint="@color/categoryButtonLightGrey"
-                    android:textColor="@android:color/black" />
+        <!-- Bottom Navigation View -->
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            app:elevation="0dp"
+            app:itemIconTint="@color/dark_gray"
+            app:itemTextColor="@color/dark_gray"
+            app:menu="@menu/bottom_nav_menu" />
+    </LinearLayout>
 
-                <Button
-                    android:id="@+id/btn_pants"
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="4dp"
-                    android:text="@string/pants"
-                    android:textSize="16sp"
-                    android:background="@drawable/category_button_bg"
-                    android:backgroundTint="@color/categoryButtonLightGrey"
-                    android:textColor="@android:color/black" /> />
-
-                <Button
-                    android:id="@+id/btn_dresses"
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="4dp"
-                    android:text="@string/dresses"
-                    android:textSize="16sp"
-                    android:background="@drawable/category_button_bg"
-                    android:backgroundTint="@color/categoryButtonLightGrey"
-                    android:textColor="@android:color/black" /> />
-
-                <Button
-                    android:id="@+id/btn_shoes"
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="4dp"
-                    android:text="@string/shoes"
-                    android:textSize="16sp"
-                    android:background="@drawable/category_button_bg"
-                    android:backgroundTint="@color/categoryButtonLightGrey"
-                    android:textColor="@android:color/black" /> />
-
-                <Button
-                    android:id="@+id/btn_accessories"
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="4dp"
-                    android:layout_columnSpan="2"
-                    android:text="@string/accessories"
-                    android:textSize="16sp"
-                    android:background="@drawable/category_button_bg"
-                    android:backgroundTint="@color/categoryButtonLightGrey"
-                    android:textColor="@android:color/black" /> />
-
-            </GridLayout>
-
-            <!-- Recent Items Section -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/top_picks"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:layout_marginBottom="16dp" />
-            <TextView
-                android:id="@+id/text_swipe_to_explore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Swipe to explore →"
-                android:textSize="12sp"
-                android:textColor="#888888"
-                android:layout_marginBottom="4dp"
-                android:layout_gravity="end"
-                android:clickable="true"
-                android:focusable="true" />
-
-
-            <!-- Horizontal RecyclerView for Top picks -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view_top_picks"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                android:background="@drawable/category_button_bg"
-                android:backgroundTint="@color/categoryButtonLightGrey"
-                android:clipToPadding="false"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                tools:listitem="@layout/row_list_item" />
-
-
-
-        </LinearLayout>
-
-    </ScrollView>
-
-    <!-- Navigation Drawer -->
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/navigation_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:menu="@menu/drawer_menu"
-        app:headerLayout="@layout/nav_header" />
-
-
-</androidx.drawerlayout.widget.DrawerLayout>
+</FrameLayout>

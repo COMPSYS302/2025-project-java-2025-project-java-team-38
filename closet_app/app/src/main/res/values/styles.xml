@@ -1,12 +1,23 @@
 <!-- res/values/styles.xml -->
 <resources>
-    <!-- Base theme, with an ActionBar -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- your colorPrimary, colorPrimaryDark, etc. -->
+    <!-- Base theme now inherits from MaterialComponents -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <!-- your existing color and style overrides -->
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/accent_color</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="android:statusBarColor">@color/primary_dark</item>
     </style>
 
-    <!-- A “NoActionBar” variant -->
-    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- you can override colors here if needed -->
+    <!-- NoActionBar variant -->
+    <style name="AppTheme.NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- override colors if needed -->
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/accent_color</item>
+        <item name="colorOnSecondary">@color/white</item>
     </style>
 </resources>

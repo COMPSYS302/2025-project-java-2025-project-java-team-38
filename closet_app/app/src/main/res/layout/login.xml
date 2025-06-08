@@ -50,21 +50,25 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Login"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/light_gray"
         app:layout_constraintTop_toBottomOf="@id/et_password"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="24dp"/>
 
-    <!-- 5) Register button -->
     <Button
         android:id="@+id/btn_register"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Register"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/medium_gray"
         app:layout_constraintTop_toBottomOf="@id/btn_login"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="12dp"/>
+
 
     <!-- 6) Google OAuth -->
     <com.google.android.gms.common.SignInButton
