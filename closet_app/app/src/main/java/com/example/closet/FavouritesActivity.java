@@ -3,8 +3,11 @@ package com.example.closet;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -29,8 +32,11 @@ public class FavouritesActivity extends AppCompatActivity implements ItemAdapter
     private static final String TAG = "FavouritesActivity";
 
     private RecyclerView recyclerView;
+    private EditText searchBar;
     private ItemAdapter adapter;
+
     private final List<ClothingItem> favouritesList = new ArrayList<>();
+    private final List<ClothingItem> filteredList = new ArrayList<>();
 
     private FirebaseFirestore firestore;
     private FirebaseAuth firebaseAuth;
@@ -96,7 +102,7 @@ public class FavouritesActivity extends AppCompatActivity implements ItemAdapter
                 intent = new Intent(this, MostViewedActivity.class);
             } else if (itemId == R.id.nav_favourites) {
                 drawerLayout.closeDrawer(GravityCompat.START);
-                return true; // already on this page
+                return true;
             } else if (itemId == R.id.nav_new_in) {
                 Toast.makeText(this, "New In clicked", Toast.LENGTH_SHORT).show();
             } else if (itemId == R.id.nav_categories) {
@@ -115,13 +121,28 @@ public class FavouritesActivity extends AppCompatActivity implements ItemAdapter
         });
 
         recyclerView = findViewById(R.id.recycler_view_items);
-        adapter = new ItemAdapter(this, favouritesList, R.layout.row_list_item);
+        searchBar = findViewById(R.id.search_bar);  // Make sure this exists in your layout
+
+        adapter = new ItemAdapter(this, filteredList, R.layout.row_list_item);
         adapter.setOnItemClickListener(this);
         adapter.setOnItemLikeListener(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
+        setupSearch();
         loadFavourites();
+    }
+
+    private void setupSearch() {
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override public void afterTextChanged(Editable s) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterItems(s.toString());
+            }
+        });
     }
 
     private void loadFavourites() {
@@ -141,6 +162,7 @@ public class FavouritesActivity extends AppCompatActivity implements ItemAdapter
         }
 
         favouritesList.clear();
+        filteredList.clear();
 
         for (String id : favouriteIds) {
             firestore.collection("Clothes").document(id).get()
@@ -150,12 +172,29 @@ public class FavouritesActivity extends AppCompatActivity implements ItemAdapter
                             item.setId(doc.getId());
                             item.setLikedByCurrentUser(true);
                             favouritesList.add(item);
-                            adapter.updateItems(favouritesList);
+                            filteredList.add(item);
+                            adapter.updateItems(filteredList);
                         }
                     })
                     .addOnFailureListener(e ->
                             Log.e(TAG, "Failed to fetch favourite item: " + id, e));
         }
+    }
+
+    private void filterItems(String query) {
+        String lower = query.toLowerCase().trim();
+        filteredList.clear();
+
+        for (ClothingItem item : favouritesList) {
+            if ((item.getName() != null && item.getName().toLowerCase().contains(lower)) ||
+                    (item.getCategory() != null && item.getCategory().toLowerCase().contains(lower)) ||
+                    (item.getFabric() != null && item.getFabric().toLowerCase().contains(lower)) ||
+                    (item.getFit() != null && item.getFit().toLowerCase().contains(lower))) {
+                filteredList.add(item);
+            }
+        }
+
+        adapter.updateItems(filteredList);
     }
 
     @Override
@@ -174,6 +213,7 @@ public class FavouritesActivity extends AppCompatActivity implements ItemAdapter
         } else {
             editor.remove(item.getId());
             favouritesList.remove(position);
+            filteredList.remove(position);
             adapter.notifyItemRemoved(position);
         }
         editor.apply();

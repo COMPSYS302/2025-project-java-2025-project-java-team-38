@@ -2,10 +2,14 @@ package com.example.closet;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
-import android.widget.Toast;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,13 +24,16 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopPicksActivity extends AppCompatActivity implements ItemAdapter.OnItemClickListener, ItemAdapter.OnItemLikeListener {
+public class TopPicksActivity extends AppCompatActivity
+        implements ItemAdapter.OnItemClickListener, ItemAdapter.OnItemLikeListener {
 
     private static final String TAG = "TopPicksActivity";
 
     private RecyclerView recyclerView;
+    private EditText searchBar;
     private ItemAdapter adapter;
     private final List<ClothingItem> topPicksList = new ArrayList<>();
+    private final List<ClothingItem> filteredList = new ArrayList<>();
 
     private FirebaseFirestore firestore;
     private FirebaseAuth firebaseAuth;
@@ -43,51 +50,64 @@ public class TopPicksActivity extends AppCompatActivity implements ItemAdapter.O
 
         firestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
-
         if (firebaseAuth.getCurrentUser() != null) {
             currentUserId = firebaseAuth.getCurrentUser().getUid();
         }
 
-        findViewById(R.id.logo_title).setOnClickListener(v -> {
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
-        });
+        // Logo click = return to main
+        findViewById(R.id.logo_title).setOnClickListener(v -> goHome());
+        findViewById(R.id.logo_icon).setOnClickListener(v -> goHome());
 
+        // Hamburger menu setup
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
         ImageView hamburgerIcon = findViewById(R.id.hamburger_icon);
         hamburgerIcon.setOnClickListener(v -> drawerLayout.open());
 
-        // 🧩 Add NavigationView behavior
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
-
             if (itemId == R.id.nav_home) {
                 startActivity(new Intent(this, MainActivity.class));
             } else if (itemId == R.id.nav_top_picks) {
-                drawerLayout.closeDrawers(); // Already in Top Picks
+                // Already here
             } else if (itemId == R.id.nav_most_viewed) {
                 startActivity(new Intent(this, MostViewedActivity.class));
             } else if (itemId == R.id.nav_favourites) {
                 startActivity(new Intent(this, FavouritesActivity.class));
-                drawerLayout.closeDrawers();
             }
-
             drawerLayout.closeDrawers();
             return true;
         });
 
+        // RecyclerView + Adapter
         recyclerView = findViewById(R.id.recycler_view_items);
-        adapter = new ItemAdapter(this, topPicksList, R.layout.row_list_item);
+        adapter = new ItemAdapter(this, filteredList, R.layout.row_list_item);
         adapter.setOnItemClickListener(this);
         adapter.setOnItemLikeListener(this);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
+        // Search Bar setup
+        searchBar = findViewById(R.id.search_bar);
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override public void afterTextChanged(Editable s) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterTopPicks(s.toString());
+            }
+        });
+
+        // Load data
         loadTopPicks();
     }
 
+    private void goHome() {
+        Intent intent = new Intent(TopPicksActivity.this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
 
     private void loadTopPicks() {
         TopPicksManager.loadTopPicks(currentUserId, new TopPicksManager.TopPicksCallback() {
@@ -95,7 +115,11 @@ public class TopPicksActivity extends AppCompatActivity implements ItemAdapter.O
             public void onTopPicksLoaded(List<ClothingItem> items) {
                 topPicksList.clear();
                 topPicksList.addAll(items);
-                adapter.updateItems(topPicksList);
+
+                filteredList.clear();
+                filteredList.addAll(items);
+
+                adapter.updateItems(filteredList);
                 Log.d(TAG, "Loaded top picks successfully");
             }
 
@@ -106,6 +130,38 @@ public class TopPicksActivity extends AppCompatActivity implements ItemAdapter.O
             }
         });
     }
+
+    private void filterTopPicks(String query) {
+        filteredList.clear();
+        String lower = query.toLowerCase().trim();
+
+        for (ClothingItem item : topPicksList) {
+            boolean matches = false;
+
+            if (item.getName() != null && item.getName().toLowerCase().contains(lower)) {
+                matches = true;
+            } else if (item.getCategory() != null && item.getCategory().toLowerCase().contains(lower)) {
+                matches = true;
+            } else if (item.getFabric() != null && item.getFabric().toLowerCase().contains(lower)) {
+                matches = true;
+            } else if (item.getFit() != null && item.getFit().toLowerCase().contains(lower)) {
+                matches = true;
+            } else if (item.getCare() != null && item.getCare().toLowerCase().contains(lower)) {
+                matches = true;
+            }
+
+            if (matches) {
+                filteredList.add(item);
+            }
+        }
+
+        adapter.updateItems(filteredList);
+
+        findViewById(R.id.text_empty_state).setVisibility(
+                filteredList.isEmpty() ? View.VISIBLE : View.GONE
+        );
+    }
+
 
     @Override
     public void onItemClick(ClothingItem item, int position) {

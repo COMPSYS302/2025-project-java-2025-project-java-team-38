@@ -3,6 +3,8 @@ package com.example.closet;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -21,12 +23,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.*;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
 
     private FirebaseAuth       mAuth;
     private GoogleSignInClient mGoogleSignInClient;
+
+    // UI
+    private EditText etEmail, etPassword;
+    private Button   btnLogin, btnRegister;
 
     // Launcher for the Google Sign-In intent
     private final ActivityResultLauncher<Intent> signInLauncher =
@@ -39,9 +46,11 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+ navbar
         setContentView(R.layout.login);
+ main
 
-        // 1) Firebase Auth instance
+        // 1) Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
         // 2) If already signed in, skip straight to MainActivity
@@ -50,7 +59,59 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // 3) Configure Google Sign-In
+        // 3) Wire up Email/Password UI
+        etEmail    = findViewById(R.id.et_email);
+        etPassword = findViewById(R.id.et_password);
+        btnLogin   = findViewById(R.id.btn_login);
+        btnRegister= findViewById(R.id.btn_register);
+
+        btnLogin.setOnClickListener(v -> {
+            String email = etEmail.getText().toString().trim();
+            String pass  = etPassword.getText().toString();
+
+            if (email.isEmpty() || pass.isEmpty()) {
+                Toast.makeText(this, "Enter email & password", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            mAuth.signInWithEmailAndPassword(email, pass)
+                    .addOnCompleteListener(this, task -> {
+                        if (task.isSuccessful()) {
+                            goToMain();
+                        } else {
+                            Toast.makeText(this,
+                                    "Login failed: " + task.getException().getMessage(),
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
+        });
+
+        btnRegister.setOnClickListener(v -> {
+            String email = etEmail.getText().toString().trim();
+            String pass  = etPassword.getText().toString();
+
+            if (email.isEmpty() || pass.length() < 6) {
+                Toast.makeText(this,
+                        "Provide valid email & at least 6-char password",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            mAuth.createUserWithEmailAndPassword(email, pass)
+                    .addOnCompleteListener(this, task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(this,
+                                    "Registered! Please log in.",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this,
+                                    "Registration failed: " + task.getException().getMessage(),
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
+        });
+
+        // 4) Configure Google Sign-In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(
                 GoogleSignInOptions.DEFAULT_SIGN_IN
         )
@@ -60,11 +121,12 @@ public class LoginActivity extends AppCompatActivity {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        // 4) Wire up the button
-        findViewById(R.id.btn_google_signin).setOnClickListener(v -> {
-            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-            signInLauncher.launch(signInIntent);
-        });
+        // 5) Wire up Google button
+        findViewById(R.id.btn_google_signin)
+                .setOnClickListener(v -> {
+                    Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                    signInLauncher.launch(signInIntent);
+                });
     }
 
     private void onSignInResult(ActivityResult result) {
