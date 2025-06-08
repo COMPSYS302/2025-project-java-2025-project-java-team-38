@@ -18,6 +18,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -49,6 +50,28 @@ public class FavouritesActivity extends AppCompatActivity implements ItemAdapter
         if (getSupportActionBar() != null) getSupportActionBar().hide();
 
         setContentView(R.layout.activity_favourites);
+
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        // highlight the “Favorites” tab
+        bottomNav.setSelectedItemId(R.id.nav_favorites);
+
+        bottomNav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                startActivity(new Intent(this, MainActivity.class));
+                finish();
+                return true;
+            } else if (id == R.id.nav_favorites) {
+                // already here
+                return true;
+            } else if (id == R.id.nav_account) {
+                startActivity(new Intent(this, AccountActivity.class));
+                finish();
+                return true;
+            }
+            return false;
+        });
+
 
         firestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();

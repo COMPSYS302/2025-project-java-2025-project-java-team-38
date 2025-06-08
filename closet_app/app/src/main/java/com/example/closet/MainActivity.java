@@ -2,6 +2,9 @@ package com.example.closet;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,7 +19,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -25,6 +32,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
+
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import android.content.Intent;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 
 public class MainActivity extends AppCompatActivity implements ItemAdapter.OnItemClickListener, ItemAdapter.OnItemLikeListener {
 
@@ -64,11 +77,37 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
                 .build();
         googleSignInClient = GoogleSignIn.getClient(this, gso);
 
+
+        // wire up logout button
+        findViewById(R.id.btn_logout).setOnClickListener(v -> signOut());
+
+        // Get current user ID
+
         if (firebaseAuth.getCurrentUser() != null) {
             currentUserId = firebaseAuth.getCurrentUser().getUid();
         }
 
         initializeViews();
+
+
+        // Wire up the Logout button in your header
+        ImageView btnLogout = findViewById(R.id.btn_logout);
+        btnLogout.setOnClickListener(v -> signOut());
+
+        // Set up components
+        setupNavigationDrawer();
+        setupCategoryButtons();
+        setupTopPicksRecyclerView();
+
+        // Get current user ID (again)
+        if (firebaseAuth.getCurrentUser() != null) {
+            currentUserId = firebaseAuth.getCurrentUser().getUid();
+        }
+
+        // Initialize views (again)
+        initializeViews();
+
+        // Set up components (again)
         setupNavigationDrawer();
         setupCategoryButtons();
         setupTopPicksRecyclerView();
@@ -90,10 +129,43 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
         findViewById(R.id.text_swipe_to_explore).setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, TopPicksActivity.class)));
 
+        // Load top picks
+        loadTopPicks();
+
+        // ─── Bottom Navigation Bar Setup ───
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setSelectedItemId(R.id.nav_home);
+        bottomNav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                // we’re already here
+                return true;
+            } else if (id == R.id.nav_favorites) {
+                startActivity(new Intent(this, FavouritesActivity.class));
+                finish();
+                return true;
+            } else if (id == R.id.nav_account) {
+                startActivity(new Intent(this, AccountActivity.class));
+                finish();
+                return true;
+            }
+            return false;
+        });
+
+    }
+
+
+
+
+    /**
+     * Initialize all view components
+     */
+=======
         // 🔓 Logout
         ImageView btnLogout = findViewById(R.id.btn_logout);
         btnLogout.setOnClickListener(v -> signOut());
     }
+
 
     private void initializeViews() {
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -216,4 +288,6 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
             finish();
         });
     }
+
 }
+
