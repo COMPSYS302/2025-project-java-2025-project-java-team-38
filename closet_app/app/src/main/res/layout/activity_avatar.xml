@@ -114,19 +114,19 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Accessories"
+                            android:text="Chains"
                             android:textSize="16sp"
                             android:textStyle="bold"
                             android:layout_marginBottom="4dp" />
                         <androidx.cardview.widget.CardView
-                            android:id="@+id/box_jewellery"
+                            android:id="@+id/box_chains"
                             android:layout_width="match_parent"
                             android:layout_height="60dp"
                             android:layout_marginBottom="12dp"
                             app:cardCornerRadius="8dp"
                             app:cardElevation="4dp">
                             <ImageView
-                                android:id="@+id/img_jewellery"
+                                android:id="@+id/img_chains"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:src="@drawable/ic_add"
