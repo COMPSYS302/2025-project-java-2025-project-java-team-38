@@ -23,12 +23,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AvatarActivity extends AppCompatActivity {
-    private DrawerLayout    drawerLayout;
+    private DrawerLayout drawerLayout;
     private FirebaseFirestore db;
-    private String            currentUserId;
+    private String currentUserId;
 
-    private ImageView imgHeadwear, imgJewellery, imgShirts, imgPants, imgShoes;
-    private Button    btnEnvision;
+    private ImageView imgHeadwear, imgChains, imgShirts, imgPants, imgShoes;
+    private Button btnEnvision;
+
+    private String selectedHeadwearUrl;
+    private String selectedChainsUrl;
+    private String selectedShirtsUrl;
+    private String selectedPantsUrl;
+    private String selectedShoesUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +55,7 @@ public class AvatarActivity extends AppCompatActivity {
                 finish();
                 return true;
             } else if (id == R.id.nav_virtual_avatar) {
-                return true; // we're already here
+                return true;
             } else if (id == R.id.nav_account) {
                 startActivity(new Intent(this, AccountActivity.class));
                 finish();
@@ -67,10 +73,10 @@ public class AvatarActivity extends AppCompatActivity {
         nav.setNavigationItemSelectedListener(item -> {
             Intent i = null;
             int id = item.getItemId();
-            if (id == R.id.nav_home)          i = new Intent(this, MainActivity.class);
-            else if (id == R.id.nav_top_picks)  i = new Intent(this, TopPicksActivity.class);
+            if (id == R.id.nav_home) i = new Intent(this, MainActivity.class);
+            else if (id == R.id.nav_top_picks) i = new Intent(this, TopPicksActivity.class);
             else if (id == R.id.nav_most_viewed) i = new Intent(this, MostViewedActivity.class);
-            else if (id == R.id.nav_favourites)  i = new Intent(this, FavouritesActivity.class);
+            else if (id == R.id.nav_favourites) i = new Intent(this, FavouritesActivity.class);
             else if (id == R.id.nav_virtual_avatar) {
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return true;
@@ -86,35 +92,35 @@ public class AvatarActivity extends AppCompatActivity {
         });
 
         // ─── Firestore + Auth ───
-        db            = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
         currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        // ─── Find the “+” boxes ───
-        imgHeadwear  = findViewById(R.id.img_headwear);
-        imgJewellery = findViewById(R.id.img_jewellery);
-        imgShirts    = findViewById(R.id.img_shirts);
-        imgPants     = findViewById(R.id.img_pants);
-        imgShoes     = findViewById(R.id.img_shoes);
+        // ─── Image slots ───
+        imgHeadwear = findViewById(R.id.img_headwear);
+        imgChains   = findViewById(R.id.img_chains);
+        imgShirts   = findViewById(R.id.img_shirts);
+        imgPants    = findViewById(R.id.img_pants);
+        imgShoes    = findViewById(R.id.img_shoes);
 
-        setupChooser("Headwear",  imgHeadwear);
-        setupChooser("Jewellery", imgJewellery);
-        setupChooser("Shirts",    imgShirts);
-        setupChooser("Pants",     imgPants);
-        setupChooser("Shoes",     imgShoes);
+        setupChooser("Headwear", imgHeadwear);
+        setupChooser("Chains", imgChains);
+        setupChooser("Shirts", imgShirts);
+        setupChooser("Pants", imgPants);
+        setupChooser("Shoes", imgShoes);
 
         // ─── Envision button ───
         btnEnvision = findViewById(R.id.btn_envision);
-        btnEnvision.setOnClickListener(v ->
-                        Toast.makeText(this, "Envisioning avatar…", Toast.LENGTH_SHORT).show()
-                // TODO: composite your five layers here
-        );
+        btnEnvision.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AvatarPreviewActivity.class);
+            intent.putExtra("headwear", selectedHeadwearUrl);
+            intent.putExtra("chains", selectedChainsUrl);
+            intent.putExtra("shirts", selectedShirtsUrl);
+            intent.putExtra("pants", selectedPantsUrl);
+            intent.putExtra("shoes", selectedShoesUrl);
+            startActivity(intent);
+        });
     }
 
-    /**
-     * When you tap any of the five ImageViews, query your “Clothes” collection
-     * for that category where the current user is in likedUsers, then show
-     * a little AlertDialog to pick “None” or one of the results.
-     */
     private void setupChooser(String category, ImageView targetImg) {
         targetImg.setOnClickListener(v -> {
             Query q = db.collection("Clothes")
@@ -122,30 +128,36 @@ public class AvatarActivity extends AppCompatActivity {
                     .whereArrayContains("likedUsers", currentUserId);
 
             q.get().addOnSuccessListener(snapshot -> {
-                        List<ClothingItem> items = snapshot.toObjects(ClothingItem.class);
-                        List<String> names = new ArrayList<>();
-                        names.add("None");
-                        for (ClothingItem ci : items) names.add(ci.getName());
+                List<ClothingItem> items = snapshot.toObjects(ClothingItem.class);
+                List<String> names = new ArrayList<>();
+                names.add("None");
+                for (ClothingItem ci : items) names.add(ci.getName());
 
-                        new AlertDialog.Builder(this)
-                                .setTitle("Select " + category)
-                                .setItems(names.toArray(new String[0]), (DialogInterface dlg, int which) -> {
-                                    if (which == 0) {
-                                        targetImg.setImageResource(R.drawable.ic_add);
-                                    } else {
-                                        ClothingItem sel = items.get(which - 1);
-                                        Picasso.get()
-                                                .load(sel.getImageUrl())
-                                                .fit()
-                                                .centerCrop()
-                                                .into(targetImg);
-                                    }
-                                })
-                                .show();
-                    })
-                    .addOnFailureListener(e ->
-                            Toast.makeText(this, "Failed to load favorites", Toast.LENGTH_SHORT).show()
-                    );
+                new AlertDialog.Builder(this)
+                        .setTitle("Select " + category)
+                        .setItems(names.toArray(new String[0]), (DialogInterface dlg, int which) -> {
+                            if (which == 0) {
+                                targetImg.setImageResource(R.drawable.ic_add);
+                                saveSelectedUrl(category, null);
+                            } else {
+                                ClothingItem sel = items.get(which - 1);
+                                String url = sel.getImages().get(0);
+                                Picasso.get().load(url).fit().centerCrop().into(targetImg);
+                                saveSelectedUrl(category, url);
+                            }
+                        })
+                        .show();
+            });
         });
+    }
+
+    private void saveSelectedUrl(String category, String url) {
+        switch (category) {
+            case "Headwear": selectedHeadwearUrl = url; break;
+            case "Chains":   selectedChainsUrl   = url; break;
+            case "Shirts":   selectedShirtsUrl   = url; break;
+            case "Pants":    selectedPantsUrl    = url; break;
+            case "Shoes":    selectedShoesUrl    = url; break;
+        }
     }
 }
