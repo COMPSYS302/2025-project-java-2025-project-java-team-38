@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity
     private NavigationView navigationView;
     private ImageView hamburgerIcon;
 
-    private Button btnShirts, btnPants, btnAccessories, btnDresses, btnShoes;
+    private Button btnShirts, btnPants, btnChains, btnHeadwear, btnShoes;
     private RecyclerView recyclerViewTopPicks;
     private ItemAdapter topPicksAdapter;
 
@@ -126,8 +126,8 @@ public class MainActivity extends AppCompatActivity
 
         btnShirts         = findViewById(R.id.btn_shirts);
         btnPants          = findViewById(R.id.btn_pants);
-        btnAccessories    = findViewById(R.id.btn_accessories);
-        btnDresses        = findViewById(R.id.btn_dresses);
+        btnChains    = findViewById(R.id.btn_chains);
+        btnHeadwear        = findViewById(R.id.btn_headwear);
         btnShoes          = findViewById(R.id.btn_shoes);
 
         recyclerViewTopPicks = findViewById(R.id.recycler_view_top_picks);
@@ -155,8 +155,8 @@ public class MainActivity extends AppCompatActivity
     private void setupCategoryButtons() {
         btnShirts.setOnClickListener(v -> openCategoryList("Shirts"));
         btnPants.setOnClickListener(v -> openCategoryList("Pants"));
-        btnAccessories.setOnClickListener(v -> openCategoryList("Accessories"));
-        btnDresses.setOnClickListener(v -> openCategoryList("Dresses"));
+        btnChains.setOnClickListener(v -> openCategoryList("Chains"));
+        btnHeadwear.setOnClickListener(v -> openCategoryList("Headwear"));
         btnShoes.setOnClickListener(v -> openCategoryList("Shoes"));
     }
 

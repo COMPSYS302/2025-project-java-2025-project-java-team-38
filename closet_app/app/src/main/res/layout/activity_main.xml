@@ -155,12 +155,12 @@
                         android:textColor="@android:color/black" />
 
                     <Button
-                        android:id="@+id/btn_dresses"
+                        android:id="@+id/btn_headwear"
                         android:layout_width="0dp"
                         android:layout_height="60dp"
                         android:layout_columnWeight="1"
                         android:layout_margin="4dp"
-                        android:text="@string/dresses"
+                        android:text="Headwear"
                         android:textSize="16sp"
                         android:background="@drawable/category_button_bg"
                         android:backgroundTint="@color/categoryButtonLightGrey"
@@ -179,13 +179,13 @@
                         android:textColor="@android:color/black" />
 
                     <Button
-                        android:id="@+id/btn_accessories"
+                        android:id="@+id/btn_chains"
                         android:layout_width="0dp"
                         android:layout_height="60dp"
                         android:layout_columnWeight="1"
                         android:layout_margin="4dp"
                         android:layout_columnSpan="2"
-                        android:text="@string/accessories"
+                        android:text="Chains"
                         android:textSize="16sp"
                         android:background="@drawable/category_button_bg"
                         android:backgroundTint="@color/categoryButtonLightGrey"
