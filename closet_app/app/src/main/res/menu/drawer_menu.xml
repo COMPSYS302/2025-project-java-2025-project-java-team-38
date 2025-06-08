@@ -19,16 +19,6 @@
         android:title="Most Viewed"
         android:textStyle="bold" />
 
-    <!-- “New In” -->
-    <item
-        android:id="@+id/nav_new_in"
-        android:title="New In"
-        android:textStyle="bold" />
-
-    <!-- “Categories” (e.g. Shirts, Jeans, etc.) -->
-    <item
-        android:id="@+id/nav_categories"
-        android:title="Categories" />
 
     <!-- “Favourites” -->
     <item
