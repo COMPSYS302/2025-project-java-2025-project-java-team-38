@@ -31,7 +31,7 @@
             android:theme="@style/AppTheme">
         </activity>
 
-        <!-- 3) Other activities unchanged -->
+        <!-- 3) List, Details, MostViewed, Account -->
         <activity
             android:name=".ListActivity"
             android:exported="false"
@@ -47,5 +47,18 @@
             android:exported="false"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AccountActivity"
+            android:exported="true"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <!-- 4) Added: FavouritesActivity -->
+        <activity
+            android:name=".FavouritesActivity"
+            android:exported="true"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 </manifest>
