@@ -86,17 +86,6 @@
                         android:layout_height="1dp"
                         android:layout_weight="1" />
 
-                    <!-- Logout Button -->
-                    <ImageView
-                        android:id="@+id/btn_logout"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:contentDescription="@string/logout"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:padding="4dp"
-                        android:src="@drawable/ic_logout" />
 
                 </LinearLayout>
 

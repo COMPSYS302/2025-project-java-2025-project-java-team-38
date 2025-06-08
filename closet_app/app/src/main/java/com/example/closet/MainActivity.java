@@ -97,9 +97,6 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(MainActivity.this, TopPicksActivity.class))
         );
 
-        // Logout button in header
-        ImageView btnLogout = findViewById(R.id.btn_logout);
-        btnLogout.setOnClickListener(v -> signOut());
 
         // ─── Bottom Navigation Bar Setup ───
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
