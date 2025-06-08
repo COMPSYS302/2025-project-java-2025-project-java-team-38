@@ -148,7 +148,7 @@
                                 android:id="@+id/tv_faq_content"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
+                                android:layout_marginTop="24dp"
                                 android:text="www.closet.com"
                                 android:textSize="16sp"
                                 android:textColor="@android:color/black"
@@ -162,7 +162,7 @@
                         android:id="@+id/card_support"
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="24dp"
                         android:backgroundTint="@color/categoryButtonLightGrey"
                         app:strokeColor="@color/medium_gray"
                         app:strokeWidth="1dp">
@@ -172,6 +172,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:padding="12dp">
+
 
                             <TextView
                                 android:id="@+id/tv_support_header"
