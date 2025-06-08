@@ -96,9 +96,6 @@ public class DetailsActivity extends AppCompatActivity {
                 intent = new Intent(this, MostViewedActivity.class);
             } else if (itemId == R.id.nav_favourites) {
                 intent = new Intent(this, FavouritesActivity.class);
-            } else if (itemId == R.id.nav_new_in) {
-                Toast.makeText(this, "New In clicked", Toast.LENGTH_SHORT).show();
-            } else if (itemId == R.id.nav_categories) {
                 Toast.makeText(this, "Categories clicked", Toast.LENGTH_SHORT).show();
             } else if (itemId == R.id.nav_virtual_avatar) {
                 Toast.makeText(this, "Virtual Avatar clicked", Toast.LENGTH_SHORT).show();

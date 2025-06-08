@@ -76,9 +76,6 @@ public class MostViewedActivity extends AppCompatActivity implements ItemAdapter
             } else if (itemId == R.id.nav_top_picks) {
                 startActivity(new Intent(this, TopPicksActivity.class));
                 finish();
-            } else if (itemId == R.id.nav_new_in) {
-                Toast.makeText(this, "New In clicked", Toast.LENGTH_SHORT).show();
-            } else if (itemId == R.id.nav_categories) {
                 Toast.makeText(this, "Categories clicked", Toast.LENGTH_SHORT).show();
             } else if (itemId == R.id.nav_favourites) {
                 startActivity(new Intent(this, FavouritesActivity.class));

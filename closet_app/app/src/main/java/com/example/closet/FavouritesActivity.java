@@ -112,8 +112,6 @@ public class FavouritesActivity extends AppCompatActivity implements ItemAdapter
             } else if (itemId == R.id.nav_favourites) {
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return true;
-            } else if (itemId == R.id.nav_new_in || itemId == R.id.nav_categories || itemId == R.id.nav_virtual_avatar) {
-                Toast.makeText(this, item.getTitle() + " clicked", Toast.LENGTH_SHORT).show();
             }
 
             if (intent != null) {
