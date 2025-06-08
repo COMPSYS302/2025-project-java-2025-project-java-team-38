@@ -45,8 +45,11 @@ public class DetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // displaying details activity
         setContentView(R.layout.activity_details);
 
+        // setting up bottom navigation panel and back button
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         ImageButton back = findViewById(R.id.btn_back);
         back.setOnClickListener(v -> finish());
@@ -72,10 +75,12 @@ public class DetailsActivity extends AppCompatActivity {
             return false;
         });
 
+
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         userId = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
 
+        // setting up info for the animations
         itemName = findViewById(R.id.product_name);
         fabricText = findViewById(R.id.fabric_text);
         fitText = findViewById(R.id.fit_text);
@@ -84,6 +89,7 @@ public class DetailsActivity extends AppCompatActivity {
         dotsContainer = findViewById(R.id.dots_container);
         likeButton = findViewById(R.id.like_button);
 
+        // sizes drop down logic
         Spinner sizeSpinner = findViewById(R.id.size_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this, R.array.sizes_array, android.R.layout.simple_spinner_item);
@@ -97,6 +103,7 @@ public class DetailsActivity extends AppCompatActivity {
         setupDrawer();
         setupSearchBar();
 
+        // since its being viewed, increment count in firestore
         itemId = getIntent().getStringExtra("ITEM_ID");
         if (itemId != null) {
             setupLikeLogic();
@@ -106,10 +113,11 @@ public class DetailsActivity extends AppCompatActivity {
             Log.e(TAG, "No ITEM_ID passed to DetailsActivity");
         }
 
+        // transitions for home page
         findViewById(R.id.logo_title).setOnClickListener(v -> goHome());
         findViewById(R.id.logo_icon).setOnClickListener(v -> goHome());
     }
-
+    
     private void setupSearchBar() {
         EditText searchBar = findViewById(R.id.search_bar);
         searchBar.setOnEditorActionListener((v, actionId, event) -> {
