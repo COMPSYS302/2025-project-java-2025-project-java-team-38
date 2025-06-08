@@ -89,7 +89,6 @@ public class AccountActivity extends AppCompatActivity {
         });
 
         // Bottom navigation
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setSelectedItemId(R.id.nav_account);
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
