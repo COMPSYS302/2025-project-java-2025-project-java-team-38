@@ -3,11 +3,13 @@ package com.example.closet;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
@@ -16,22 +18,25 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class AccountActivity extends AppCompatActivity {
-    private FirebaseAuth      mAuth;
-    private MaterialButton    btnLogout, btnDelete;
-    private MaterialCardView  cardFaq, cardSupport;
-    private TextView          tvFaqContent, tvSupportContent;
+    private FirebaseAuth mAuth;
+    private MaterialButton btnLogout, btnDelete;
+    private MaterialCardView cardFaq, cardSupport;
+    private TextView tvFaqContent, tvSupportContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
 
+        // Make sure status bar is visible
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.light_gray));
+
+        mAuth = FirebaseAuth.getInstance();
+
+        // Bottom nav setup
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        // highlight the “Account” tab
         bottomNav.setSelectedItemId(R.id.nav_account);
-
-
-
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
@@ -43,25 +48,26 @@ public class AccountActivity extends AppCompatActivity {
                 finish();
                 return true;
             } else if (id == R.id.nav_account) {
-                // already here
                 return true;
             }
             return false;
         });
 
-        mAuth = FirebaseAuth.getInstance();
-
-        // bind views
-        btnLogout        = findViewById(R.id.btn_logout_account);
-        btnDelete        = findViewById(R.id.btn_delete_account);
-        cardFaq          = findViewById(R.id.card_faq);
-        cardSupport      = findViewById(R.id.card_support);
-        tvFaqContent     = findViewById(R.id.tv_faq_content);
+        // Bind views
+        btnLogout = findViewById(R.id.btn_logout_account);
+        btnDelete = findViewById(R.id.btn_delete_account);
+        cardFaq = findViewById(R.id.card_faq);
+        cardSupport = findViewById(R.id.card_support);
+        tvFaqContent = findViewById(R.id.tv_faq_content);
         tvSupportContent = findViewById(R.id.tv_support_content);
 
-        // Toggle section buttons
-        findViewById(R.id.card_faq).setOnClickListener(v -> toggleSection(cardFaq));
-        findViewById(R.id.card_support).setOnClickListener(v -> toggleSection(cardSupport));
+        // Toggle FAQ/Support content
+        cardFaq.setOnClickListener(v ->
+                tvFaqContent.setVisibility(tvFaqContent.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE)
+        );
+        cardSupport.setOnClickListener(v ->
+                tvSupportContent.setVisibility(tvSupportContent.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE)
+        );
 
         // Log out
         btnLogout.setOnClickListener(v -> {
@@ -70,7 +76,7 @@ public class AccountActivity extends AppCompatActivity {
             finish();
         });
 
-        // Delete account (with confirmation)
+        // Delete account with confirmation
         btnDelete.setOnClickListener(v -> new AlertDialog.Builder(this)
                 .setTitle("Delete Account")
                 .setMessage("This will permanently delete your account. Continue?")
@@ -78,24 +84,6 @@ public class AccountActivity extends AppCompatActivity {
                 .setNegativeButton("Cancel", null)
                 .show()
         );
-
-        // Toggle FAQ content
-        cardFaq.setOnClickListener(v -> {
-            tvFaqContent.setVisibility(
-                    tvFaqContent.getVisibility() == View.VISIBLE
-                            ? View.GONE
-                            : View.VISIBLE
-            );
-        });
-
-        // Toggle Support content
-        cardSupport.setOnClickListener(v -> {
-            tvSupportContent.setVisibility(
-                    tvSupportContent.getVisibility() == View.VISIBLE
-                            ? View.GONE
-                            : View.VISIBLE
-            );
-        });
     }
 
     private void deleteAndSignOut() {
@@ -104,23 +92,13 @@ public class AccountActivity extends AppCompatActivity {
 
         user.delete().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Toast.makeText(this,
-                        "Account deleted.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Account deleted.", Toast.LENGTH_SHORT).show();
                 mAuth.signOut();
                 startActivity(new Intent(this, LoginActivity.class));
                 finish();
             } else {
-                Toast.makeText(this,
-                        "Deletion failed: " + task.getException().getMessage(),
-                        Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Deletion failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-    private void toggleSection(MaterialCardView view) {
-        boolean visible = view.getVisibility() == View.VISIBLE;
-        cardFaq.setVisibility(View.GONE);
-        cardSupport.setVisibility(View.GONE);
-        if (!visible) view.setVisibility(View.VISIBLE);
     }
 }

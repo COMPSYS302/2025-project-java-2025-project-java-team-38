@@ -6,6 +6,7 @@
     android:id="@+id/account_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".AccountActivity">
 
     <!-- ─── Your existing semi-transparent overlay + content ─── -->
@@ -32,12 +33,6 @@
                 android:paddingHorizontal="24dp"
                 android:paddingVertical="16dp">
 
-                <ImageView
-                    android:id="@+id/hamburger_icon"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/hamburger"
-                    android:contentDescription="Menu"/>
 
                 <View
                     android:layout_width="0dp"

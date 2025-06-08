@@ -6,7 +6,7 @@
         android:allowBackup="true"
         android:icon="@drawable/hanger"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
+        android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true">
 
         <!-- Allow the Credentials broker -->
@@ -25,53 +25,48 @@
             </intent-filter>
         </activity>
 
+
         <!-- 2) MainActivity -->
         <activity
             android:name=".MainActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:exported="true"/>
+            android:exported="true"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <!-- 3) ListActivity -->
         <activity
             android:name=".ListActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <!-- 4) DetailsActivity -->
         <activity
             android:name=".DetailsActivity"
             android:exported="false"
             android:parentActivityName=".ListActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <!-- 5) MostViewedActivity -->
         <activity
             android:name=".MostViewedActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <!-- 6) TopPicksActivity -->
         <activity
             android:name=".TopPicksActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <!-- 7) AccountActivity -->
         <activity
             android:name=".AccountActivity"
             android:exported="true"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <!-- 8) FavouritesActivity -->
         <activity
             android:name=".FavouritesActivity"
             android:exported="true"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" />
 
     </application>
 </manifest>
