@@ -36,42 +36,42 @@
             android:name=".ListActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <!-- 4) DetailsActivity -->
         <activity
             android:name=".DetailsActivity"
             android:exported="false"
             android:parentActivityName=".ListActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <!-- 5) MostViewedActivity -->
         <activity
             android:name=".MostViewedActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <!-- 6) TopPicksActivity -->
         <activity
             android:name=".TopPicksActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <!-- 7) AccountActivity -->
         <activity
             android:name=".AccountActivity"
             android:exported="true"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <!-- 8) FavouritesActivity -->
         <activity
             android:name=".FavouritesActivity"
             android:exported="true"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
     </application>
 </manifest>
