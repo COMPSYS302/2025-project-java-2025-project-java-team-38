@@ -98,9 +98,10 @@ public class MainActivity extends AppCompatActivity
         );
 
 
-        // ─── Bottom Navigation Bar Setup ───
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+// highlight the “Home” tab
         bottomNav.setSelectedItemId(R.id.nav_home);
+
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
@@ -110,6 +111,10 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(this, FavouritesActivity.class));
                 finish();
                 return true;
+            } else if (id == R.id.nav_virtual_avatar) {
+                startActivity(new Intent(this, AvatarActivity.class));
+                finish();
+                return true;
             } else if (id == R.id.nav_account) {
                 startActivity(new Intent(this, AccountActivity.class));
                 finish();
@@ -117,6 +122,7 @@ public class MainActivity extends AppCompatActivity
             }
             return false;
         });
+
     }
 
     private void initializeViews() {

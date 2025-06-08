@@ -26,11 +26,10 @@ public class AccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
 
+        // inside onCreate(), after setContentView(...)
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        // highlight the “Account” tab
+// highlight the “Account” tab
         bottomNav.setSelectedItemId(R.id.nav_account);
-
-
 
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
@@ -42,12 +41,17 @@ public class AccountActivity extends AppCompatActivity {
                 startActivity(new Intent(this, FavouritesActivity.class));
                 finish();
                 return true;
+            } else if (id == R.id.nav_virtual_avatar) {
+                startActivity(new Intent(this, AvatarActivity.class));
+                finish();
+                return true;
             } else if (id == R.id.nav_account) {
                 // already here
                 return true;
             }
             return false;
         });
+
 
         mAuth = FirebaseAuth.getInstance();
 

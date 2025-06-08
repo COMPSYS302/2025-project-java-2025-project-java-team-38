@@ -49,8 +49,9 @@ public class FavouritesActivity extends AppCompatActivity implements ItemAdapter
         if (getSupportActionBar() != null) getSupportActionBar().hide();
         setContentView(R.layout.activity_favourites);
 
+        // inside onCreate(), after setContentView(...)
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        // highlight the “Favorites” tab
+// highlight the “Favorites” tab
         bottomNav.setSelectedItemId(R.id.nav_favorites);
 
         bottomNav.setOnItemSelectedListener(item -> {
@@ -62,6 +63,10 @@ public class FavouritesActivity extends AppCompatActivity implements ItemAdapter
             } else if (id == R.id.nav_favorites) {
                 // already here
                 return true;
+            } else if (id == R.id.nav_virtual_avatar) {
+                startActivity(new Intent(this, AvatarActivity.class));
+                finish();
+                return true;
             } else if (id == R.id.nav_account) {
                 startActivity(new Intent(this, AccountActivity.class));
                 finish();
@@ -69,6 +74,7 @@ public class FavouritesActivity extends AppCompatActivity implements ItemAdapter
             }
             return false;
         });
+
 
 
         firestore = FirebaseFirestore.getInstance();

@@ -31,6 +31,8 @@ public class ClothingItem {
     private int views;
     private int likes;
 
+    private String ImageUrl;
+
     // Firestore field: "dateAdded" (will be a Timestamp in Firestore)
     private com.google.firebase.Timestamp dateAdded;
 
@@ -75,6 +77,10 @@ public class ClothingItem {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getImageUrl() {
+        return ImageUrl;
     }
 
     /** Firestore field: "Name" */
