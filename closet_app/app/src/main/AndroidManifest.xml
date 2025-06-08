@@ -47,5 +47,16 @@
             android:exported="false"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".TopPicksActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".FavouritesActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 </manifest>
