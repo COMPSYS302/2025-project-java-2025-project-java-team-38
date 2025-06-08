@@ -18,6 +18,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -44,6 +45,30 @@ public class DetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+
+        bottomNav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                startActivity(new Intent(this, MainActivity.class));
+                finish();
+                return true;
+            } else if (id == R.id.nav_favorites) {
+                startActivity(new Intent(this, FavouritesActivity.class));
+                finish();
+                return true;
+            } else if (id == R.id.nav_virtual_avatar) {
+                startActivity(new Intent(this, AvatarActivity.class));
+                finish();
+                return true;
+            } else if (id == R.id.nav_account) {
+                startActivity(new Intent(this, AccountActivity.class));
+                finish();
+                return true;
+            }
+            return false;
+        });
 
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
