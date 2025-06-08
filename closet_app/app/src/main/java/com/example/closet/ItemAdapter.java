@@ -126,7 +126,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             imageHeart = itemView.findViewById(R.id.image_heart);
             textItemName = itemView.findViewById(R.id.text_item_name);
             textItemSubtitle = itemView.findViewById(R.id.text_item_subtitle);
-            textLikedStatus = itemView.findViewById(R.id.text_liked_status);
 
             // Set up gesture detector for double tap
             setupGestureDetector();

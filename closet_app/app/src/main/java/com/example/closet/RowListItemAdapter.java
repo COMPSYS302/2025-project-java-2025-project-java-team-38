@@ -104,7 +104,7 @@ public class RowListItemAdapter extends RecyclerView.Adapter<RowListItemAdapter.
         private final ImageView imageHeart;
         private final TextView textItemName;
         private final TextView textItemSubtitle;
-        private final TextView textLikedStatus;
+
         private final GestureDetector gestureDetector;
 
         public ViewHolder(@NonNull View itemView) {
@@ -113,7 +113,7 @@ public class RowListItemAdapter extends RecyclerView.Adapter<RowListItemAdapter.
             imageHeart       = itemView.findViewById(R.id.image_heart);
             textItemName     = itemView.findViewById(R.id.text_item_name);
             textItemSubtitle = itemView.findViewById(R.id.text_item_subtitle);
-            textLikedStatus  = itemView.findViewById(R.id.text_liked_status);
+
 
             // Set up gesture detector for single‐tap and double‐tap on the image
             gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
@@ -179,10 +179,6 @@ public class RowListItemAdapter extends RecyclerView.Adapter<RowListItemAdapter.
             }
             textItemSubtitle.setText(subtitle.toString());
 
-            // 3) Liked UI (heart icon + “Liked” text)
-            boolean isLiked = item.isLikedByCurrentUser();
-            imageHeart.setVisibility(isLiked ? View.VISIBLE : View.GONE);
-            textLikedStatus.setVisibility(isLiked ? View.VISIBLE : View.GONE);
 
             // 4) Load image (first URL in item.getImages())
             List<String> imageUrls = item.getImages();
