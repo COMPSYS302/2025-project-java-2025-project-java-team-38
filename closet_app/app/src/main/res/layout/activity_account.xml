@@ -1,224 +1,232 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<androidx.drawerlayout.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/account_root"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".AccountActivity">
 
-    <!-- ─── Your existing semi-transparent overlay + content ─── -->
-    <ScrollView
+    <!-- Main content area -->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="73dp">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <!-- Scrollable content -->
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="#CCFFFFFF"
-            android:padding="16dp">
+            android:layout_height="match_parent"
+            android:layout_marginBottom="73dp">
 
-            <!-- HEADER -->
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:background="@drawable/rounded_title"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="24dp"
-                android:paddingVertical="16dp">
-
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"/>
-
-                <TextView
-                    android:id="@+id/tv_account_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Account"
-                    android:textColor="@android:color/black"
-                    android:textSize="22sp"
-                    android:textStyle="bold"
-                    android:fontFamily="serif"/>
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"/>
-
-                <ImageView
-                    android:id="@+id/logo_icon"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/hanger"
-                    android:contentDescription="App logo"/>
-            </LinearLayout>
-
-            <!-- BUTTONS + CARDS -->
-            <LinearLayout
-                android:id="@+id/ll_buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center_horizontal">
+                android:background="#CCFFFFFF"
+                android:padding="16dp">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_logout_account"
-
-                    android:layout_width="200dp"
+                <!-- HEADER BAR -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:paddingVertical="12dp"
-                    android:backgroundTint="@color/categoryButtonLightGrey"
-                    android:text="Log Out"
-                    android:textAllCaps="false"
-                    android:textSize="18sp"
-                    android:textColor="@color/black"
-                    app:strokeColor="@color/medium_gray"
-                    app:strokeWidth="1dp"/>
+                    android:layout_marginBottom="24dp"
+                    android:background="@drawable/rounded_title"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="24dp"
+                    android:paddingVertical="16dp">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_delete_account"
+                    <ImageView
+                        android:id="@+id/hamburger_icon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/hamburger"
+                        android:contentDescription="Menu"/>
 
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:paddingVertical="12dp"
-                    android:text="Delete Account"
-                    android:backgroundTint="@color/categoryButtonLightGrey"
-                    android:textAllCaps="false"
-                    android:textSize="18sp"
-                    android:textColor="@color/black"
-                    app:strokeColor="@color/medium_gray"
-                    app:strokeWidth="1dp"/>
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"/>
 
-                <!-- FAQ Card -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card_faq"
-                    style="@style/Widget.MaterialComponents.CardView"
-
-                    app:strokeColor="@color/medium_gray"
-                    android:backgroundTint="@color/categoryButtonLightGrey"
-                    app:strokeWidth="1dp"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/tv_account_title"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="12dp"
-                        >
+                        android:text="Account"
+                        android:textColor="@android:color/black"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:fontFamily="serif"/>
 
-                        <TextView
-                            android:id="@+id/tv_faq_header"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:drawableStart="@drawable/dummy_arrow_drop_down"
-                            android:drawableEnd="@drawable/arrow_drop_down"
-                            android:drawablePadding="8dp"
-                            android:text="FAQ"
-                            android:textSize="18sp"
-                            android:textColor="@android:color/black"
-                            />
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"/>
 
-                        <TextView
-                            android:id="@+id/tv_faq_content"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:gravity="center"
-                            android:text="www.closet.com"
-                            android:textSize="16sp"
-                            android:textColor="@android:color/black"
-                            android:visibility="gone"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                    <ImageView
+                        android:id="@+id/logo_icon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/hanger"
+                        android:contentDescription="App logo"/>
+                </LinearLayout>
 
-                <!-- Support Card -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card_support"
-                    style="@style/Widget.MaterialComponents.CardView"
-                    app:strokeColor="@color/medium_gray"
-                    app:strokeWidth="1dp"
-                    android:layout_width="200dp"
+                <!-- Buttons + Cards -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:backgroundTint="@color/categoryButtonLightGrey">
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_logout_account"
+                        android:layout_width="200dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="12dp">
+                        android:layout_marginTop="8dp"
+                        android:paddingVertical="12dp"
+                        android:backgroundTint="@color/categoryButtonLightGrey"
+                        android:text="Log Out"
+                        android:textAllCaps="false"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        app:strokeColor="@color/medium_gray"
+                        app:strokeWidth="1dp"/>
 
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_delete_account"
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:paddingVertical="12dp"
+                        android:text="Delete Account"
+                        android:backgroundTint="@color/categoryButtonLightGrey"
+                        android:textAllCaps="false"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        app:strokeColor="@color/medium_gray"
+                        app:strokeWidth="1dp"/>
 
-                        <TextView
-                            android:id="@+id/tv_support_header"
+                    <!-- FAQ Card -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_faq"
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:backgroundTint="@color/categoryButtonLightGrey"
+                        app:strokeColor="@color/medium_gray"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="Customer Support"
-                            android:textSize="18sp"
-                            android:textColor="@android:color/black"
-                            android:drawableStart="@drawable/dummy_arrow_drop_down"
-                            android:drawableEnd="@drawable/arrow_drop_down"
-                            android:drawablePadding="8dp" />
+                            android:orientation="vertical"
+                            android:padding="12dp">
 
+                            <TextView
+                                android:id="@+id/tv_faq_header"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="FAQ"
+                                android:textSize="18sp"
+                                android:textColor="@android:color/black"
+                                android:drawableStart="@drawable/dummy_arrow_drop_down"
+                                android:drawableEnd="@drawable/arrow_drop_down"
+                                android:drawablePadding="8dp"/>
 
-                        <TextView
-                            android:id="@+id/tv_support_content"
-                            android:layout_width="wrap_content"
+                            <TextView
+                                android:id="@+id/tv_faq_content"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="www.closet.com"
+                                android:textSize="16sp"
+                                android:textColor="@android:color/black"
+                                android:gravity="center"
+                                android:visibility="gone"/>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Support Card -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_support"
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:backgroundTint="@color/categoryButtonLightGrey"
+                        app:strokeColor="@color/medium_gray"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="Phone: +1-800-123-4567\nEmail: support@closet.com"
-                            android:textSize="16sp"
-                            android:textColor="@android:color/black"
-                            android:visibility="gone"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                            android:orientation="vertical"
+                            android:padding="12dp">
 
+                            <TextView
+                                android:id="@+id/tv_support_header"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Customer Support"
+                                android:textSize="18sp"
+                                android:textColor="@android:color/black"
+                                android:drawableStart="@drawable/dummy_arrow_drop_down"
+                                android:drawableEnd="@drawable/arrow_drop_down"
+                                android:drawablePadding="8dp"/>
+
+                            <TextView
+                                android:id="@+id/tv_support_content"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="Phone: +1-800-123-4567\nEmail: support@closet.com"
+                                android:textSize="16sp"
+                                android:textColor="@android:color/black"
+                                android:visibility="gone"/>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
             </LinearLayout>
+        </ScrollView>
 
-        </LinearLayout>
-    </ScrollView>
-
-    <!-- ─── Bottom Navigation Container (POSITIONED AT BOTTOM) ─── -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:orientation="vertical"
-        android:background="@android:color/white">
-
-        <!-- Separator line -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#E0E0E0" />
-
-        <!-- Bottom Navigation View -->
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_navigation"
+        <!-- Bottom Navigation -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            app:elevation="0dp"
-            app:itemIconTint="@color/dark_gray"
-            app:itemTextColor="@color/dark_gray"
-            app:menu="@menu/bottom_nav_menu" />
-    </LinearLayout>
+            android:layout_gravity="bottom"
+            android:orientation="vertical"
+            android:background="@android:color/white">
 
-</FrameLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E0E0E0"/>
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottom_navigation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                app:elevation="0dp"
+                app:itemIconTint="@color/dark_gray"
+                app:itemTextColor="@color/dark_gray"
+                app:menu="@menu/bottom_nav_menu"/>
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- Drawer content -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:menu="@menu/drawer_menu"
+        app:itemTextColor="@color/black"
+        app:headerLayout="@layout/nav_header"/>
+
+</androidx.drawerlayout.widget.DrawerLayout>
