@@ -9,7 +9,7 @@
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true">
 
-        <!-- Allow the Credentials broker -->
+        <!-- Needed for Google Credentials Broker -->
         <meta-data
             android:name="com.google.android.gms.auth.api.credentials.CredentialManager.BROKER_ALLOWED_CALLERS"
             android:resource="@array/broker_allowed_callers" />
@@ -64,6 +64,13 @@
 
         <activity
             android:name=".FavouritesActivity"
+            android:exported="true"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <!-- 9) AvatarActivity -->
+        <activity
+            android:name=".AvatarActivity"
             android:exported="true"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />

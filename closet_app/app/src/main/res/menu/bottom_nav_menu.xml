@@ -12,4 +12,9 @@
         android:id="@+id/nav_account"
         android:icon="@drawable/ic_account"
         android:title="Account"/>
+
+    <item
+        android:id="@+id/nav_virtual_avatar"
+        android:icon="@drawable/ic_avatar_silhouette"
+        android:title="Avatar"/>
 </menu>

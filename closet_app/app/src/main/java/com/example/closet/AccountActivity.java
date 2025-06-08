@@ -35,6 +35,13 @@ public class AccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
 
+
+        // inside onCreate(), after setContentView(...)
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+// highlight the “Account” tab
+        bottomNav.setSelectedItemId(R.id.nav_account);
+
+
         // Show status bar and set color
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.light_gray));
@@ -94,18 +101,27 @@ public class AccountActivity extends AppCompatActivity {
                 startActivity(new Intent(this, FavouritesActivity.class));
                 finish();
                 return true;
+            } else if (id == R.id.nav_virtual_avatar) {
+                startActivity(new Intent(this, AvatarActivity.class));
+                finish();
+                return true;
             } else if (id == R.id.nav_account) {
                 return true;
             }
             return false;
         });
 
-        // Bind views
-        btnLogout = findViewById(R.id.btn_logout_account);
-        btnDelete = findViewById(R.id.btn_delete_account);
-        cardFaq = findViewById(R.id.card_faq);
-        cardSupport = findViewById(R.id.card_support);
-        tvFaqContent = findViewById(R.id.tv_faq_content);
+
+
+        mAuth = FirebaseAuth.getInstance();
+
+        // bind views
+        btnLogout        = findViewById(R.id.btn_logout_account);
+        btnDelete        = findViewById(R.id.btn_delete_account);
+        cardFaq          = findViewById(R.id.card_faq);
+        cardSupport      = findViewById(R.id.card_support);
+        tvFaqContent     = findViewById(R.id.tv_faq_content);
+
         tvSupportContent = findViewById(R.id.tv_support_content);
 
         // Toggle FAQ/Support content
