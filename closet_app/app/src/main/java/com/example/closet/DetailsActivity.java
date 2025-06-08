@@ -4,12 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,8 +20,8 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -31,12 +31,14 @@ public class DetailsActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private FirebaseFirestore db;
+    private FirebaseAuth auth;
+    private String itemId;
+    private String userId;
+
     private TextView itemName, fabricText, fitText, careText;
     private ViewPager2 viewPager;
     private LinearLayout dotsContainer;
     private ImageView likeButton;
-    private EditText searchBar;
-    private String itemId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +46,9 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_details);
 
         db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        userId = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
 
-        // View references
         itemName = findViewById(R.id.product_name);
         fabricText = findViewById(R.id.fabric_text);
         fitText = findViewById(R.id.fit_text);
@@ -53,7 +56,6 @@ public class DetailsActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.view_pager);
         dotsContainer = findViewById(R.id.dots_container);
         likeButton = findViewById(R.id.like_button);
-        searchBar = findViewById(R.id.search_bar);
 
         Spinner sizeSpinner = findViewById(R.id.size_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
@@ -65,24 +67,8 @@ public class DetailsActivity extends AppCompatActivity {
         findViewById(R.id.btn_fit).setOnClickListener(v -> toggleSection(fitText));
         findViewById(R.id.btn_care).setOnClickListener(v -> toggleSection(careText));
 
-        drawerLayout = findViewById(R.id.drawer_layout);
-        findViewById(R.id.hamburger_icon).setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
-        NavigationView navigationView = findViewById(R.id.navigation_view);
-        setupNavigation(navigationView);
-
-        findViewById(R.id.logo_title).setOnClickListener(v -> goHome());
-        findViewById(R.id.logo_icon).setOnClickListener(v -> goHome());
-
-        // Handle search
-        searchBar.setOnEditorActionListener((v, actionId, event) -> {
-            String query = searchBar.getText().toString().trim();
-            if (!query.isEmpty()) {
-                Intent intent = new Intent(this, ListActivity.class);
-                intent.putExtra("SEARCH_QUERY", query);
-                startActivity(intent);
-            }
-            return true;
-        });
+        setupDrawer();
+        setupSearchBar();
 
         itemId = getIntent().getStringExtra("ITEM_ID");
         if (itemId != null) {
@@ -90,15 +76,32 @@ public class DetailsActivity extends AppCompatActivity {
             loadFirestore(itemId);
             incrementViewCount(itemId);
         } else {
-            Log.e(TAG, "No ITEM_ID passed");
+            Log.e(TAG, "No ITEM_ID passed to DetailsActivity");
         }
+
+        findViewById(R.id.logo_title).setOnClickListener(v -> goHome());
+        findViewById(R.id.logo_icon).setOnClickListener(v -> goHome());
     }
 
-    private void goHome() {
-        startActivity(new Intent(this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+    private void setupSearchBar() {
+        EditText searchBar = findViewById(R.id.search_bar);
+        searchBar.setOnEditorActionListener((v, actionId, event) -> {
+            String query = searchBar.getText().toString().trim();
+            if (!query.isEmpty()) {
+                Intent intent = new Intent(DetailsActivity.this, ListActivity.class);
+                intent.putExtra("SEARCH_QUERY", query);
+                intent.putExtra("SEARCH_SCOPE", "global");
+                startActivity(intent);
+            }
+            return true;
+        });
     }
 
-    private void setupNavigation(NavigationView navigationView) {
+    private void setupDrawer() {
+        drawerLayout = findViewById(R.id.drawer_layout);
+        findViewById(R.id.hamburger_icon).setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+
+        NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(item -> {
             Intent intent = null;
             int itemId = item.getItemId();
@@ -111,11 +114,12 @@ public class DetailsActivity extends AppCompatActivity {
                 intent = new Intent(this, MostViewedActivity.class);
             } else if (itemId == R.id.nav_favourites) {
                 intent = new Intent(this, FavouritesActivity.class);
-            } else if (itemId == R.id.nav_new_in || itemId == R.id.nav_categories || itemId == R.id.nav_virtual_avatar) {
+            } else {
                 Toast.makeText(this, item.getTitle() + " clicked", Toast.LENGTH_SHORT).show();
             }
 
             if (intent != null) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
             }
@@ -126,17 +130,18 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void toggleSection(TextView view) {
+        boolean visible = view.getVisibility() == View.VISIBLE;
         fabricText.setVisibility(View.GONE);
         fitText.setVisibility(View.GONE);
         careText.setVisibility(View.GONE);
-        view.setVisibility(view.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+        if (!visible) view.setVisibility(View.VISIBLE);
     }
 
     private void loadFirestore(String itemId) {
         db.collection("Clothes").document(itemId).get()
                 .addOnSuccessListener(document -> {
                     if (!document.exists()) {
-                        Log.e(TAG, "Item doesn't exist");
+                        Log.e(TAG, "Document doesn't exist");
                         return;
                     }
 
@@ -150,41 +155,16 @@ public class DetailsActivity extends AppCompatActivity {
                         setupImageSlider(images);
                     }
                 })
-                .addOnFailureListener(e -> Log.e(TAG, "Firestore load failed", e));
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to load Firestore doc", e));
     }
 
     private void incrementViewCount(String itemId) {
         db.collection("Clothes").document(itemId)
                 .update("Views", com.google.firebase.firestore.FieldValue.increment(1))
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "Views incremented"))
-                .addOnFailureListener(e -> Log.e(TAG, "View increment failed", e));
-    }
-
-    private void setupLikeLogic() {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        String userId = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
-
-        if (userId == null || itemId == null) return;
-
-        db.collection("Clothes").document(itemId).get()
-                .addOnSuccessListener(doc -> {
-                    List<String> likedUsers = (List<String>) doc.get("likedUsers");
-                    boolean[] isLiked = {likedUsers != null && likedUsers.contains(userId)};
-                    likeButton.setImageResource(isLiked[0] ? R.drawable.ic_heart_filled : R.drawable.ic_favorite);
-
-                    likeButton.setOnClickListener(v -> {
-                        isLiked[0] = !isLiked[0];
-                        likeButton.setImageResource(isLiked[0] ? R.drawable.ic_heart_filled : R.drawable.ic_favorite);
-
-                        db.collection("Clothes").document(itemId)
-                                .update("likedUsers", isLiked[0]
-                                        ? com.google.firebase.firestore.FieldValue.arrayUnion(userId)
-                                        : com.google.firebase.firestore.FieldValue.arrayRemove(userId))
-                                .addOnSuccessListener(aVoid -> Log.d(TAG, "Like updated"))
-                                .addOnFailureListener(e -> Log.e(TAG, "Failed to update like", e));
-                    });
-                })
-                .addOnFailureListener(e -> Log.e(TAG, "Like check failed", e));
+                .addOnSuccessListener(aVoid ->
+                        Log.d(TAG, "View count incremented for item: " + itemId))
+                .addOnFailureListener(e ->
+                        Log.e(TAG, "Failed to increment view count", e));
     }
 
     private void setupImageSlider(List<String> urls) {
@@ -197,8 +177,10 @@ public class DetailsActivity extends AppCompatActivity {
         for (int i = 0; i < urls.size(); i++) {
             dots[i] = new ImageView(this);
             dots[i].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.dot_unseen));
+
             LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
             p.setMargins(8, 0, 8, 0);
             dotsContainer.addView(dots[i], p);
         }
@@ -207,11 +189,12 @@ public class DetailsActivity extends AppCompatActivity {
             dots[0].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.dot_open));
 
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override public void onPageSelected(int position) {
+            @Override
+            public void onPageSelected(int pos) {
                 for (int i = 0; i < dots.length; i++) {
                     dots[i].setImageDrawable(ContextCompat.getDrawable(
-                            DetailsActivity.this, i == position
-                                    ? R.drawable.dot_open : R.drawable.dot_unseen));
+                            DetailsActivity.this,
+                            i == pos ? R.drawable.dot_open : R.drawable.dot_unseen));
                 }
             }
         });
@@ -225,5 +208,36 @@ public class DetailsActivity extends AppCompatActivity {
             int current = viewPager.getCurrentItem();
             if (current < urls.size() - 1) viewPager.setCurrentItem(current + 1, true);
         });
+    }
+
+    private void setupLikeLogic() {
+        if (userId == null || itemId == null) return;
+
+        db.collection("Clothes").document(itemId).get()
+                .addOnSuccessListener(doc -> {
+                    List<String> likedUsers = (List<String>) doc.get("likedUsers");
+                    boolean[] isLiked = {likedUsers != null && likedUsers.contains(userId)};
+
+                    likeButton.setImageResource(isLiked[0] ? R.drawable.ic_heart_filled : R.drawable.ic_favorite);
+
+                    likeButton.setOnClickListener(v -> {
+                        isLiked[0] = !isLiked[0];
+                        likeButton.setImageResource(isLiked[0] ? R.drawable.ic_heart_filled : R.drawable.ic_favorite);
+
+                        db.collection("Clothes").document(itemId)
+                                .update("likedUsers", isLiked[0]
+                                        ? com.google.firebase.firestore.FieldValue.arrayUnion(userId)
+                                        : com.google.firebase.firestore.FieldValue.arrayRemove(userId))
+                                .addOnSuccessListener(aVoid -> Log.d(TAG, "Like status updated"))
+                                .addOnFailureListener(e -> Log.e(TAG, "Failed to update like", e));
+                    });
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to get item for like setup", e));
+    }
+
+    private void goHome() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }
