@@ -21,6 +21,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -228,33 +229,33 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void setupLikeLogic() {
-        boolean hasLiked = prefs.getBoolean(itemId, false);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String userId = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
 
-        // Set correct heart icon
-        likeButton.setImageResource(hasLiked ? R.drawable.ic_heart_filled : R.drawable.ic_favorite);
+        if (userId == null || itemId == null) return;
 
-        likeButton.setOnClickListener(v -> {
-            boolean nowLiked = !prefs.getBoolean(itemId, false);
+        db.collection("Clothes").document(itemId).get()
+                .addOnSuccessListener(doc -> {
+                    List<String> likedUsers = (List<String>) doc.get("likedUsers");
+                    boolean[] isLiked = {likedUsers != null && likedUsers.contains(userId)};
 
-            // Update heart icon immediately
-            likeButton.setImageResource(nowLiked ? R.drawable.ic_heart_filled : R.drawable.ic_favorite);
+                    // Set initial heart icon
+                    likeButton.setImageResource(isLiked[0] ? R.drawable.ic_heart_filled : R.drawable.ic_favorite);
 
-            SharedPreferences.Editor editor = prefs.edit();
+                    likeButton.setOnClickListener(v -> {
+                        isLiked[0] = !isLiked[0];  // Flip like status
+                        likeButton.setImageResource(isLiked[0] ? R.drawable.ic_heart_filled : R.drawable.ic_favorite);
 
-            if (nowLiked) {
-                editor.putBoolean(itemId, true); // Save to favorites
-            } else {
-                editor.remove(itemId);           // Remove from favorites
-            }
-
-            editor.apply(); // Save changes
-
-            // Update Firestore like count
-            db.collection("Clothes").document(itemId)
-                    .update("Likes", com.google.firebase.firestore.FieldValue.increment(nowLiked ? 1 : -1))
-                    .addOnSuccessListener(aVoid -> Log.d(TAG, "Likes updated"))
-                    .addOnFailureListener(e -> Log.e(TAG, "Failed to update likes", e));
-        });
+                        db.collection("Clothes").document(itemId)
+                                .update("likedUsers", isLiked[0]
+                                        ? com.google.firebase.firestore.FieldValue.arrayUnion(userId)
+                                        : com.google.firebase.firestore.FieldValue.arrayRemove(userId))
+                                .addOnSuccessListener(aVoid -> Log.d(TAG, "Like updated"))
+                                .addOnFailureListener(e -> Log.e(TAG, "Failed to update like", e));
+                    });
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to get item for like setup", e));
     }
 
 }

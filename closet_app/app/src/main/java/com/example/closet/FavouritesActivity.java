@@ -1,7 +1,6 @@
 package com.example.closet;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,11 +20,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class FavouritesActivity extends AppCompatActivity implements ItemAdapter.OnItemClickListener, ItemAdapter.OnItemLikeListener {
 
@@ -45,10 +45,8 @@ public class FavouritesActivity extends AppCompatActivity implements ItemAdapter
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         if (getSupportActionBar() != null) getSupportActionBar().hide();
-
         setContentView(R.layout.activity_favourites);
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
@@ -78,21 +76,32 @@ public class FavouritesActivity extends AppCompatActivity implements ItemAdapter
 
         if (firebaseAuth.getCurrentUser() != null) {
             currentUserId = firebaseAuth.getCurrentUser().getUid();
+        } else {
+            Toast.makeText(this, "Not logged in", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
         }
+
+        setupDrawer();
+        setupRecyclerView();
+        setupSearch();
+        loadFavourites();
+    }
+
+    private void setupDrawer() {
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.navigation_view);
+        ImageView hamburgerIcon = findViewById(R.id.hamburger_icon);
+        hamburgerIcon.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
 
         findViewById(R.id.logo_title).setOnClickListener(v -> {
             startActivity(new Intent(this, MainActivity.class));
             finish();
         });
 
-        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.navigation_view);
-        ImageView hamburgerIcon = findViewById(R.id.hamburger_icon);
-        hamburgerIcon.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
-
         navigationView.setNavigationItemSelectedListener(item -> {
-            int itemId = item.getItemId();
             Intent intent = null;
+            int itemId = item.getItemId();
 
             if (itemId == R.id.nav_home) {
                 intent = new Intent(this, MainActivity.class);
@@ -103,12 +112,8 @@ public class FavouritesActivity extends AppCompatActivity implements ItemAdapter
             } else if (itemId == R.id.nav_favourites) {
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return true;
-            } else if (itemId == R.id.nav_new_in) {
-                Toast.makeText(this, "New In clicked", Toast.LENGTH_SHORT).show();
-            } else if (itemId == R.id.nav_categories) {
-                Toast.makeText(this, "Categories clicked", Toast.LENGTH_SHORT).show();
-            } else if (itemId == R.id.nav_virtual_avatar) {
-                Toast.makeText(this, "Virtual Avatar clicked", Toast.LENGTH_SHORT).show();
+            } else if (itemId == R.id.nav_new_in || itemId == R.id.nav_categories || itemId == R.id.nav_virtual_avatar) {
+                Toast.makeText(this, item.getTitle() + " clicked", Toast.LENGTH_SHORT).show();
             }
 
             if (intent != null) {
@@ -119,24 +124,22 @@ public class FavouritesActivity extends AppCompatActivity implements ItemAdapter
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
+    }
 
+    private void setupRecyclerView() {
         recyclerView = findViewById(R.id.recycler_view_items);
-        searchBar = findViewById(R.id.search_bar);  // Make sure this exists in your layout
-
+        searchBar = findViewById(R.id.search_bar);
         adapter = new ItemAdapter(this, filteredList, R.layout.row_list_item);
         adapter.setOnItemClickListener(this);
         adapter.setOnItemLikeListener(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-
-        setupSearch();
-        loadFavourites();
     }
 
     private void setupSearch() {
         searchBar.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-            @Override public void afterTextChanged(Editable s) { }
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void afterTextChanged(Editable s) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -146,39 +149,27 @@ public class FavouritesActivity extends AppCompatActivity implements ItemAdapter
     }
 
     private void loadFavourites() {
-        SharedPreferences prefs = getSharedPreferences("LikedPrefs", MODE_PRIVATE);
-        Map<String, ?> allEntries = prefs.getAll();
-
-        List<String> favouriteIds = new ArrayList<>();
-        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
-            if (entry.getValue() instanceof Boolean && (Boolean) entry.getValue()) {
-                favouriteIds.add(entry.getKey());
-            }
-        }
-
-        if (favouriteIds.isEmpty()) {
-            Toast.makeText(this, "No favourite items", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        favouritesList.clear();
-        filteredList.clear();
-
-        for (String id : favouriteIds) {
-            firestore.collection("Clothes").document(id).get()
-                    .addOnSuccessListener(doc -> {
+        firestore.collection("Clothes")
+                .whereArrayContains("likedUsers", currentUserId)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    favouritesList.clear();
+                    filteredList.clear();
+                    for (DocumentSnapshot doc : querySnapshot) {
                         ClothingItem item = doc.toObject(ClothingItem.class);
                         if (item != null) {
                             item.setId(doc.getId());
                             item.setLikedByCurrentUser(true);
                             favouritesList.add(item);
                             filteredList.add(item);
-                            adapter.updateItems(filteredList);
                         }
-                    })
-                    .addOnFailureListener(e ->
-                            Log.e(TAG, "Failed to fetch favourite item: " + id, e));
-        }
+                    }
+                    adapter.updateItems(filteredList);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Failed to load favourites", e);
+                    Toast.makeText(this, "Error loading favourites", Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void filterItems(String query) {
@@ -206,16 +197,23 @@ public class FavouritesActivity extends AppCompatActivity implements ItemAdapter
 
     @Override
     public void onItemLike(ClothingItem item, int position, boolean isLiked) {
-        SharedPreferences prefs = getSharedPreferences("LikedPrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        if (isLiked) {
-            editor.putBoolean(item.getId(), true);
-        } else {
-            editor.remove(item.getId());
-            favouritesList.remove(position);
-            filteredList.remove(position);
-            adapter.notifyItemRemoved(position);
-        }
-        editor.apply();
+        firestore.collection("Clothes").document(item.getId())
+                .update("likedUsers", isLiked
+                        ? com.google.firebase.firestore.FieldValue.arrayUnion(currentUserId)
+                        : com.google.firebase.firestore.FieldValue.arrayRemove(currentUserId))
+                .addOnSuccessListener(unused -> {
+                    if (isLiked) {
+                        item.setLikedByCurrentUser(true);
+                    } else {
+                        item.setLikedByCurrentUser(false);
+                        favouritesList.remove(item);
+                        filteredList.remove(item);
+                        adapter.notifyItemRemoved(position);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Failed to update like status", e);
+                    Toast.makeText(this, "Failed to update like", Toast.LENGTH_SHORT).show();
+                });
     }
 }
