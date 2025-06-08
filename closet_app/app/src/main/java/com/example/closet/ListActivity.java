@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -58,7 +59,8 @@ public class ListActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-
+        ImageButton back = findViewById(R.id.btn_back);
+        back.setOnClickListener(v -> finish());
         initializeViews();
         firestore = FirebaseFirestore.getInstance();
         setupRecyclerView();

@@ -44,4 +44,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="open">Open navigation drawer</string>
     <string name="close">Close navigation drawer</string>
+        <!-- …other strings… -->
+        <string name="back">Back</string>
+
 </resources>

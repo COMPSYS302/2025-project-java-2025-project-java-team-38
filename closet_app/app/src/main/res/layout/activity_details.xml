@@ -41,6 +41,14 @@
                     android:orientation="horizontal"
                     android:paddingHorizontal="24dp"
                     android:paddingVertical="16dp">
+                    <ImageButton
+                        android:id="@+id/btn_back"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/back"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_arrow_back" />
 
                     <ImageView
                         android:id="@+id/hamburger_icon"
@@ -55,7 +63,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
+                        android:layout_weight="0.4"
                         android:gravity="center"
                         android:orientation="horizontal" />
 

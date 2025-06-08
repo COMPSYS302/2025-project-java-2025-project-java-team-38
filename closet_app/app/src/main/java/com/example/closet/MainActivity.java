@@ -2,19 +2,17 @@ package com.example.closet;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-import android.util.Log;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -60,13 +58,8 @@ public class MainActivity extends AppCompatActivity
         firebaseAuth = FirebaseAuth.getInstance();
         firestore    = FirebaseFirestore.getInstance();
 
-        // Configure Google Sign-In
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(
-                GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        googleSignInClient = GoogleSignIn.getClient(this, gso);
+        // Configure Google Sign-In (deprecated API, suppressed)
+        setupGoogleSignIn();
 
         // Grab current user ID, if signed in
         if (firebaseAuth.getCurrentUser() != null) {
@@ -97,15 +90,11 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(MainActivity.this, TopPicksActivity.class))
         );
 
-
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-// highlight the “Home” tab
         bottomNav.setSelectedItemId(R.id.nav_home);
-
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
-                // already here
                 return true;
             } else if (id == R.id.nav_favorites) {
                 startActivity(new Intent(this, FavouritesActivity.class));
@@ -122,7 +111,17 @@ public class MainActivity extends AppCompatActivity
             }
             return false;
         });
+    }
 
+    @SuppressWarnings("deprecation")
+    private void setupGoogleSignIn() {
+        // still using the deprecated GoogleSignInOptions for now
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(
+                GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        googleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
     private void initializeViews() {
@@ -132,8 +131,8 @@ public class MainActivity extends AppCompatActivity
 
         btnShirts         = findViewById(R.id.btn_shirts);
         btnPants          = findViewById(R.id.btn_pants);
-        btnChains    = findViewById(R.id.btn_chains);
-        btnHeadwear        = findViewById(R.id.btn_headwear);
+        btnChains         = findViewById(R.id.btn_chains);
+        btnHeadwear       = findViewById(R.id.btn_headwear);
         btnShoes          = findViewById(R.id.btn_shoes);
 
         recyclerViewTopPicks = findViewById(R.id.recycler_view_top_picks);
