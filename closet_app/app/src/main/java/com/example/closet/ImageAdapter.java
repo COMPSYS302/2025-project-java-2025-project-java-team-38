@@ -18,10 +18,12 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     private final Context context;
     private final List<String> imageUrls;
 
+    // Sets context and image urls
     public ImageAdapter(Context context, List<String> imageUrls) {
         this.context = context;
         this.imageUrls = imageUrls;
     }
+
 
     @NonNull
     @Override
@@ -35,11 +37,12 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         String url = imageUrls.get(position);
 
         if (url != null && url.startsWith("http")) {
+            // try catch to ensure app doesn't crash
             try {
                 Picasso.get()
                         .load(url)
-                        .placeholder(R.drawable.clothes) // show something while loading
-                        .error(R.drawable.hanger)        // fallback image if broken
+                        .placeholder(R.drawable.clothes) // pending image
+                        .error(R.drawable.hanger)        // broken link image
                         .into(holder.imageView, new Callback() {
                             @Override
                             public void onSuccess() {
@@ -69,6 +72,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
 
+        // holds images to be viewed
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.image_view);
