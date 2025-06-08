@@ -14,18 +14,11 @@ import androidx.activity.result.IntentSenderRequest;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
+import com.google.android.gms.auth.api.identity.BeginSignInRequest.GoogleIdTokenRequestOptions;
 import com.google.android.gms.auth.api.identity.Identity;
 import com.google.android.gms.auth.api.identity.SignInClient;
-import com.google.android.gms.auth.api.identity.BeginSignInRequest.GoogleIdTokenRequestOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.identity.SignInCredential;
 import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.CommonStatusCodes;
-import com.google.android.gms.tasks.Task;
-
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -38,8 +31,8 @@ public class LoginActivity extends AppCompatActivity {
 
     // UI
     private EditText etEmail, etPassword;
-    private Button   btnLogin, btnRegister;
-    private SignInButton btnGoogle;           // <-- SignInButton type
+    private Button btnLogin, btnRegister;
+    private SignInButton btnGoogle;
 
     // One-Tap launcher
     private final ActivityResultLauncher<IntentSenderRequest> oneTapLauncher =
@@ -65,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.et_password);
         btnLogin   = findViewById(R.id.btn_login);
         btnRegister= findViewById(R.id.btn_register);
-        btnGoogle  = findViewById(R.id.btn_google_signin);  // SignInButton
+        btnGoogle  = findViewById(R.id.btn_google_signin);
 
         btnLogin.setOnClickListener(v -> {
             String email = etEmail.getText().toString().trim();
@@ -129,8 +122,8 @@ public class LoginActivity extends AppCompatActivity {
                             oneTapLauncher.launch(req);
                         })
                         .addOnFailureListener(e -> {
-                            Log.w(TAG, "One-Tap failed, falling back", e);
-                            // you could fall back here if needed
+                            Log.w(TAG, "One-Tap failed to start", e);
+                            // fallback if needed
                         })
         );
     }
@@ -140,27 +133,32 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "Sign-in canceled.", Toast.LENGTH_SHORT).show();
             return;
         }
-        Task<GoogleSignInAccount> task =
-                GoogleSignIn.getSignedInAccountFromIntent(result.getData());
+
         try {
-            GoogleSignInAccount acct = task.getResult(ApiException.class);
-            if (acct == null || acct.getIdToken() == null) {
-                throw new ApiException(new com.google.android.gms.common.api.Status(
-                        CommonStatusCodes.INTERNAL_ERROR));
+            // Extract One-Tap credential
+            SignInCredential credential =
+                    oneTapClient.getSignInCredentialFromIntent(result.getData());
+            String idToken = credential.getGoogleIdToken();
+            if (idToken == null) {
+                Toast.makeText(this, "No ID token returned.", Toast.LENGTH_SHORT).show();
+                return;
             }
-            AuthCredential credential =
-                    GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-            mAuth.signInWithCredential(credential)
-                    .addOnCompleteListener(this, t -> {
-                        if (t.isSuccessful()) goToMain();
-                        else {
-                            Log.w(TAG, "Firebase auth failed", t.getException());
+
+            // Exchange for Firebase credential
+            AuthCredential firebaseCred =
+                    GoogleAuthProvider.getCredential(idToken, null);
+            mAuth.signInWithCredential(firebaseCred)
+                    .addOnCompleteListener(this, task -> {
+                        if (task.isSuccessful()) {
+                            goToMain();
+                        } else {
+                            Log.w(TAG, "Firebase auth failed", task.getException());
                             Toast.makeText(this,
                                     "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }
                     });
-        } catch (ApiException e) {
-            Log.w(TAG, "Google sign-in failed", e);
+        } catch (Exception e) {
+            Log.w(TAG, "One-Tap result handling failed", e);
             Toast.makeText(this,
                     "Google Sign-In failed.", Toast.LENGTH_SHORT).show();
         }

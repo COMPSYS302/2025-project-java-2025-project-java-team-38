@@ -44,7 +44,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="open">Open navigation drawer</string>
     <string name="close">Close navigation drawer</string>
-        <!-- …other strings… -->
-        <string name="back">Back</string>
+    <string name="back">Back</string>
+    <string name="default_web_client_id">57185028705-2ofc4fptrq5upksrk7ig1sht10fpctfo.apps.googleusercontent.com</string>
 
 </resources>
