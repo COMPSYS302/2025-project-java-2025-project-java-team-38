@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -47,7 +48,8 @@ public class TopPicksActivity extends AppCompatActivity
         if (getSupportActionBar() != null) getSupportActionBar().hide();
 
         setContentView(R.layout.activity_top_picks);
-
+        ImageButton back = findViewById(R.id.btn_back);
+        back.setOnClickListener(v -> finish());
         firestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser() != null) {

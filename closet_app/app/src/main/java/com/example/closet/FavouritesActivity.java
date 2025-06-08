@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -48,7 +49,8 @@ public class FavouritesActivity extends AppCompatActivity implements ItemAdapter
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         if (getSupportActionBar() != null) getSupportActionBar().hide();
         setContentView(R.layout.activity_favourites);
-
+        ImageButton back = findViewById(R.id.btn_back);
+        back.setOnClickListener(v -> finish());
         // inside onCreate(), after setContentView(...)
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
 // highlight the “Favorites” tab
