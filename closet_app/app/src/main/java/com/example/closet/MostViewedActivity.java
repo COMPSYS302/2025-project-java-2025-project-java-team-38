@@ -2,8 +2,11 @@ package com.example.closet;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -29,13 +32,14 @@ public class MostViewedActivity extends AppCompatActivity implements ItemAdapter
     private RecyclerView recyclerView;
     private ItemAdapter adapter;
     private final List<ClothingItem> mostViewedList = new ArrayList<>();
+    private final List<ClothingItem> filteredList = new ArrayList<>();
 
+    private EditText searchBar;
     private FirebaseFirestore firestore;
     private FirebaseAuth firebaseAuth;
     private String currentUserId;
 
     @Override
-
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -44,6 +48,8 @@ public class MostViewedActivity extends AppCompatActivity implements ItemAdapter
         if (getSupportActionBar() != null) getSupportActionBar().hide();
 
         setContentView(R.layout.activity_most_viewed);
+
+        searchBar = findViewById(R.id.search_bar);  // Ensure your XML includes this
 
         // Back to MainActivity when logo is clicked
         findViewById(R.id.logo_title).setOnClickListener(v -> {
@@ -57,10 +63,7 @@ public class MostViewedActivity extends AppCompatActivity implements ItemAdapter
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.navigation_view);
 
-        findViewById(R.id.hamburger_icon).setOnClickListener(v -> {
-            Log.d("MostViewedActivity", "Hamburger menu clicked");
-            drawerLayout.openDrawer(GravityCompat.START);
-        });
+        findViewById(R.id.hamburger_icon).setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
 
         navigationView.setNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
@@ -97,16 +100,26 @@ public class MostViewedActivity extends AppCompatActivity implements ItemAdapter
             currentUserId = firebaseAuth.getCurrentUser().getUid();
         }
 
-        adapter = new ItemAdapter(this, mostViewedList, R.layout.row_list_item);
+        adapter = new ItemAdapter(this, filteredList, R.layout.row_list_item);
         adapter.setOnItemClickListener(this);
         adapter.setOnItemLikeListener(this);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
+        // Set up search
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterItems(s.toString());
+            }
+        });
+
         loadMostViewedItems();
     }
-
 
     private void loadMostViewedItems() {
         firestore.collection("Clothes")
@@ -115,6 +128,7 @@ public class MostViewedActivity extends AppCompatActivity implements ItemAdapter
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     mostViewedList.clear();
+                    filteredList.clear();
                     for (DocumentSnapshot doc : querySnapshot) {
                         ClothingItem item = doc.toObject(ClothingItem.class);
                         if (item != null) {
@@ -125,15 +139,32 @@ public class MostViewedActivity extends AppCompatActivity implements ItemAdapter
                             item.setLikedByCurrentUser(liked);
 
                             mostViewedList.add(item);
+                            filteredList.add(item);
                         }
                     }
-                    adapter.updateItems(mostViewedList);
+                    adapter.updateItems(filteredList);
                     Log.d(TAG, "Loaded top 10 most viewed items");
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Failed to load most viewed items", e);
                     Toast.makeText(this, "Error loading most viewed items", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    private void filterItems(String query) {
+        String lower = query.toLowerCase().trim();
+        filteredList.clear();
+
+        for (ClothingItem item : mostViewedList) {
+            if ((item.getName() != null && item.getName().toLowerCase().contains(lower)) ||
+                    (item.getCategory() != null && item.getCategory().toLowerCase().contains(lower)) ||
+                    (item.getFabric() != null && item.getFabric().toLowerCase().contains(lower)) ||
+                    (item.getFit() != null && item.getFit().toLowerCase().contains(lower))) {
+                filteredList.add(item);
+            }
+        }
+
+        adapter.updateItems(filteredList);
     }
 
     @Override
